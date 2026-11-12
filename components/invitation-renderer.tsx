@@ -100,7 +100,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
         </header>
 
         <AnimatePresence mode="popLayout" initial={false}>
-          {data.photoUrl && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} /></motion.div>}
+          {data.photoUrl && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} templateId={template.id} /></motion.div>}
           <motion.div key="details" layout className="invite-details">
             <p className="invite-date">{formatDate(data.date)}</p>
             <p><Clock3 size={14} /> {data.startTime || "14:00"}{data.endTime ? `–${data.endTime}` : ""}</p>

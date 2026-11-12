@@ -14,7 +14,7 @@ type Props = { template: InvitationTemplate };
 
 const featureKeys: FeatureKey[] = ["rsvp", "map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
-const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Blomram" }];
+const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
 
 export function InvitationStudio({ template }: Props) {
   const [data, setData] = useState<InvitationData>(template.defaultData);
@@ -105,7 +105,7 @@ export function InvitationStudio({ template }: Props) {
                         onPointerUp={stopPhotoDrag}
                         onPointerCancel={stopPhotoDrag}
                       >
-                        <InvitationPhoto data={data} className="invite-photo-wrap--editor" />
+                        <InvitationPhoto data={data} templateId={template.id} className="invite-photo-wrap--editor" />
                       </div>
                     </div>
                     <p className="photo-drag-hint"><Move size={13} /> Dra bilden för att välja exakt utsnitt</p>
