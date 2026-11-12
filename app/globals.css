@@ -900,3 +900,179 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 }
 
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important; } }
+
+/* Collection architecture: shared invitation data, deliberately different experiences */
+.category-entry-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.category-entry:last-child { grid-column:auto; max-width:none; }
+.template-art[class*="template-art--"] .art-world { background-position:center; }
+.template-art--poster .art-title { max-width:86%; font:900 clamp(36px,5vw,66px)/.82 var(--sans); text-transform:uppercase; letter-spacing:-.08em; transform:rotate(-3deg); }
+.template-art--poster .art-subtitle { padding:7px 11px; color:#fff; background:#28317d; font-family:var(--sans); font-weight:800; text-transform:uppercase; }
+.template-art--editorial .art-kicker { position:absolute; left:8%; top:8%; writing-mode:vertical-rl; }
+.template-art--editorial .art-title { width:62%; margin-left:20%; color:#181817; text-align:left; font-size:clamp(38px,5vw,62px); }
+.template-art--editorial .art-subtitle,.template-art--editorial .art-date { margin-left:20%; text-align:left; }
+.template-art--cinematic .art-world,.template-art--postcard .art-world { opacity:1; }
+.template-art--cinematic .art-title { margin-top:44%; color:#fff9e9; text-shadow:0 4px 24px #402a1d; }
+.template-art--celestial .art-title { text-shadow:0 0 25px rgba(255,255,255,.8); }
+.template-art--vintage .art-title { margin-top:32%; }
+.template-art--patisserie { clip-path:polygon(0 2%,5% 0,10% 2%,15% 0,20% 2%,25% 0,30% 2%,35% 0,40% 2%,45% 0,50% 2%,55% 0,60% 2%,65% 0,70% 2%,75% 0,80% 2%,85% 0,90% 2%,95% 0,100% 2%,100% 98%,95% 100%,90% 98%,85% 100%,80% 98%,75% 100%,70% 98%,65% 100%,60% 98%,55% 100%,50% 98%,45% 100%,40% 98%,35% 100%,30% 98%,25% 100%,20% 98%,15% 100%,10% 98%,5% 100%,0 98%); }
+.template-art--deco .art-title,.template-art--ticket .art-title { color:#f7df9b; text-transform:uppercase; letter-spacing:.07em; }
+.template-art--ticket { clip-path:polygon(4% 0,96% 0,96% 4%,100% 4%,100% 96%,96% 96%,96% 100%,4% 100%,4% 96%,0 96%,0 4%,4% 4%); }
+
+.invitation[class*="invitation--layout-"] { isolation:isolate; }
+.invitation[class*="invitation--layout-"] .invite-content { transition:opacity .45s,transform .6s; }
+.storybook-layers,.poster-graphics,.editorial-rail,.cinematic-sequence,.celestial-orbit,.vintage-frame,.patisserie-awning,.deco-frame,.ticket-stub { position:absolute; z-index:1; inset:0; pointer-events:none; }
+
+/* Sagoskogen: a tall, layered storybook that is discovered while scrolling */
+.invitation--layout-storybook { min-height:1120px; padding-top:360px; background:#10241f; }
+.invitation--layout-storybook .invite-world-bg { inset:0; opacity:1; background-position:center top; background-size:auto 100%; }
+.invitation--layout-storybook .invite-world-bg::after { background:linear-gradient(180deg,transparent 9%,rgba(9,25,21,.16) 28%,rgba(10,27,23,.88) 52%,#10241f 78%); }
+.invitation--layout-storybook .invite-content { align-items:flex-start; padding:28px; border:1px solid rgba(231,200,134,.26); border-radius:28px; background:rgba(9,25,21,.76); backdrop-filter:blur(12px); }
+.invitation--layout-storybook .invite-header,.invitation--layout-storybook .invite-greeting { text-align:left; }
+.invitation--layout-storybook .invite-header h1 { font-size:49px; }
+.invitation--layout-storybook .invite-details,.invitation--layout-storybook .invite-actions { width:100%; }
+.storybook-layers span { position:absolute; width:190px; height:310px; background:linear-gradient(90deg,rgba(5,18,14,.85),transparent); filter:blur(1px); }
+.storybook-layers span:first-child { left:-70px; top:80px; clip-path:polygon(0 0,70% 0,100% 100%,0 100%); }
+.storybook-layers span:nth-child(2) { right:-70px; top:180px; transform:scaleX(-1); clip-path:polygon(0 0,70% 0,100% 100%,0 100%); }
+.storybook-layers i,.storybook-layers b { position:absolute; z-index:2; color:#e9d29a; font:italic 10px var(--serif); letter-spacing:.12em; text-transform:uppercase; }
+.storybook-layers i { top:315px; left:34px; }.storybook-layers b { top:555px; right:24px; }
+
+/* Konfettikalas: graphic poster rather than a paper card */
+.invitation--layout-poster { padding-top:78px; background:#ff6b7d; color:#252d77; }
+.invitation--layout-poster::before { border:7px solid #25327c; border-radius:18px; }
+.invitation--layout-poster .invite-world-bg { opacity:.95; }
+.invitation--layout-poster .invite-world-bg::after { background:rgba(255,244,220,.18); }
+.invitation--layout-poster .invite-content { align-items:stretch; }
+.invitation--layout-poster .invite-header { position:relative; z-index:2; padding:30px 13px 23px; text-align:left; transform:rotate(-2deg); }
+.invitation--layout-poster .invite-header p { font-weight:900; color:#27317c; }
+.invitation--layout-poster .invite-header h1 { color:#27317c!important; font:900 56px/.78 var(--sans); letter-spacing:-.09em; text-transform:uppercase; }
+.invitation--layout-poster .invite-header h2 { display:inline-block; padding:7px 10px; color:#fff!important; background:#27317c; font:900 11px var(--sans); text-transform:uppercase; }
+.invitation--layout-poster .invite-details { border:4px solid #27317c; border-radius:8px; background:#fff3db!important; box-shadow:8px 8px 0 #27317c; transform:rotate(1.4deg); }
+.poster-graphics span { position:absolute; right:-20px; top:24px; color:#fff6df; font:900 62px var(--sans); transform:rotate(8deg); }
+.poster-graphics i { position:absolute; left:11px; bottom:140px; color:#ffef48; font:900 92px var(--sans); -webkit-text-stroke:3px #27317c; transform:rotate(-10deg); }
+.poster-graphics b { position:absolute; right:20px; bottom:17px; color:#27317c; font-size:20px; }
+
+/* Tidlös: editorial grid with a vertical rail and asymmetric content */
+.invitation--layout-editorial { padding:70px 34px 42px 92px; background:#f2eee7; }
+.invitation--layout-editorial::before { inset:22px; border-radius:0; border-color:rgba(25,25,24,.35); }
+.invitation--layout-editorial .invite-world-bg { opacity:.32; }
+.invitation--layout-editorial .invite-world-bg::after { background:linear-gradient(90deg,rgba(242,238,231,.7),rgba(242,238,231,.92)); }
+.invitation--layout-editorial .invite-content { align-items:flex-start; text-align:left; }
+.invitation--layout-editorial .invite-header { width:100%; text-align:left; }
+.invitation--layout-editorial .invite-header h1 { max-width:290px; color:#181817!important; font-size:54px; line-height:.82; }
+.invitation--layout-editorial .invite-header h2 { max-width:210px; color:#7e604e!important; }
+.invitation--layout-editorial .invite-details { width:88%; margin-left:auto; border:0; border-radius:0; border-left:1px solid #222; background:transparent!important; text-align:left; }
+.invitation--layout-editorial .invite-actions { width:100%; }
+.editorial-rail { right:auto; width:55px; border-right:1px solid rgba(20,20,19,.3); }
+.editorial-rail span,.editorial-rail i { position:absolute; left:18px; writing-mode:vertical-rl; font:8px var(--sans); letter-spacing:.14em; }
+.editorial-rail span { top:70px; }.editorial-rail i { bottom:40px; }
+
+/* Gyllene timmen: full-screen photography with separate glass chapters */
+.invitation--layout-cinematic { min-height:1050px; padding:360px 24px 44px; background:#4a3425; }
+.invitation--layout-cinematic .invite-world-bg { inset:0; opacity:1; background-position:center top; }
+.invitation--layout-cinematic .invite-world-bg::after { background:linear-gradient(180deg,transparent 18%,rgba(47,28,17,.18) 34%,rgba(39,24,16,.88) 67%,#2b1d16); }
+.invitation--layout-cinematic .invite-content { gap:16px; }
+.invitation--layout-cinematic .invite-header,.invitation--layout-cinematic .invite-details,.invitation--layout-cinematic .invite-greeting,.invitation--layout-cinematic .invite-actions { width:100%; padding:24px; border:1px solid rgba(255,235,194,.3); border-radius:2px 30px 2px 30px; background:rgba(49,31,20,.38)!important; backdrop-filter:blur(12px); }
+.invitation--layout-cinematic .invite-header h1 { color:#fff3d5!important; font-size:46px; }
+.cinematic-sequence { left:auto; right:13px; top:310px; bottom:auto; display:flex; flex-direction:column; gap:15px; }
+.cinematic-sequence span { color:#ffe4ad; font:8px var(--sans); }
+
+/* Månskimmer: a quiet celestial medallion */
+.invitation--layout-celestial { padding-top:210px; background:#15233f; }
+.invitation--layout-celestial .invite-world-bg { opacity:.92; }
+.invitation--layout-celestial .invite-world-bg::after { background:linear-gradient(180deg,transparent 12%,rgba(15,29,55,.62) 40%,rgba(16,31,57,.88) 80%); }
+.invitation--layout-celestial .invite-content { padding:26px 18px; border-radius:190px 190px 28px 28px; background:rgba(13,28,55,.42); backdrop-filter:blur(8px); }
+.invitation--layout-celestial .invite-header h1 { color:#f6e9c8!important; text-shadow:0 0 28px rgba(255,241,198,.5); }
+.celestial-orbit { inset:42px 50% auto auto; width:180px; height:180px; transform:translateX(50%); border:1px solid rgba(245,221,164,.3); border-radius:50%; }
+.celestial-orbit>span { position:absolute; inset:-10px; border-radius:50%; }
+.celestial-orbit i,.celestial-orbit b,.celestial-orbit em { position:absolute; color:#f9df9c; font-style:normal; }.celestial-orbit i{top:2px;left:50%}.celestial-orbit b{right:0;top:60%}.celestial-orbit em{left:8px;top:35%}
+
+/* Nallekram: framed heirloom card */
+.invitation--layout-vintage { padding-top:310px; background:#eee4d2; }
+.invitation--layout-vintage .invite-world-bg { inset:0; opacity:1; background-position:center top; }
+.invitation--layout-vintage .invite-world-bg::after { background:linear-gradient(180deg,transparent 20%,rgba(247,240,225,.42) 42%,rgba(242,233,215,.92) 66%); }
+.invitation--layout-vintage .invite-content { padding:25px 22px; border:1px solid #9d8b6b; border-radius:42% 42% 18px 18px / 55px 55px 18px 18px; background:rgba(250,244,231,.76); }
+.vintage-frame { inset:15px; border:2px double rgba(123,101,67,.55); border-radius:100px 100px 24px 24px; }
+.vintage-frame::before,.vintage-frame::after { content:"❦"; position:absolute; top:18px; color:#8f7650; font-size:24px; }.vintage-frame::before{left:22px}.vintage-frame::after{right:22px;transform:scaleX(-1)}
+
+/* Körsbärsdröm: patisserie scallops and fold-out panels */
+.invitation--layout-patisserie { padding-top:230px; background:#f9d9dc; }
+.invitation--layout-patisserie .invite-world-bg { opacity:.9; }
+.invitation--layout-patisserie .invite-world-bg::after { background:linear-gradient(180deg,transparent 15%,rgba(255,242,233,.58) 38%,rgba(255,238,229,.92) 66%); }
+.invitation--layout-patisserie .invite-content { padding:25px 19px; background:#fff6e8; clip-path:polygon(0 2%,5% 0,10% 2%,15% 0,20% 2%,25% 0,30% 2%,35% 0,40% 2%,45% 0,50% 2%,55% 0,60% 2%,65% 0,70% 2%,75% 0,80% 2%,85% 0,90% 2%,95% 0,100% 2%,100% 98%,95% 100%,90% 98%,85% 100%,80% 98%,75% 100%,70% 98%,65% 100%,60% 98%,55% 100%,50% 98%,45% 100%,40% 98%,35% 100%,30% 98%,25% 100%,20% 98%,15% 100%,10% 98%,5% 100%,0 98%); }
+.invitation--layout-patisserie .invite-details { transform:rotate(-1.2deg); box-shadow:7px 8px 0 #d7a4a8; }
+.invitation--layout-patisserie .invite-actions { transform:rotate(.8deg); }
+.patisserie-awning { height:54px; display:flex; }
+.patisserie-awning i { flex:1; height:70px; border-radius:0 0 99px 99px; background:#a9364d; }.patisserie-awning i:nth-child(even){background:#fff0dc}
+
+/* Guldkant: geometric art-deco stage and split opening panels */
+.invitation--layout-deco { padding-top:145px; background:#080b11; }
+.invitation--layout-deco .invite-world-bg { opacity:.75; }
+.invitation--layout-deco .invite-world-bg::after { background:radial-gradient(circle at center,rgba(24,36,54,.18),rgba(4,6,10,.72)); }
+.invitation--layout-deco .invite-content { padding:34px 24px; border:1px solid #bd9851; background:rgba(7,10,16,.72); }
+.invitation--layout-deco .invite-header h1 { color:#f4d58a!important; text-transform:uppercase; letter-spacing:.05em; }
+.deco-frame { inset:20px; border:2px solid #bd9851; clip-path:polygon(0 0,40% 0,50% 7%,60% 0,100% 0,100% 100%,60% 100%,50% 93%,40% 100%,0 100%); }
+.envelope-scene--layout-deco .envelope-wrap { width:330px; height:360px; }
+.envelope-scene--layout-deco .envelope-back,.envelope-scene--layout-deco .envelope-front { height:330px; border-radius:0; background:linear-gradient(90deg,#080b11 0 49.4%,#c39d51 49.6% 50.4%,#080b11 50.6%); clip-path:none; }
+.envelope-scene--layout-deco .envelope-flap { display:none; }
+.envelope-scene--layout-deco .wax-seal { top:50%; }
+
+/* Gyllene biljetten: perforated ticket with a real stub */
+.invitation--layout-ticket { padding:95px 45px 55px; background:#0b1b35; clip-path:polygon(4% 0,96% 0,96% 2%,100% 2%,100% 98%,96% 98%,96% 100%,4% 100%,4% 98%,0 98%,0 2%,4% 2%); }
+.invitation--layout-ticket::before { border:2px solid #d5b45d; border-radius:10px; }
+.invitation--layout-ticket .invite-world-bg { opacity:.82; }
+.invitation--layout-ticket .invite-world-bg::after { background:rgba(3,11,24,.5); }
+.invitation--layout-ticket .invite-content { align-items:stretch; }
+.invitation--layout-ticket .invite-header { text-align:left; padding-bottom:24px; border-bottom:2px dashed #d5b45d; }
+.invitation--layout-ticket .invite-header h1 { color:#f5d97f!important; font:900 50px/.9 var(--sans); text-transform:uppercase; }
+.invitation--layout-ticket .invite-details { border-radius:0; border:0; border-bottom:2px dashed #d5b45d; background:transparent!important; text-align:left; }
+.ticket-stub { top:auto; height:93px; border-top:2px dashed #d5b45d; display:flex; align-items:center; justify-content:space-around; color:#e9c96f; font:8px var(--sans); letter-spacing:.14em; }.ticket-stub b{font-size:25px}
+
+/* Citronlunden: a two-sided interactive postcard */
+.invitation--layout-postcard { min-height:720px; padding:42px 28px; background:#f7f0d8; perspective:1200px; }
+.invitation--layout-postcard .invite-world-bg { opacity:.32; }
+.invitation--layout-postcard .invite-world-bg::after { background:rgba(255,252,235,.74); }
+.invitation--layout-postcard:not(.is-postcard-flipped) .invite-content { opacity:0; transform:rotateY(180deg); pointer-events:none; }
+.invitation--layout-postcard.is-postcard-flipped .postcard-front { opacity:0; transform:rotateY(-180deg); pointer-events:none; }
+.invitation--layout-postcard.is-postcard-flipped { padding-top:80px; }
+.invitation--layout-postcard .invite-content { padding:35px 25px; border:1px solid #bcb18c; background:#fffdf0; transform-origin:center; }
+.invitation--layout-postcard .invite-header { width:100%; padding-left:34%; text-align:left; }
+.invitation--layout-postcard .invite-header h1 { font-size:36px; }
+.invitation--layout-postcard .invite-details { width:100%; border-radius:0; border-left:1px solid #bcb18c; background:transparent!important; }
+.postcard-front { position:absolute; z-index:9; inset:22px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:40px 28px; border:10px solid #fff8e5; background-image:linear-gradient(transparent 45%,rgba(14,71,44,.35)),url('/art/citronlunden-world.webp'); background-size:cover; background-position:center; box-shadow:0 20px 50px rgba(28,54,35,.22); transition:opacity .4s,transform .65s; backface-visibility:hidden; }
+.postcard-front>div { color:#fffbea; text-align:center; text-shadow:0 3px 18px #21482e; }.postcard-front p{margin:0;font:italic 16px var(--serif)}.postcard-front h2{margin:4px 0;font:48px/.9 var(--serif)}.postcard-front span{font:8px var(--sans);text-transform:uppercase;letter-spacing:.15em}
+.postcard-front button,.postcard-turn-back { margin-top:24px; padding:11px 15px; border:1px solid currentColor; border-radius:999px; color:#264c31; background:#fff9df; font:700 8px var(--sans); cursor:pointer; }.postcard-front button{display:flex;align-items:center;gap:8px}.postcard-front svg{width:13px}.postcard-turn-back{margin-bottom:10px;background:transparent}
+
+/* Each experience has its own motion signature; "Stilla" always removes it */
+@keyframes posterBounce { 0%,100%{transform:rotate(8deg) scale(1)} 50%{transform:rotate(4deg) scale(1.08)} }
+@keyframes editorialRule { 0%,100%{opacity:.38;transform:translateY(0)} 50%{opacity:1;transform:translateY(18px)} }
+@keyframes cinematicBreath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.045)} }
+@keyframes vintageGlow { 0%,100%{box-shadow:inset 0 0 0 rgba(255,244,219,0)} 50%{box-shadow:inset 0 0 70px rgba(255,244,219,.42)} }
+@keyframes awningWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+@keyframes decoShimmer { 0%,100%{filter:drop-shadow(0 0 0 rgba(223,188,108,0))} 50%{filter:drop-shadow(0 0 12px rgba(223,188,108,.7))} }
+@keyframes ticketPulse { 0%,100%{letter-spacing:.14em;opacity:.72} 50%{letter-spacing:.22em;opacity:1} }
+@keyframes postcardSun { 0%,100%{background-position:center} 50%{background-position:53% 48%} }
+.animation--soft.invitation--layout-poster .poster-graphics span { animation:posterBounce 3.8s ease-in-out infinite; }
+.animation--playful.invitation--layout-poster .poster-graphics span { animation:posterBounce 1.8s ease-in-out infinite; }
+.animation--soft.invitation--layout-editorial .editorial-rail::after,.animation--playful.invitation--layout-editorial .editorial-rail::after { content:"";position:absolute;left:26px;top:44%;width:1px;height:90px;background:#111;animation:editorialRule 4s ease-in-out infinite; }
+.animation--playful.invitation--layout-editorial .editorial-rail::after { animation-duration:2.4s; }
+.animation--soft.invitation--layout-cinematic .invite-world-bg { animation:cinematicBreath 14s ease-in-out infinite; }
+.animation--playful.invitation--layout-cinematic .invite-world-bg { animation:cinematicBreath 7s ease-in-out infinite; }
+.animation--soft.invitation--layout-vintage .vintage-frame { animation:vintageGlow 5.5s ease-in-out infinite; }
+.animation--playful.invitation--layout-vintage .vintage-frame { animation:vintageGlow 2.8s ease-in-out infinite; }
+.animation--soft.invitation--layout-patisserie .patisserie-awning i:nth-child(odd) { animation:awningWave 3.8s ease-in-out infinite; }
+.animation--playful.invitation--layout-patisserie .patisserie-awning i { animation:awningWave 1.9s ease-in-out infinite alternate; }
+.animation--soft.invitation--layout-deco .deco-frame,.animation--playful.invitation--layout-deco .deco-frame { animation:decoShimmer 4.5s ease-in-out infinite; }
+.animation--playful.invitation--layout-deco .deco-frame { animation-duration:2.3s; }
+.animation--soft.invitation--layout-ticket .ticket-stub span,.animation--playful.invitation--layout-ticket .ticket-stub span { animation:ticketPulse 4s ease-in-out infinite; }
+.animation--playful.invitation--layout-ticket .ticket-stub span { animation-duration:2s; }
+.animation--soft.invitation--layout-postcard .postcard-front { animation:postcardSun 12s ease-in-out infinite; }
+.animation--playful.invitation--layout-postcard .postcard-front { animation:postcardSun 6s ease-in-out infinite; }
+
+@media (max-width:1100px) and (min-width:701px) { .category-entry-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:700px) {
+  .category-entry-grid { display:flex; }
+  .invitation--layout-storybook,.invitation--layout-cinematic { min-height:980px; }
+  .invitation--layout-editorial { padding-left:80px; }
+  .invitation--layout-poster .invite-header h1 { font-size:49px; }
+  .invitation--layout-ticket { padding-left:35px; padding-right:35px; }
+}

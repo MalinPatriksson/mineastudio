@@ -3,9 +3,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mineastudio.se"),
-  title: { default: "Digitala inbjudningar för bröllop, dop & barnkalas | Minea Studio", template: "%s | Minea Studio" },
-  description: "Skapa en personlig digital inbjudan till bröllop, barnkalas, dop eller namngivning. Anpassa design, färger och OSA och dela direkt via SMS-länk.",
-  keywords: ["digital inbjudan", "digitala inbjudningar", "digitala inbjudningskort", "digital bröllopsinbjudan", "inbjudningskort barnkalas", "dopinbjudan", "inbjudan namngivning", "OSA online", "inbjudningsmall"],
+  title: { default: "Digitala inbjudningar för livets alla fester | Minea Studio", template: "%s | Minea Studio" },
+  description: "Skapa en personlig digital inbjudan till bröllop, barnkalas, dop, babyshower, student, jubileum eller middag. Anpassa design, färger och OSA och dela som en vacker länk.",
+  keywords: ["digital inbjudan", "digitala inbjudningar", "digitala inbjudningskort", "digital bröllopsinbjudan", "inbjudningskort barnkalas", "dopinbjudan", "inbjudan babyshower", "studentinbjudan", "jubileumsinbjudan", "OSA online", "inbjudningsmall"],
   authors: [{ name: "Minea Studio" }],
   creator: "Minea Studio",
   publisher: "Minea Studio",

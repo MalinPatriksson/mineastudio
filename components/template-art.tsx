@@ -10,7 +10,7 @@ const shortDate = (value: string) => {
 
 export function TemplateArt({ template, compact = false, animated = true }: { template: InvitationTemplate; compact?: boolean; animated?: boolean }) {
   const data = template.defaultData;
-  const classes = `template-art ${template.palette}-art ${compact ? "template-art--compact" : ""}`;
+  const classes = `template-art ${template.palette}-art template-art--${template.layout} ${compact ? "template-art--compact" : ""}`;
 
   if (template.palette === "sand") {
     return (

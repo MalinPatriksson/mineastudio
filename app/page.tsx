@@ -6,7 +6,7 @@ export default function Page() {
     "@graph": [
       { "@type": "Organization", "@id": "https://mineastudio.se/#organization", name: "Minea Studio", url: "https://mineastudio.se", email: "hej@mineastudio.se" },
       { "@type": "WebSite", "@id": "https://mineastudio.se/#website", url: "https://mineastudio.se", name: "Minea Studio", inLanguage: "sv-SE", publisher: { "@id": "https://mineastudio.se/#organization" } },
-      { "@type": "Service", name: "Personliga digitala inbjudningar", provider: { "@id": "https://mineastudio.se/#organization" }, areaServed: "SE", offers: { "@type": "Offer", priceCurrency: "SEK", price: "59", availability: "https://schema.org/InStock" }, serviceType: "Digitala inbjudningskort för bröllop, barnkalas, dop och namngivning" },
+      { "@type": "Service", name: "Personliga digitala inbjudningar", provider: { "@id": "https://mineastudio.se/#organization" }, areaServed: "SE", offers: { "@type": "Offer", priceCurrency: "SEK", price: "59", availability: "https://schema.org/InStock" }, serviceType: "Digitala inbjudningskort för bröllop, barnkalas, dop, namngivning, babyshower, student, jubileum och middag" },
       { "@type": "FAQPage", mainEntity: [
         { "@type": "Question", name: "Hur fungerar en digital inbjudan?", acceptedAnswer: { "@type": "Answer", text: "Välj en design, fyll i namn, datum och plats och dela sedan inbjudan som en personlig länk via SMS, mejl eller chatt." } },
         { "@type": "Question", name: "Kan jag skapa en digital bröllopsinbjudan med OSA?", acceptedAnswer: { "@type": "Answer", text: "Ja. Bröllopsinbjudan kan innehålla OSA direkt i inbjudan eller via SMS, karta, kalenderlänk, personlig hälsning och en design som matchar era färger." } },

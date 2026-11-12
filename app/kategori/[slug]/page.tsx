@@ -4,19 +4,15 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { TemplateArt } from "@/components/template-art";
-import { templates } from "@/lib/invitations";
+import { invitationCategories, templates } from "@/lib/invitations";
 
-const categoryDetails: Record<string, { name: string; intro: string; palette: "rose" | "sand" | "midnight" | "sky" }> = {
-  barnkalas: { name: "Barnkalas", intro: "Lekfulla små världar för födelsedagar som får kännas precis så stora som de är.", palette: "rose" },
-  brollop: { name: "Bröllop", intro: "Mjuka, professionella inbjudningar formgivna som den vackra början på er stora dag.", palette: "sand" },
-  dop: { name: "Dop & namngivning", intro: "Varsamma, ljusa uttryck för en dag fylld av närhet och nya minnen.", palette: "sky" },
-};
+const categoryDetails = Object.fromEntries(invitationCategories.map((category) => [category.slug, { name: category.name, intro: category.note, palette: category.palette }]));
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const category = categoryDetails[slug];
   if (!category) return {};
-  const seoTitle = slug === "brollop" ? "Digital bröllopsinbjudan med OSA" : slug === "barnkalas" ? "Digitala inbjudningskort till barnkalas" : "Digital dopinbjudan & inbjudan till namngivning";
+  const seoTitle = `${category.name} – digitala inbjudningar med OSA`;
   return {
     title: seoTitle,
     description: `${category.intro} Välj en mall, anpassa text och färger och dela din digitala inbjudan via SMS-länk.`,
@@ -65,4 +61,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       </section>
     </main>
   );
+}
+
+export function generateStaticParams() {
+  return invitationCategories.map((category) => ({ slug: category.slug }));
 }

@@ -4,6 +4,7 @@ export type FeatureKey = "rsvp" | "map" | "calendar" | "countdown" | "greeting";
 export type PhotoShape = "organic" | "arch" | "circle";
 export type PhotoFrameStyle = "clean" | "fade" | "floral";
 export type RsvpMode = "form" | "sms" | "none";
+export type InvitationLayout = "classic" | "storybook" | "poster" | "editorial" | "cinematic" | "celestial" | "vintage" | "patisserie" | "deco" | "ticket" | "postcard";
 export type RsvpQuestionConfig = {
   partySize: boolean;
   allergies: boolean;
@@ -52,6 +53,7 @@ export type InvitationTemplate = {
   tagline: string;
   description: string;
   artwork: string;
+  layout: InvitationLayout;
   palette: "rose" | "sand" | "midnight" | "sky";
   recommended: FeatureKey[];
   defaultData: InvitationData;
@@ -67,6 +69,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Rosetter, blommor och en liten värld av magi.",
     description: "En handmålad kalasdröm i puderrosa, med mjuka rosetter och lekfulla detaljer som vaknar till liv.",
     artwork: "/art/rosendrom-world.jpg",
+    layout: "classic",
     palette: "rose",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -100,6 +103,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Ett soligt trädgårdskalas i aprikos och salvia.",
     description: "En varm, handmålad kalasvärld med äppelblom, vimplar och en liten picknick under träden.",
     artwork: "/art/appelblom-world.png",
+    layout: "classic",
     palette: "rose",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -133,6 +137,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Varm minimalism i linne, sand och champagne.",
     description: "En mjuk och professionell bröllopsinbjudan med taktil papperskänsla, luft och diskreta botaniska detaljer.",
     artwork: "/art/sandlofte-world.png",
+    layout: "classic",
     palette: "sand",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -165,6 +170,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "En stilla kväll i midnattsblått och champagne.",
     description: "En sofistikerad bröllopsinbjudan med botaniska linjer, mjukt ljus och högtidlig typografi.",
     artwork: "/art/nattblomma-world.jpg",
+    layout: "classic",
     palette: "midnight",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -197,6 +203,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Ljus, stillhet och mjuka himmelska toner.",
     description: "En varsam inbjudan i disigt blått med svävande moln och små handritade stjärnor.",
     artwork: "/art/lilla-molnet-world.jpg",
+    layout: "classic",
     palette: "sky",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -229,6 +236,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Linne, olivblad och en stilla pärlemorton.",
     description: "En ljus botanisk inbjudan med varm papperskänsla och mjuka olivkvistar för dop eller namngivning.",
     artwork: "/art/olivkvist-world.png",
+    layout: "classic",
     palette: "sky",
     recommended: ["rsvp", "map", "calendar"],
     defaultData: {
@@ -252,9 +260,89 @@ export const templates: InvitationTemplate[] = [
       rsvpDate: "2027-04-25",
     },
   },
+  {
+    id: "sagoskogen", name: "Sagoskogen", category: "Barnkalas", categorySlug: "barnkalas", price: 59,
+    tagline: "En levande sagobok bland lyktor, rävar och mossa.",
+    description: "En scrollande sagoskog i flera bildlager där kalasets information upptäcks kapitel för kapitel.",
+    artwork: "/art/sagoskogen-world.webp", layout: "storybook", palette: "midnight", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Milo", age: "7", date: "2027-09-04", startTime: "13:00", endTime: "16:00", address: "Skogsgläntan 8, Nacka", kicker: "Det var en gång", subtitle: "ett förtrollat 7-årskalas", greeting: "Följ lyktorna in i skogen och fira ett nytt kapitel tillsammans med oss.", footerText: "Och så började äventyret", countdownLabel: "dagar till äventyret", rsvpHint: "Svara till sagan", rsvpLabel: "OSA till kalaset", mapHint: "Följ stigen", mapLabel: "Hitta till gläntan", calendarHint: "Spara kapitlet", calendarLabel: "Spara dagen", phone: "0701203040", rsvpDate: "2027-08-22" },
+  },
+  {
+    id: "konfettikalas", name: "Konfettikalas", category: "Barnkalas", categorySlug: "barnkalas", price: 59,
+    tagline: "Stora bokstäver, klara färger och full kalasenergi.",
+    description: "En grafisk affischinbjudan med djärv typografi, studsande konfetti och lekfulla färgblock.",
+    artwork: "/art/konfettikalas-world.svg", layout: "poster", palette: "rose", recommended: ["rsvp", "map", "calendar", "countdown"],
+    defaultData: { name: "Amina", age: "8", date: "2027-10-16", startTime: "14:00", endTime: "17:00", address: "Färgfabriken 5, Göteborg", kicker: "Hurra hurra", subtitle: "8 år med extra allt", greeting: "Kom som du är och gör dig redo för musik, tårta och konfetti!", footerText: "Mer färg. Mer skratt. Mer kalas.", countdownLabel: "dagar kvar", rsvpHint: "Är du med?", rsvpLabel: "Svara på inbjudan", mapHint: "Till festen", mapLabel: "Hitta hit", calendarHint: "Boka kalaset", calendarLabel: "Spara dagen", phone: "0702233445", rsvpDate: "2027-10-02" },
+  },
+  {
+    id: "tidlos", name: "Tidlös", category: "Bröllop", categorySlug: "brollop", price: 59,
+    tagline: "Modern typografi, oväntad balans och mycket luft.",
+    description: "En asymmetrisk redaktionell bröllopsinbjudan där datum, namn och detaljer bildar en modern komposition.",
+    artwork: "/art/tidlos-world.svg", layout: "editorial", palette: "sand", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Signe & Otto", date: "2027-07-10", startTime: "15:00", endTime: "23:30", address: "Konsthallen, Malmö", kicker: "Tillsammans", subtitle: "bjuder vi in till vår dag", greeting: "En sommarkväll, ett löfte och alla vi tycker om på samma plats.", footerText: "Klädsel: sommarfin", countdownLabel: "dagar till vigseln", rsvpHint: "Senast 1 juni", rsvpLabel: "OSA till bröllopet", mapHint: "Platsen", mapLabel: "Vägbeskrivning", calendarHint: "Datumet", calendarLabel: "Spara vår dag", phone: "0706677889", rsvpDate: "2027-06-01" },
+  },
+  {
+    id: "gyllene-timmen", name: "Gyllene timmen", category: "Bröllop", categorySlug: "brollop", price: 59,
+    tagline: "Ett fotografiskt kärleksbrev i kvällsljus.",
+    description: "Helskärmsfotografi med information som vecklar ut sig i mjuka, scrollande glaspartier.",
+    artwork: "/art/gyllene-timmen-world.webp", layout: "cinematic", palette: "sand", recommended: ["rsvp", "map", "calendar", "greeting", "countdown"],
+    defaultData: { name: "Mira & Elias", date: "2027-08-14", startTime: "16:00", endTime: "00:00", address: "Havsgården, Varberg", kicker: "När solen står lågt", subtitle: "säger vi ja", greeting: "Möt oss i det gyllene kvällsljuset för middag, dans och början på resten av livet.", footerText: "Vi ses där himlen möter havet", countdownLabel: "solnedgångar kvar", rsvpHint: "Svara senast 20 juni", rsvpLabel: "OSA till vår dag", mapHint: "Mot havet", mapLabel: "Hitta till gården", calendarHint: "Vår kväll", calendarLabel: "Spara datumet", phone: "0707788990", rsvpDate: "2027-06-20" },
+  },
+  {
+    id: "manskimmer", name: "Månskimmer", category: "Dop & namngivning", categorySlug: "dop", price: 59,
+    tagline: "En pärlemorskimrande natt för ett litet nytt liv.",
+    description: "Illustrerad stjärnhimmel med långsamt kretsande ljuspunkter och mjuka moln.",
+    artwork: "/art/manskimmer-world.webp", layout: "celestial", palette: "sky", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Loui", date: "2027-11-07", startTime: "12:30", endTime: "15:30", address: "Ljuskapellet, Örebro", kicker: "Under samma måne", subtitle: "välkommen till namngivning", greeting: "Kom och fira vår lilla stjärna med en varm stund tillsammans.", footerText: "En liten stjärna, en stor dag", countdownLabel: "nätter kvar", rsvpHint: "Berätta om du kommer", rsvpLabel: "Svara på inbjudan", mapHint: "Visa vägen", mapLabel: "Hitta till kapellet", calendarHint: "Kom ihåg dagen", calendarLabel: "Spara dagen", phone: "0708899001", rsvpDate: "2027-10-20" },
+  },
+  {
+    id: "nallekram", name: "Nallekram", category: "Babyshower", categorySlug: "babyshower", price: 59,
+    tagline: "En mjuk vintagevärld för den allra första festen.",
+    description: "En nostalgisk nalleillustration med handmålad blomram, band och varsam papperskänsla.",
+    artwork: "/art/nallekram-world.webp", layout: "vintage", palette: "sand", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Baby Lind", date: "2027-03-21", startTime: "13:00", endTime: "16:00", address: "Sjömansgatan 14, Stockholm", kicker: "En liten björnkram", subtitle: "babyshower för vår efterlängtade lilla", greeting: "Kom på fika, små överraskningar och en varm eftermiddag tillsammans.", footerText: "Små tassar lämnar stora avtryck", countdownLabel: "dagar till kramkalaset", rsvpHint: "Kan du komma?", rsvpLabel: "Svara på inbjudan", mapHint: "Till kramkalaset", mapLabel: "Hitta hit", calendarHint: "Spara stunden", calendarLabel: "Lägg till i kalender", phone: "0709900112", rsvpDate: "2027-03-08" },
+  },
+  {
+    id: "korsbarsdrom", name: "Körsbärsdröm", category: "Babyshower", categorySlug: "babyshower", price: 59,
+    tagline: "Fransk konditorikänsla med en lekfull överraskning.",
+    description: "Vågiga kanter, körsbärsröda detaljer och utvikbara informationssektioner inspirerade av Paris.",
+    artwork: "/art/korsbarsdrom-world.webp", layout: "patisserie", palette: "rose", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Baby Moreau", date: "2027-05-02", startTime: "14:00", endTime: "17:00", address: "Lilla Patisseriet, Uppsala", kicker: "Un petit bébé", subtitle: "en söt babyshower väntar", greeting: "Macarons, körsbär och en eftermiddag för den lilla person vi längtar efter.", footerText: "Bisous från oss", countdownLabel: "dagar till fikat", rsvpHint: "Répondez s'il vous plaît", rsvpLabel: "Svara på inbjudan", mapHint: "Till bageriet", mapLabel: "Hitta hit", calendarHint: "Spara fikat", calendarLabel: "Spara dagen", phone: "0701012131", rsvpDate: "2027-04-18" },
+  },
+  {
+    id: "guldkant", name: "Guldkant", category: "Födelsedag & jubileum", categorySlug: "fodelsedag-jubileum", price: 59,
+    tagline: "Art déco, champagne och en entré med dramatik.",
+    description: "En pampig jubileumsinbjudan som öppnas med dubbla geometriska paneler i svart och guld.",
+    artwork: "/art/guldkant-world.svg", layout: "deco", palette: "midnight", recommended: ["rsvp", "map", "calendar", "countdown"],
+    defaultData: { name: "Astrid 50", date: "2027-09-25", startTime: "18:30", endTime: "01:00", address: "Grand Hôtel, Stockholm", kicker: "En kväll med guldkant", subtitle: "middag, musik och femtio fantastiska år", greeting: "Klä upp dig, höj glaset och fira livet tillsammans med mig.", footerText: "Klädsel: festligt", countdownLabel: "dagar till galan", rsvpHint: "Reservera din plats", rsvpLabel: "OSA till festen", mapHint: "Till galan", mapLabel: "Vägbeskrivning", calendarHint: "Boka kvällen", calendarLabel: "Spara datumet", phone: "0702122232", rsvpDate: "2027-08-20" },
+  },
+  {
+    id: "gyllene-biljetten", name: "Gyllene biljetten", category: "Student & examen", categorySlug: "student-examen", price: 59,
+    tagline: "Din examen. Din biljett till nästa kapitel.",
+    description: "En egen digital biljettlayout med perforering, serienummer och en festlig guldfolie-känsla.",
+    artwork: "/art/gyllene-biljetten-world.svg", layout: "ticket", palette: "midnight", recommended: ["rsvp", "map", "calendar", "countdown"],
+    defaultData: { name: "Nora", date: "2027-06-11", startTime: "15:00", endTime: "21:00", address: "Examensparken 3, Lund", kicker: "Gyllene biljett", subtitle: "studentmottagning 2027", greeting: "Efter sena kvällar, tidiga morgnar och många koppar kaffe är det äntligen dags att fira.", footerText: "Giltig för en oförglömlig kväll", countdownLabel: "dagar till utspring", rsvpHint: "Bekräfta plats", rsvpLabel: "OSA till mottagningen", mapHint: "Hitta till firandet", mapLabel: "Visa vägen", calendarHint: "Spara biljetten", calendarLabel: "Lägg till i kalender", phone: "0703233343", rsvpDate: "2027-05-25" },
+  },
+  {
+    id: "citronlunden", name: "Citronlunden", category: "Fest & middag", categorySlug: "fest-middag", price: 59,
+    tagline: "Ett solvarmt vykort från en kväll i södern.",
+    description: "Ett interaktivt vykort som vänds från citronlundens framsida till kvällens alla detaljer.",
+    artwork: "/art/citronlunden-world.webp", layout: "postcard", palette: "sky", recommended: ["rsvp", "map", "calendar", "greeting"],
+    defaultData: { name: "Middag i lunden", date: "2027-07-24", startTime: "18:00", endTime: "23:00", address: "Orangeriet 7, Visby", kicker: "Saluti dalla sera", subtitle: "en lång middag under citronträden", greeting: "Ta plats vid bordet för antipasti, levande ljus och en sommarkväll som får dröja kvar.", footerText: "A presto, vi ses snart", countdownLabel: "dagar till middagen", rsvpHint: "Reservera en stol", rsvpLabel: "Svara på inbjudan", mapHint: "Till lunden", mapLabel: "Hitta till bordet", calendarHint: "Spara kvällen", calendarLabel: "Lägg till i kalender", phone: "0704344454", rsvpDate: "2027-07-10" },
+  },
 ];
 
 export const templateById = Object.fromEntries(templates.map((template) => [template.id, template]));
+
+export const invitationCategories = [
+  { number: "01", name: "Barnkalas", slug: "barnkalas", note: "Lekfulla världar för stora små dagar.", templateId: "sagoskogen", palette: "rose" as const },
+  { number: "02", name: "Bröllop", slug: "brollop", note: "Från tidlös typografi till gyllene kvällsljus.", templateId: "tidlos", palette: "sand" as const },
+  { number: "03", name: "Dop & namngivning", slug: "dop", note: "Mjuka minnen att bära med sig.", templateId: "manskimmer", palette: "sky" as const },
+  { number: "04", name: "Babyshower", slug: "babyshower", note: "Varmt, lekfullt och fullt av förväntan.", templateId: "nallekram", palette: "sand" as const },
+  { number: "05", name: "Födelsedag & jubileum", slug: "fodelsedag-jubileum", note: "Milstenar som förtjänar en storslagen entré.", templateId: "guldkant", palette: "midnight" as const },
+  { number: "06", name: "Student & examen", slug: "student-examen", note: "Nästa kapitel börjar med en gyllene biljett.", templateId: "gyllene-biljetten", palette: "midnight" as const },
+  { number: "07", name: "Fest & middag", slug: "fest-middag", note: "Långa bord, levande ljus och goda samtal.", templateId: "citronlunden", palette: "sky" as const },
+] as const;
 
 export const featureLabels: Record<FeatureKey, { title: string; description: string }> = {
   rsvp: { title: "OSA via SMS", description: "Gästen svarar med ett färdigt sms." },

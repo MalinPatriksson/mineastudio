@@ -4,32 +4,28 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowDown, ArrowRight, CalendarDays, Check, MapPin, MessageCircle, Sparkles } from "lucide-react";
-import { templateById, templates } from "@/lib/invitations";
+import { invitationCategories, templateById, templates } from "@/lib/invitations";
 import { SiteHeader } from "./site-header";
 import { TemplateArt } from "./template-art";
 import { BrandLogo } from "./brand-logo";
 
-const occasions = [
-  { number: "01", title: "Barnkalas", note: "Lekfullt, personligt, alldeles magiskt.", slug: "barnkalas", templateId: "rosendrom" },
-  { number: "02", title: "Bröllop", note: "Mjuk minimalism för er stora dag.", slug: "brollop", templateId: "sandlofte" },
-  { number: "03", title: "Dop & namngivning", note: "Mjuka minnen att bära med sig.", slug: "dop", templateId: "olivkvist" },
-];
+const heroOccasions = invitationCategories.slice(0, 3);
 
 const marqueeCopy = <><span>Formgivet för stunden</span><i>✦</i><span>Personligt utan designkrångel</span><i>◇</i><span>En vacker länk att dela</span><i>✦</i><span>Allt ingår i ett fast pris</span><i>◇</i></>;
 
 const seoFaqs = [
   { question: "Hur fungerar en digital inbjudan?", answer: "Välj en design, fyll i namn, datum och plats och dela sedan inbjudan som en personlig länk via SMS, mejl eller chatt." },
-  { question: "Kan jag skapa en digital bröllopsinbjudan med OSA?", answer: "Ja. Bröllopsinbjudan kan innehålla OSA via SMS, karta, kalenderlänk, personlig hälsning och en design som matchar era färger." },
-  { question: "Finns digitala inbjudningskort för barnkalas och dop?", answer: "Ja. Minea Studio har separata kollektioner för barnkalas, dop, namngivning och bröllop med flera mallar i varje kategori." },
+  { question: "Kan jag skapa en digital bröllopsinbjudan med OSA?", answer: "Ja. Bröllopsinbjudan kan innehålla OSA direkt i inbjudan eller via SMS, karta, kalenderlänk, personlig hälsning och en design som matchar era färger." },
+  { question: "Vilka tillfällen finns det inbjudningar till?", answer: "Minea Studio har kollektioner för barnkalas, bröllop, dop och namngivning, babyshower, födelsedag och jubileum, student och examen samt fest och middag." },
   { question: "Behöver gästerna ladda ner en app?", answer: "Nej. Gästen öppnar den digitala inbjudan direkt i mobilen eller på datorn via länken du delar." },
 ];
 
 export function HomePage() {
   const [featuredIndex, setFeaturedIndex] = useState(0);
-  const featured = templateById[occasions[featuredIndex].templateId];
+  const featured = templateById[heroOccasions[featuredIndex].templateId];
 
   useEffect(() => {
-    const rotation = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % occasions.length), 5200);
+    const rotation = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % heroOccasions.length), 5200);
     return () => window.clearInterval(rotation);
   }, []);
   return (
@@ -57,10 +53,10 @@ export function HomePage() {
             <div className="hero-counter">0{featuredIndex + 1}<span>/03</span></div>
           </div>
           <div className="hero-template-picker" role="group" aria-label="Välj tillfälle att förhandsvisa">
-            {occasions.map((occasion) => (
-              <button key={occasion.slug} className={featuredIndex === occasions.indexOf(occasion) ? "active" : ""} onClick={() => setFeaturedIndex(occasions.indexOf(occasion))}>
+            {heroOccasions.map((occasion) => (
+              <button key={occasion.slug} className={featuredIndex === heroOccasions.indexOf(occasion) ? "active" : ""} onClick={() => setFeaturedIndex(heroOccasions.indexOf(occasion))}>
                 <span style={{ backgroundImage: `url(${templateById[occasion.templateId].artwork})` }} />
-                <div><small>{occasion.number}</small><b>{occasion.title}</b></div>
+                <div><small>{occasion.number}</small><b>{occasion.name}</b></div>
               </button>
             ))}
           </div>
@@ -76,10 +72,10 @@ export function HomePage() {
           <p>Börja med tillfället. Där hittar du alla inbjudningar som är formgivna just för den sortens firande.</p>
         </div>
         <div className="category-entry-grid">
-          {occasions.map((occasion) => (
+          {invitationCategories.map((occasion) => (
             <Link href={`/kategori/${occasion.slug}`} key={occasion.slug} className={`category-entry category-entry--${templateById[occasion.templateId].palette}`}>
               <div className="category-entry-art"><TemplateArt template={templateById[occasion.templateId]} compact animated={false} /></div>
-              <div className="category-entry-copy"><span>{occasion.number}</span><p>{occasion.note}</p><h3>{occasion.title}</h3><i>Se alla designer <ArrowRight size={16} /></i></div>
+              <div className="category-entry-copy"><span>{occasion.number}</span><p>{occasion.note}</p><h3>{occasion.name}</h3><i>Se alla designer <ArrowRight size={16} /></i></div>
             </Link>
           ))}
         </div>
@@ -123,8 +119,8 @@ export function HomePage() {
         <div className="seo-intro">
           <p className="eyebrow">Digitala inbjudningskort</p>
           <h2 id="digitala-inbjudningar">En personlig digital inbjudan<br /><em>som är enkel att dela.</em></h2>
-          <p>Skapa en digital inbjudan till bröllop, barnkalas, dop eller namngivning. Välj en färdig mall, anpassa text, färger och funktioner och dela en vacker länk via SMS – utan app för gästen.</p>
-          <div className="seo-keywords" aria-label="Tillfällen"><Link href="/kategori/brollop">Digital bröllopsinbjudan</Link><Link href="/kategori/barnkalas">Inbjudningskort barnkalas</Link><Link href="/kategori/dop">Dopinbjudan & namngivning</Link></div>
+          <p>Skapa en digital inbjudan till bröllop, barnkalas, dop, babyshower, student, jubileum eller middag. Välj en upplevelse, anpassa text, färger och funktioner och dela en vacker länk – utan app för gästen.</p>
+          <div className="seo-keywords" aria-label="Tillfällen">{invitationCategories.map((category) => <Link key={category.slug} href={`/kategori/${category.slug}`}>{category.name}</Link>)}</div>
         </div>
         <div className="faq-list">
           {seoFaqs.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}

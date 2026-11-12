@@ -60,6 +60,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
   const [opened, setOpened] = useState(!envelope);
   const [opening, setOpening] = useState(false);
   const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [postcardFlipped, setPostcardFlipped] = useState(false);
 
   useEffect(() => {
     if (!invitationToken || !window.location.hash.includes("rsvp=")) return;
@@ -74,12 +75,12 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
   };
 
   return (
-    <motion.article className={`invitation invitation--${template.palette} colorway--${colorway} animation--${animation} ${dense ? "invitation--dense" : ""} ${extraDense ? "invitation--extra-dense" : ""} ${envelope && !opened ? "invitation--sealed" : ""}`}>
+    <motion.article className={`invitation invitation--${template.palette} invitation--layout-${template.layout} colorway--${colorway} animation--${animation} ${postcardFlipped ? "is-postcard-flipped" : ""} ${dense ? "invitation--dense" : ""} ${extraDense ? "invitation--extra-dense" : ""} ${envelope && !opened ? "invitation--sealed" : ""}`}>
       <div className="invite-world-bg" style={{ backgroundImage: `url(${template.artwork})` }} />
 
       <AnimatePresence>
         {!opened && (
-          <motion.div className={`envelope-scene envelope-scene--${template.palette}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.025 }} transition={{ duration: .45 }}>
+          <motion.div className={`envelope-scene envelope-scene--${template.palette} envelope-scene--layout-${template.layout}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.025 }} transition={{ duration: .45 }}>
             <div className="envelope-atmosphere" />
             <button className={`envelope-button ${opening ? "is-opening" : ""}`} type="button" onClick={openEnvelope} aria-label="Öppna kuvertet">
               <div className="envelope-wrap">
@@ -100,6 +101,17 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
           </motion.div>
         )}
       </AnimatePresence>
+
+      {template.layout === "storybook" && <div className="storybook-layers" aria-hidden="true"><motion.span animate={motionEnabled ? { y: playful ? [-18, 16, -18] : [-8, 8, -8] } : undefined} transition={{ duration: 7, repeat: Infinity }} /><motion.span animate={motionEnabled ? { y: playful ? [12, -20, 12] : [6, -6, 6] } : undefined} transition={{ duration: 9, repeat: Infinity }} /><i>Kapitel ett</i><b>Följ stigen</b></div>}
+      {template.layout === "poster" && <div className="poster-graphics" aria-hidden="true"><span>JA!</span><i>{data.age || "WOW"}</i><b>✦ ✦ ✦</b></div>}
+      {template.layout === "editorial" && <div className="editorial-rail" aria-hidden="true"><span>MINEA / BRÖLLOP</span><i>{formatDate(data.date)}</i></div>}
+      {template.layout === "cinematic" && <div className="cinematic-sequence" aria-hidden="true"><span>01</span><span>02</span><span>03</span></div>}
+      {template.layout === "celestial" && <div className="celestial-orbit" aria-hidden="true"><motion.span animate={motionEnabled ? { rotate: 360 } : undefined} transition={{ duration: playful ? 12 : 24, repeat: Infinity, ease: "linear" }}><i>✦</i><b>✧</b><em>✦</em></motion.span></div>}
+      {template.layout === "vintage" && <div className="vintage-frame" aria-hidden="true"><span /><i /><b /></div>}
+      {template.layout === "patisserie" && <div className="patisserie-awning" aria-hidden="true">{Array.from({ length: 7 }, (_, index) => <i key={index} />)}</div>}
+      {template.layout === "deco" && <div className="deco-frame" aria-hidden="true"><span /><i /><b /></div>}
+      {template.layout === "ticket" && <div className="ticket-stub" aria-hidden="true"><span>ADMIT ONE</span><i>№ 2027</i><b>✦</b></div>}
+      {template.layout === "postcard" && !postcardFlipped && <div className="postcard-front"><div><p>Hälsningar från</p><h2>Citronlunden</h2><span>En kväll i solen</span></div><button type="button" onClick={() => setPostcardFlipped(true)}>Vänd vykortet <ChevronRight /></button></div>}
 
       <div className="invite-decoration" aria-hidden="true">
         {template.palette === "rose" && <>{motionEnabled && Array.from({ length: playful ? 6 : 3 }, (_, bloom) => <motion.span key={bloom} className={`background-bloom bb-${bloom + 1}`} animate={{ y: playful ? [-8, 10, -8] : [0, 0, 0], scale: playful ? [.82, 1.24, .82] : [.94, 1.08, .94], rotate: playful ? [-10, 12, -10] : [-3, 4, -3], opacity: [.18, playful ? .68 : .48, .18] }} transition={{ duration: (playful ? 3.6 : 5.5) + bloom * .45, repeat: Infinity, delay: bloom * .35 }}>✿</motion.span>)}<div className="ribbon-mark"><span /><b /><span /></div></>}
@@ -134,6 +146,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
           </motion.div>}
         </AnimatePresence>
         <footer>{data.footerText}</footer>
+        {template.layout === "postcard" && <button className="postcard-turn-back" type="button" onClick={() => setPostcardFlipped(false)}>Vänd till framsidan</button>}
       </div>
       {demoMark && <span className="demo-corner">DEMO<br />MINEA</span>}
       <RsvpForm open={rsvpOpen} onClose={() => setRsvpOpen(false)} invitationName={data.name} invitationToken={invitationToken} questions={rsvpQuestions} />

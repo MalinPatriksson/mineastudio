@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Menu } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
+import { invitationCategories } from "@/lib/invitations";
 
 export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
   return (
@@ -20,9 +21,7 @@ export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
           <details className="mobile-menu">
             <summary aria-label="Öppna meny"><Menu size={21} /> Meny</summary>
             <div>
-              <Link href="/kategori/barnkalas">Barnkalas</Link>
-              <Link href="/kategori/brollop">Bröllop</Link>
-              <Link href="/kategori/dop">Dop & namngivning</Link>
+              {invitationCategories.map((category) => <Link key={category.slug} href={`/kategori/${category.slug}`}>{category.name}</Link>)}
               <Link href="/#sa-fungerar-det">Så fungerar det</Link>
               <Link href="/studio/rosendrom">Börja skapa <ArrowUpRight size={15} /></Link>
             </div>
