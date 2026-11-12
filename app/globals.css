@@ -12,8 +12,17 @@ button { color:inherit; }
 .eyebrow { margin:0; font-size:10px; line-height:1.4; letter-spacing:.2em; text-transform:uppercase; font-weight:700; }
 .site-header { position:absolute; z-index:20; top:0; left:0; width:100%; height:92px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(24px,5vw,76px); color:#f9f5ed; }
 .site-header--quiet { position:relative; height:72px; color:var(--ink); background:#f7f3ec; border-bottom:1px solid var(--line); }
-.brand { display:inline-flex; align-items:center; gap:11px; font-family:var(--serif); font-size:19px; letter-spacing:.01em; }
-.brand-mark { width:31px; height:31px; display:grid; place-items:center; border:1px solid currentColor; border-radius:50%; font-family:var(--sans); font-size:9px; letter-spacing:.04em; }
+.brand { display:inline-flex; align-items:center; color:inherit; }
+.brand-logo { display:inline-flex; align-items:center; gap:11px; }
+.brand-emblem { width:38px; height:38px; flex:0 0 auto; overflow:visible; }
+.brand-emblem-paper { fill:currentColor; fill-opacity:.055; stroke:currentColor; stroke-width:1.15; }
+.brand-emblem-ring { stroke:currentColor; stroke-width:.65; opacity:.32; }
+.brand-emblem-letter { stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.brand-emblem-flourish { stroke:currentColor; stroke-width:.8; stroke-linecap:round; opacity:.62; }
+.brand-emblem-spark { fill:#d4a47e; }
+.brand-wordmark { display:grid; gap:3px; text-align:left; }
+.brand-wordmark strong { font:400 21px/.82 var(--serif); letter-spacing:-.025em; }
+.brand-wordmark small { font:600 6px/1 var(--sans); text-transform:uppercase; letter-spacing:.22em; opacity:.58; }
 .site-header nav { display:flex; gap:35px; align-items:center; font-size:12px; }
 .site-header nav>a:not(.nav-cta) { opacity:.78; transition:opacity .2s; }
 .site-header nav>a:hover { opacity:1; }
@@ -126,9 +135,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .falling-petal { position:absolute; z-index:4; width:15px; height:9px; border-radius:100% 0 100% 0; background:linear-gradient(135deg,#f8cacb,#b96674); box-shadow:0 2px 8px rgba(125,65,72,.2); }
 .fp-1{left:18%;top:10%}.fp-2{left:35%;top:4%}.fp-3{right:29%;top:12%}.fp-4{right:16%;top:4%}.fp-5{left:52%;top:16%}
 .rose-sparkle { position:absolute; z-index:4; right:16%; top:27%; color:#c17a84; filter:drop-shadow(0 0 8px white); }
-.brand>span:last-child { display:flex; align-items:baseline; gap:5px; }
-.brand i { font:italic 11px var(--serif); opacity:.62; }
-.brand-mark { border-radius:48% 52% 46% 54%; background:rgba(255,255,255,.07); }
+.brand--footer .brand-emblem { width:45px; height:45px; }
+.brand--footer .brand-wordmark strong { font-size:25px; }
+.brand--footer .brand-wordmark small { font-size:6.5px; }
 .button,.nav-cta { border-radius:999px; }
 .nav-cta { background:rgba(255,255,255,.06); backdrop-filter:blur(10px); }
 .hero-stage::before { content:""; position:absolute; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle,rgba(222,153,159,.24),transparent 67%); filter:blur(10px); animation:heroAura 5s ease-in-out infinite; }

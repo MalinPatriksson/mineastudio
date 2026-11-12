@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { BrandLogo } from "./brand-logo";
 
 export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
   return (
     <header className={`site-header ${quiet ? "site-header--quiet" : ""}`}>
       <Link className="brand" href="/" aria-label="Minea Studio, startsida">
-        <span className="brand-mark">M</span>
-        <span>Minea <i>Studio</i></span>
+        <BrandLogo />
       </Link>
       {!quiet && (
         <nav aria-label="Huvudmeny">

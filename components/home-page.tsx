@@ -7,6 +7,7 @@ import { ArrowDown, ArrowRight, CalendarDays, MapPin, MessageCircle, Sparkles } 
 import { templateById, templates } from "@/lib/invitations";
 import { SiteHeader } from "./site-header";
 import { TemplateArt } from "./template-art";
+import { BrandLogo } from "./brand-logo";
 
 const occasions = [
   { number: "01", title: "Barnkalas", note: "Lekfullt, personligt, alldeles magiskt.", slug: "barnkalas", templateId: "rosendrom" },
@@ -124,7 +125,7 @@ export function HomePage() {
       </section>
 
       <footer>
-        <div className="footer-main"><div><div className="brand brand--footer"><span className="brand-mark">M</span><span>Minea <i>Studio</i></span></div><h2>Gör nästa stund<br /><em>lite mer magisk.</em></h2></div><Link className="round-link" href="/studio/rosendrom"><ArrowRight size={26} /><span>Börja skapa</span></Link></div>
+        <div className="footer-main"><div><Link className="brand brand--footer" href="/" aria-label="Minea Studio, startsida"><BrandLogo /></Link><h2>Gör nästa stund<br /><em>lite mer magisk.</em></h2></div><Link className="round-link" href="/studio/rosendrom"><ArrowRight size={26} /><span>Börja skapa</span></Link></div>
         <div className="footer-bottom"><span>© 2026 Minea Studio</span><span>Digitala inbjudningar, formgivna med omtanke.</span><a href="mailto:hej@mineastudio.se">hej@mineastudio.se</a></div>
       </footer>
     </main>

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Minea Studio" }],
   creator: "Minea Studio",
   publisher: "Minea Studio",
+  icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }], shortcut: "/icon.svg" },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
