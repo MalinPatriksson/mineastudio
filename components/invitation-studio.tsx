@@ -1,0 +1,243 @@
+"use client";
+
+import { useRef, useState, type DragEvent, type PointerEvent as ReactPointerEvent } from "react";
+import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, GripVertical, ImagePlus, Monitor, Move, Settings2, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, LayoutBlock, PhotoFit, PhotoShape } from "@/lib/invitations";
+import { colorwayOptions, featureLabels } from "@/lib/invitations";
+import { InvitationRenderer } from "./invitation-renderer";
+import { SiteHeader } from "./site-header";
+
+type Props = { template: InvitationTemplate };
+
+const featureKeys: FeatureKey[] = ["rsvp", "map", "calendar", "countdown", "greeting"];
+const initialLayout: LayoutBlock[] = ["photo", "details", "greeting", "countdown", "actions"];
+const layoutLabels: Record<LayoutBlock, string> = { photo: "Egen bild", details: "Datum & plats", greeting: "Hälsning", countdown: "Nedräkning", actions: "Knappar" };
+const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
+const photoFits: Array<{ id: PhotoFit; label: string }> = [{ id: "cover", label: "Fyll" }, { id: "contain", label: "Visa hela" }, { id: "close", label: "Närbild" }];
+
+export function InvitationStudio({ template }: Props) {
+  const [data, setData] = useState<InvitationData>(template.defaultData);
+  const [enabled, setEnabled] = useState<FeatureKey[]>(template.recommended);
+  const [animation, setAnimation] = useState<AnimationStyle>("soft");
+  const [colorway, setColorway] = useState<Colorway>("signature");
+  const [fullPreview, setFullPreview] = useState(false);
+  const [checkout, setCheckout] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [layoutOrder, setLayoutOrder] = useState<LayoutBlock[]>(initialLayout);
+  const [draggedBlock, setDraggedBlock] = useState<LayoutBlock | null>(null);
+  const photoDrag = useRef<{ clientX: number; clientY: number; positionX: number; positionY: number } | null>(null);
+
+  const required = [data.name, data.date, data.startTime, data.address, data.phone];
+  const progress = Math.round((required.filter(Boolean).length / required.length) * 100);
+
+  const update = <K extends keyof InvitationData>(key: K, value: InvitationData[K]) => setData((current) => ({ ...current, [key]: value }));
+  const toggleFeature = (feature: FeatureKey) => setEnabled((current) => current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature]);
+  const addPhoto = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setData((current) => ({
+      ...current,
+      photoUrl: String(reader.result),
+      photoPositionX: 50,
+      photoPositionY: 50,
+      photoShape: current.photoShape ?? "organic",
+      photoFit: current.photoFit ?? "cover",
+    }));
+    reader.readAsDataURL(file);
+  };
+  const startPhotoDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    photoDrag.current = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      positionX: data.photoPositionX ?? 50,
+      positionY: data.photoPositionY ?? 50,
+    };
+  };
+  const movePhoto = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = photoDrag.current;
+    if (!drag) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const positionX = Math.max(0, Math.min(100, drag.positionX - ((event.clientX - drag.clientX) / bounds.width) * 100));
+    const positionY = Math.max(0, Math.min(100, drag.positionY - ((event.clientY - drag.clientY) / bounds.height) * 100));
+    setData((current) => ({ ...current, photoPositionX: positionX, photoPositionY: positionY }));
+  };
+  const stopPhotoDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    photoDrag.current = null;
+  };
+  const moveBlock = (target: LayoutBlock) => {
+    if (!draggedBlock || draggedBlock === target) return;
+    setLayoutOrder((current) => {
+      const next = current.filter((block) => block !== draggedBlock);
+      next.splice(next.indexOf(target), 0, draggedBlock);
+      return next;
+    });
+    setDraggedBlock(null);
+  };
+  const startDrag = (event: DragEvent<HTMLButtonElement>, block: LayoutBlock) => {
+    setDraggedBlock(block);
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", block);
+  };
+
+  return (
+    <main className="studio-page">
+      <SiteHeader quiet />
+      <div className="studio-topbar">
+        <Link href="/" className="back-link"><ArrowLeft size={16} /> Till kollektionen</Link>
+        <div className="studio-title"><span>{template.category}</span><strong>{template.name}</strong></div>
+        <div className="studio-progress"><span>{progress}% klart</span><i><b style={{ width: `${progress}%` }} /></i></div>
+      </div>
+
+      <div className="mobile-switch" role="tablist" aria-label="Växla vy">
+        <button className={mobileTab === "edit" ? "active" : ""} onClick={() => setMobileTab("edit")}><Settings2 size={16} /> Anpassa</button>
+        <button className={mobileTab === "preview" ? "active" : ""} onClick={() => setMobileTab("preview")}><Eye size={16} /> Förhandsvisa</button>
+      </div>
+
+      <div className="studio-layout">
+        <aside className={`editor-panel ${mobileTab !== "edit" ? "mobile-hidden" : ""}`}>
+          <div className="editor-intro"><p className="eyebrow">Gör den till din</p><h1>Din stund,<br /><em>dina ord.</em></h1><p>Vi tar hand om designen medan du fyller den med det som betyder något.</p></div>
+          <section className="editor-section">
+            <div className="editor-section-title"><span>01</span><div><h2>Berätta om stunden</h2><p>Texten uppdateras direkt i kortet.</p></div></div>
+            <div className="field-grid">
+              <label className="field field--wide">Namn<input value={data.name} maxLength={32} onChange={(event) => update("name", event.target.value)} /></label>
+              <div className="photo-upload field--wide">
+                <div>
+                  <span className="photo-upload-icon"><ImagePlus size={19} /></span>
+                  <span><b>Egen bild <em>valfritt</em></b><small>Välj form, inpassning och dra fram precis rätt utsnitt.</small></span>
+                </div>
+                {data.photoUrl ? (
+                  <>
+                    <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>Justera bilden nedan</b><button type="button" aria-label="Ta bort bild" onClick={() => setData((current) => ({ ...current, photoUrl: undefined }))}><Trash2 size={15} /></button></div>
+                    <div
+                      className={`photo-cropper photo-cropper--${data.photoShape ?? "organic"}`}
+                      style={{
+                        backgroundImage: `url(${data.photoUrl})`,
+                        backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%`,
+                        backgroundSize: data.photoFit === "contain" ? "contain" : data.photoFit === "close" ? "155%" : "cover",
+                      }}
+                      onPointerDown={startPhotoDrag}
+                      onPointerMove={movePhoto}
+                      onPointerUp={stopPhotoDrag}
+                      onPointerCancel={stopPhotoDrag}
+                      role="img"
+                      aria-label="Dra bilden för att välja vilket utsnitt som ska synas"
+                    ><span><Move size={14} /> Dra bilden till rätt utsnitt</span></div>
+                    <div className="photo-controls">
+                      <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
+                      <div><small>Inpassning</small><div className="photo-choice-row">{photoFits.map((fit) => <button type="button" key={fit.id} className={(data.photoFit ?? "cover") === fit.id ? "active" : ""} aria-pressed={(data.photoFit ?? "cover") === fit.id} onClick={() => update("photoFit", fit.id)}>{fit.label}</button>)}</div></div>
+                    </div>
+                  </>
+                ) : (
+                  <label className="photo-upload-button">Välj bild<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => addPhoto(event.target.files?.[0])} /></label>
+                )}
+              </div>
+              {template.category === "Barnkalas" && <label className="field">Ålder<input type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
+              <label className="field">Datum<input type="date" value={data.date} onChange={(event) => update("date", event.target.value)} /></label>
+              <label className="field">Starttid<input type="time" value={data.startTime} onChange={(event) => update("startTime", event.target.value)} /></label>
+              <label className="field">Sluttid<input type="time" value={data.endTime} onChange={(event) => update("endTime", event.target.value)} /></label>
+              <label className="field field--wide">Adress<input value={data.address} onChange={(event) => update("address", event.target.value)} /></label>
+              <label className="field">Telefonnummer<input inputMode="tel" value={data.phone} onChange={(event) => update("phone", event.target.value)} /></label>
+              <label className="field">Sista OSA-dag<input type="date" value={data.rsvpDate} onChange={(event) => update("rsvpDate", event.target.value)} /></label>
+            </div>
+            <div className="editable-copy">
+              <p className="editable-copy-title"><Sparkles size={13} /> Din personliga text</p>
+              <div className="field-grid">
+                <label className="field field--wide">Överrubrik<input value={data.kicker} maxLength={48} onChange={(event) => update("kicker", event.target.value)} /></label>
+                <label className="field field--wide">Underrubrik<input value={data.subtitle} maxLength={48} onChange={(event) => update("subtitle", event.target.value)} /></label>
+                <label className="field field--wide">Personlig hälsning<textarea rows={3} maxLength={150} value={data.greeting} onChange={(event) => update("greeting", event.target.value)} /><small>{data.greeting.length}/150</small></label>
+              </div>
+              <p className="editable-copy-note">Knappar, nedräkning och avslutning är färdigformulerade för att alltid vara tydliga för gästen.</p>
+            </div>
+          </section>
+
+          <section className="editor-section">
+            <div className="editor-section-title"><span>02</span><div><h2>Välj funktioner</h2><p>Layouten balanseras automatiskt.</p></div></div>
+            <div className="feature-toggles">
+              {featureKeys.map((feature) => {
+                const active = enabled.includes(feature);
+                return <button type="button" className={active ? "active" : ""} key={feature} aria-pressed={active} onClick={() => toggleFeature(feature)}><span className="toggle"><i /></span><span><b>{featureLabels[feature].title}</b><small>{featureLabels[feature].description}</small></span>{template.recommended.includes(feature) && <em>Rekommenderad</em>}</button>;
+              })}
+            </div>
+          </section>
+
+          <section className="editor-section">
+            <div className="editor-section-title"><span>03</span><div><h2>Ordna innehållet</h2><p>Dra delarna till den ordning som känns bäst.</p></div></div>
+            <div className="layout-sorter">
+              {layoutOrder.map((block) => (
+                <button
+                  type="button"
+                  draggable
+                  key={block}
+                  className={draggedBlock === block ? "dragging" : ""}
+                  onDragStart={(event) => startDrag(event, block)}
+                  onDragEnd={() => setDraggedBlock(null)}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={() => moveBlock(block)}
+                ><GripVertical size={16} /><span>{layoutLabels[block]}</span><small>Dra för att flytta</small></button>
+              ))}
+            </div>
+          </section>
+
+          <section className="editor-section">
+            <div className="editor-section-title"><span>04</span><div><h2>Välj rörelse</h2><p>Stilla visar en färdig komposition utan pausade objekt.</p></div></div>
+            <div className="animation-options">
+              {([{ key: "none", title: "Stilla", symbol: "—" }, { key: "soft", title: "Mjuk", symbol: "∿" }, { key: "playful", title: "Lekfull", symbol: "✦" }] as const).map((option) => <button key={option.key} className={animation === option.key ? "active" : ""} onClick={() => setAnimation(option.key)}><i>{option.symbol}</i><span>{option.title}</span>{animation === option.key && <Check size={14} />}</button>)}
+            </div>
+          </section>
+
+          <section className="editor-section">
+            <div className="editor-section-title"><span>05</span><div><h2>Välj färgvärld</h2><p>Alla toner anpassas tillsammans av designen.</p></div></div>
+            <div className="colorway-options">
+              {colorwayOptions[template.palette].map((option) => (
+                <button type="button" key={option.id} className={colorway === option.id ? "active" : ""} onClick={() => setColorway(option.id)} aria-pressed={colorway === option.id}>
+                  <span className="colorway-swatches">{option.colors.map((color) => <i key={color} style={{ backgroundColor: color }} />)}</span>
+                  <b>{option.name}</b>
+                  {colorway === option.id && <Check size={14} />}
+                </button>
+              ))}
+            </div>
+            <p className="colorway-note"><Sparkles size={13} /> Illustration, text, knappar och kuvert färgmatchas automatiskt.</p>
+          </section>
+        </aside>
+
+        <section className={`preview-panel ${mobileTab !== "preview" ? "mobile-hidden" : ""}`}>
+          <div className="preview-head"><div><span className="live-dot" />Mobilvy <em>· gästlänken anpassar sig även för dator</em></div><button onClick={() => setFullPreview(true)}><Eye size={15} /> Visa datorläge</button></div>
+          <div className="preview-canvas"><div className="phone-frame"><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} layoutOrder={layoutOrder} interactive={false} /></div></div>
+          <div className="preview-note"><Sparkles size={15} /><p><b>Designen anpassar sig.</b> Prova funktioner och färgvärldar. Vattenmärket finns bara i demon och tas bort helt från den betalda produkten.</p></div>
+          <div className="buy-bar"><div><span>Din digitala inbjudan</span><strong>{template.price} kr</strong><small>Ett fast pris · inga tillägg</small></div><button className="button button-dark" onClick={() => setCheckout(true)}>Fortsätt till köp <ArrowRight size={16} /></button></div>
+        </section>
+      </div>
+
+      <AnimatePresence>
+        {fullPreview && (
+          <motion.div className="fullscreen-preview" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} role="dialog" aria-modal="true" aria-label="Förhandsvisning av inbjudan">
+            <div className="fullscreen-bar">
+              <span><i /> Demo · vattenmärket tas bort på den betalda produkten</span>
+              <div className="device-toggle" role="group" aria-label="Välj förhandsvisningsstorlek">
+                <button className={previewDevice === "desktop" ? "active" : ""} onClick={() => setPreviewDevice("desktop")}><Monitor /> Dator</button>
+                <button className={previewDevice === "mobile" ? "active" : ""} onClick={() => setPreviewDevice("mobile")}><Smartphone /> Mobil</button>
+              </div>
+              <button onClick={() => setFullPreview(false)}><X /> Stäng</button>
+            </div>
+            <div className={`fullscreen-canvas fullscreen-canvas--${previewDevice}`} style={{ backgroundImage: `url(${template.artwork})` }}>
+              <div className={`fullscreen-device fullscreen-device--${previewDevice}`}>
+                {previewDevice === "mobile" && <div className="fullscreen-phone-speaker" />}
+                <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} layoutOrder={layoutOrder} interactive envelope />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {checkout && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.div className="checkout-modal" initial={{ y: 30, scale: .98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }}><button className="modal-close" onClick={() => setCheckout(false)} aria-label="Stäng"><X /></button><span className="success-icon"><CheckCircle2 /></span><p className="eyebrow">Demoköp klart</p><h2>Din inbjudan är redo att delas.</h2><p>I den riktiga tjänsten tas vattenmärket bort först efter verifierad betalning. Den lokala demonstrationslänken förblir vattenmärkt.</p><div className="share-link"><span>localhost:3000/i/{template.id}</span><button onClick={async () => { await navigator.clipboard.writeText(`${location.origin}/i/${template.id}`); setCopied(true); }}>{copied ? <Check /> : <Copy />}</button></div><Link className="button button-dark" href={`/i/${template.id}`}>Öppna den vattenmärkta demon <ArrowRight /></Link><small><ShoppingBag size={13} /> Ingen betalning har genomförts.</small></motion.div></motion.div>}
+      </AnimatePresence>
+    </main>
+  );
+}
