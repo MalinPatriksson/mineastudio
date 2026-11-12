@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, ArrowRight, CalendarDays, MapPin, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, CalendarDays, Check, MapPin, MessageCircle, Sparkles } from "lucide-react";
 import { templateById, templates } from "@/lib/invitations";
 import { SiteHeader } from "./site-header";
 import { TemplateArt } from "./template-art";
@@ -110,6 +110,13 @@ export function HomePage() {
         <div><MapPin /><h3>Vägen dit</h3><p>Rätt adress, direkt i kartan.</p></div>
         <div><CalendarDays /><h3>Glöm aldrig datumet</h3><p>En knapp lägger allt i kalendern.</p></div>
         <div><Sparkles /><h3>Levande detaljer</h3><p>Mjuka rörelser som passar stunden.</p></div>
+      </section>
+
+      <section className="simple-pricing section" aria-labelledby="pris">
+        <div><p className="eyebrow">Ett enkelt pris</p><h2 id="pris"><strong>59 kr</strong> <del>79 kr</del><br /><em>per evenemang.</em></h2><p>En betalning gäller en personlig inbjudan till ett evenemang. Ett nytt evenemang kräver ett nytt köp.</p></div>
+        <ul>
+          {["Alla designer, färger och animationer", "OSA direkt eller via SMS", "Gästhantering och obegränsat antal gäster", "Karta, kalender och personlig bild", "Redigering efter köp", "Tillgänglig till 90 dagar efter evenemanget"].map((item) => <li key={item}><Check /> {item}</li>)}
+        </ul>
       </section>
 
       <section className="seo-section section" aria-labelledby="digitala-inbjudningar">

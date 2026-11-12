@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CalendarPlus, ChevronRight, Clock3, MapPin, MessageCircle } from "lucide-react";
-import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate } from "@/lib/invitations";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, RsvpMode, RsvpQuestionConfig } from "@/lib/invitations";
+import { defaultRsvpQuestions } from "@/lib/invitations";
 import { InvitationPhoto } from "./invitation-photo";
+import { RsvpForm } from "./rsvp-form";
 
 type Props = {
   template: InvitationTemplate;
@@ -15,6 +17,9 @@ type Props = {
   interactive?: boolean;
   demoMark?: boolean;
   envelope?: boolean;
+  rsvpMode?: RsvpMode;
+  rsvpQuestions?: RsvpQuestionConfig;
+  invitationToken?: string;
 };
 
 const sealName = (name: string) => {
@@ -45,8 +50,8 @@ function Countdown({ date, label }: { date: string; label: string }) {
   return <div className="invite-countdown"><span>{days}</span><small>{label}</small></div>;
 }
 
-export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false }: Props) {
-  const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature));
+export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false, rsvpMode = "sms", rsvpQuestions = defaultRsvpQuestions, invitationToken }: Props) {
+  const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature) && (feature !== "rsvp" || rsvpMode !== "none"));
   const motionEnabled = animation !== "none";
   const playful = animation === "playful";
   const densityScore = enabled.length + (data.photoUrl ? 2 : 0) + (data.greeting.length > 95 ? 1 : 0) + (data.name.length > 18 ? 1 : 0);
@@ -54,6 +59,13 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
   const extraDense = densityScore >= 8;
   const [opened, setOpened] = useState(!envelope);
   const [opening, setOpening] = useState(false);
+  const [rsvpOpen, setRsvpOpen] = useState(false);
+
+  useEffect(() => {
+    if (!invitationToken || !window.location.hash.includes("rsvp=")) return;
+    const timer = window.setTimeout(() => setRsvpOpen(true), 0);
+    return () => window.clearTimeout(timer);
+  }, [invitationToken]);
 
   const openEnvelope = () => {
     if (opening) return;
@@ -115,7 +127,8 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
           {enabled.includes("greeting") && data.greeting && <motion.p key="greeting" layout className="invite-greeting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{data.greeting}</motion.p>}
           {enabled.includes("countdown") && data.date && <motion.div key="countdown" layout initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }}><Countdown date={data.date} label={data.countdownLabel} /></motion.div>}
           {actions.length > 0 && <motion.div layout key="actions" className={`invite-actions invite-actions--${actions.length}`}>
-            {enabled.includes("rsvp") && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(rsvpMessage(data.name))}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
+            {enabled.includes("rsvp") && rsvpMode === "form" && <motion.button type="button" layout key="rsvp" onClick={() => setRsvpOpen(true)}><MessageCircle /><span><small>Svara på en minut</small>Svara på inbjudan</span><ChevronRight /></motion.button>}
+            {enabled.includes("rsvp") && rsvpMode === "sms" && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(rsvpMessage(data.name))}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
             {enabled.includes("map") && <motion.a layout key="map" target="_blank" rel="noreferrer" href={interactive ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}` : undefined}><MapPin /><span><small>{data.mapHint}</small>{data.mapLabel}</span><ChevronRight /></motion.a>}
             {enabled.includes("calendar") && <motion.a layout key="calendar" target="_blank" rel="noreferrer" href={interactive ? calendarUrl(data) : undefined}><CalendarPlus /><span><small>{data.calendarHint}</small>{data.calendarLabel}</span><ChevronRight /></motion.a>}
           </motion.div>}
@@ -123,6 +136,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
         <footer>{data.footerText}</footer>
       </div>
       {demoMark && <span className="demo-corner">DEMO<br />MINEA</span>}
+      <RsvpForm open={rsvpOpen} onClose={() => setRsvpOpen(false)} invitationName={data.name} invitationToken={invitationToken} questions={rsvpQuestions} />
     </motion.article>
   );
 }

@@ -4,8 +4,8 @@ import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react"
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, ImagePlus, Monitor, Move, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
-import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape } from "@/lib/invitations";
-import { colorwayOptions, featureLabels } from "@/lib/invitations";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape, RsvpMode, RsvpQuestionConfig } from "@/lib/invitations";
+import { colorwayOptions, defaultRsvpQuestions, featureLabels } from "@/lib/invitations";
 import { InvitationRenderer } from "./invitation-renderer";
 import { InvitationPhoto } from "./invitation-photo";
 import { SiteHeader } from "./site-header";
@@ -13,7 +13,7 @@ import { AddressAutocomplete } from "./address-autocomplete";
 
 type Props = { template: InvitationTemplate };
 
-const featureKeys: FeatureKey[] = ["rsvp", "map", "calendar", "countdown", "greeting"];
+const featureKeys: FeatureKey[] = ["map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
 const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
 
@@ -22,6 +22,8 @@ export function InvitationStudio({ template }: Props) {
   const [enabled, setEnabled] = useState<FeatureKey[]>(template.recommended);
   const [animation, setAnimation] = useState<AnimationStyle>("soft");
   const [colorway, setColorway] = useState<Colorway>("signature");
+  const [rsvpMode, setRsvpMode] = useState<RsvpMode>("form");
+  const [rsvpQuestions, setRsvpQuestions] = useState<RsvpQuestionConfig>(defaultRsvpQuestions);
   const [fullPreview, setFullPreview] = useState(false);
   const [checkout, setCheckout] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -35,6 +37,11 @@ export function InvitationStudio({ template }: Props) {
 
   const update = <K extends keyof InvitationData>(key: K, value: InvitationData[K]) => setData((current) => ({ ...current, [key]: value }));
   const toggleFeature = (feature: FeatureKey) => setEnabled((current) => current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature]);
+  const selectRsvpMode = (mode: RsvpMode) => {
+    setRsvpMode(mode);
+    setEnabled((current) => mode === "none" ? current.filter((item) => item !== "rsvp") : current.includes("rsvp") ? current : ["rsvp", ...current]);
+  };
+  const toggleRsvpQuestion = (question: keyof RsvpQuestionConfig) => setRsvpQuestions((current) => ({ ...current, [question]: !current[question] }));
   const addPhoto = (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
@@ -71,6 +78,7 @@ export function InvitationStudio({ template }: Props) {
   };
   const startPreviewDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest("button,a,input,textarea,select,label")) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     previewWasDragged.current = false;
     previewDrag.current = { clientX: event.clientX, clientY: event.clientY, scrollLeft: event.currentTarget.scrollLeft, scrollTop: event.currentTarget.scrollTop };
@@ -155,6 +163,15 @@ export function InvitationStudio({ template }: Props) {
 
           <section className="editor-section">
             <div className="editor-section-title"><span>02</span><div><h2>Välj funktioner</h2><p>Layouten balanseras automatiskt.</p></div></div>
+            <div className="rsvp-settings">
+              <div className="rsvp-settings-head"><div><b>Hur ska gästen svara?</b><small>OSA direkt samlar svaren på ett ställe.</small></div><em>Rekommenderad</em></div>
+              <div className="rsvp-mode-options" role="radiogroup" aria-label="Välj OSA-sätt">
+                {([{ id: "form", title: "Direkt i inbjudan", note: "Snyggt formulär" }, { id: "sms", title: "Via SMS", note: "Öppnar mobilen" }, { id: "none", title: "Ingen OSA", note: "Dölj svarsknappen" }] as const).map((option) => (
+                  <button type="button" role="radio" aria-checked={rsvpMode === option.id} className={rsvpMode === option.id ? "active" : ""} key={option.id} onClick={() => selectRsvpMode(option.id)}><span>{rsvpMode === option.id && <Check />}</span><b>{option.title}</b><small>{option.note}</small></button>
+                ))}
+              </div>
+              {rsvpMode === "form" && <div className="rsvp-question-options"><p>Frågor i formuläret</p>{([{ key: "partySize", label: "Antal personer" }, { key: "allergies", label: "Allergier & kost" }, { key: "message", label: "Meddelande" }] as const).map((question) => <label key={question.key}><input type="checkbox" checked={rsvpQuestions[question.key]} onChange={() => toggleRsvpQuestion(question.key)} /><span><Check /></span>{question.label}</label>)}</div>}
+            </div>
             <div className="feature-toggles">
               {featureKeys.map((feature) => {
                 const active = enabled.includes(feature);
@@ -187,9 +204,9 @@ export function InvitationStudio({ template }: Props) {
 
         <section className="preview-panel">
           <div className="preview-head"><div><span className="live-dot" />Liveförhandsvisning <em>· dra eller scrolla i kortet</em></div><button onClick={() => { setPreviewDevice("mobile"); setFullPreview(true); }}><Eye size={15} /> Förhandsvisa slutprodukten</button></div>
-          <div className="preview-canvas"><div className="phone-frame drag-scroll-area" onPointerDown={startPreviewDrag} onPointerMove={movePreview} onPointerUp={stopPreviewDrag} onPointerCancel={stopPreviewDrag} onClickCapture={(event) => { if (previewWasDragged.current) { event.preventDefault(); event.stopPropagation(); previewWasDragged.current = false; } }}><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive={false} /></div></div>
+          <div className="preview-canvas"><div className="phone-frame drag-scroll-area" onPointerDown={startPreviewDrag} onPointerMove={movePreview} onPointerUp={stopPreviewDrag} onPointerCancel={stopPreviewDrag} onClickCapture={(event) => { if (previewWasDragged.current) { event.preventDefault(); event.stopPropagation(); previewWasDragged.current = false; } }}><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive={false} rsvpMode={rsvpMode} rsvpQuestions={rsvpQuestions} /></div></div>
           <div className="preview-note"><Sparkles size={15} /><p><b>Designen anpassar sig.</b> Prova funktioner och färgvärldar. Vattenmärket finns bara i demon och tas bort helt från den betalda produkten.</p></div>
-          <div className="buy-bar"><div><span>Din digitala inbjudan</span><strong>{template.price} kr</strong><small>Ett fast pris · inga tillägg</small></div><button className="button button-dark" onClick={() => setCheckout(true)}>Fortsätt till köp <ArrowRight size={16} /></button></div>
+          <div className="buy-bar"><div><span>En inbjudan · ett evenemang</span><strong>{template.price} kr <del>79 kr</del></strong><small>Allt ingår · obegränsat antal gäster</small></div><button className="button button-dark" onClick={() => setCheckout(true)}>Fortsätt till köp <ArrowRight size={16} /></button></div>
         </section>
       </div>
 
@@ -207,7 +224,7 @@ export function InvitationStudio({ template }: Props) {
             <div className={`fullscreen-canvas fullscreen-canvas--${previewDevice}`} style={{ backgroundImage: `url(${template.artwork})` }}>
               <div className={`fullscreen-device fullscreen-device--${previewDevice} drag-scroll-area`} onPointerDown={startPreviewDrag} onPointerMove={movePreview} onPointerUp={stopPreviewDrag} onPointerCancel={stopPreviewDrag} onClickCapture={(event) => { if (previewWasDragged.current) { event.preventDefault(); event.stopPropagation(); previewWasDragged.current = false; } }}>
                 {previewDevice === "mobile" && <div className="fullscreen-phone-speaker" />}
-                <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive envelope />
+                <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive envelope rsvpMode={rsvpMode} rsvpQuestions={rsvpQuestions} />
               </div>
             </div>
           </motion.div>

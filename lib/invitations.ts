@@ -3,6 +3,18 @@ export type Colorway = "signature" | "soft" | "deep" | "beige" | "boy";
 export type FeatureKey = "rsvp" | "map" | "calendar" | "countdown" | "greeting";
 export type PhotoShape = "organic" | "arch" | "circle";
 export type PhotoFrameStyle = "clean" | "fade" | "floral";
+export type RsvpMode = "form" | "sms" | "none";
+export type RsvpQuestionConfig = {
+  partySize: boolean;
+  allergies: boolean;
+  message: boolean;
+};
+
+export const defaultRsvpQuestions: RsvpQuestionConfig = {
+  partySize: true,
+  allergies: true,
+  message: true,
+};
 
 export type InvitationData = {
   name: string;
@@ -51,7 +63,7 @@ export const templates: InvitationTemplate[] = [
     name: "Rosendröm",
     category: "Barnkalas",
     categorySlug: "barnkalas",
-    price: 39,
+    price: 59,
     tagline: "Rosetter, blommor och en liten värld av magi.",
     description: "En handmålad kalasdröm i puderrosa, med mjuka rosetter och lekfulla detaljer som vaknar till liv.",
     artwork: "/art/rosendrom-world.jpg",
@@ -84,7 +96,7 @@ export const templates: InvitationTemplate[] = [
     name: "Äppelblom",
     category: "Barnkalas",
     categorySlug: "barnkalas",
-    price: 39,
+    price: 59,
     tagline: "Ett soligt trädgårdskalas i aprikos och salvia.",
     description: "En varm, handmålad kalasvärld med äppelblom, vimplar och en liten picknick under träden.",
     artwork: "/art/appelblom-world.png",
@@ -117,7 +129,7 @@ export const templates: InvitationTemplate[] = [
     name: "Sandlöfte",
     category: "Bröllop",
     categorySlug: "brollop",
-    price: 49,
+    price: 59,
     tagline: "Varm minimalism i linne, sand och champagne.",
     description: "En mjuk och professionell bröllopsinbjudan med taktil papperskänsla, luft och diskreta botaniska detaljer.",
     artwork: "/art/sandlofte-world.png",
@@ -149,7 +161,7 @@ export const templates: InvitationTemplate[] = [
     name: "Nattblomma",
     category: "Bröllop",
     categorySlug: "brollop",
-    price: 49,
+    price: 59,
     tagline: "En stilla kväll i midnattsblått och champagne.",
     description: "En sofistikerad bröllopsinbjudan med botaniska linjer, mjukt ljus och högtidlig typografi.",
     artwork: "/art/nattblomma-world.jpg",
@@ -181,7 +193,7 @@ export const templates: InvitationTemplate[] = [
     name: "Lilla molnet",
     category: "Dop & namngivning",
     categorySlug: "dop",
-    price: 39,
+    price: 59,
     tagline: "Ljus, stillhet och mjuka himmelska toner.",
     description: "En varsam inbjudan i disigt blått med svävande moln och små handritade stjärnor.",
     artwork: "/art/lilla-molnet-world.jpg",
@@ -213,7 +225,7 @@ export const templates: InvitationTemplate[] = [
     name: "Olivkvist",
     category: "Dop & namngivning",
     categorySlug: "dop",
-    price: 39,
+    price: 59,
     tagline: "Linne, olivblad och en stilla pärlemorton.",
     description: "En ljus botanisk inbjudan med varm papperskänsla och mjuka olivkvistar för dop eller namngivning.",
     artwork: "/art/olivkvist-world.png",
