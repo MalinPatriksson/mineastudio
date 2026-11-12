@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Menu } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 
 export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
@@ -9,13 +9,25 @@ export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
         <BrandLogo />
       </Link>
       {!quiet && (
-        <nav aria-label="Huvudmeny">
-          <Link href="/#kollektion">Kollektion</Link>
-          <Link href="/#sa-fungerar-det">Så fungerar det</Link>
-          <Link className="nav-cta" href="/studio/rosendrom">
-            Skapa din inbjudan <ArrowUpRight size={15} />
-          </Link>
-        </nav>
+        <>
+          <nav aria-label="Huvudmeny">
+            <Link href="/#kollektion">Kollektion</Link>
+            <Link href="/#sa-fungerar-det">Så fungerar det</Link>
+            <Link className="nav-cta" href="/studio/rosendrom">
+              Skapa din inbjudan <ArrowUpRight size={15} />
+            </Link>
+          </nav>
+          <details className="mobile-menu">
+            <summary aria-label="Öppna meny"><Menu size={21} /> Meny</summary>
+            <div>
+              <Link href="/kategori/barnkalas">Barnkalas</Link>
+              <Link href="/kategori/brollop">Bröllop</Link>
+              <Link href="/kategori/dop">Dop & namngivning</Link>
+              <Link href="/#sa-fungerar-det">Så fungerar det</Link>
+              <Link href="/studio/rosendrom">Börja skapa <ArrowUpRight size={15} /></Link>
+            </div>
+          </details>
+        </>
       )}
     </header>
   );

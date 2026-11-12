@@ -3,12 +3,13 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, ImagePlus, Monitor, Move, Settings2, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, ImagePlus, Monitor, Move, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
 import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape } from "@/lib/invitations";
 import { colorwayOptions, featureLabels } from "@/lib/invitations";
 import { InvitationRenderer } from "./invitation-renderer";
 import { InvitationPhoto } from "./invitation-photo";
 import { SiteHeader } from "./site-header";
+import { AddressAutocomplete } from "./address-autocomplete";
 
 type Props = { template: InvitationTemplate };
 
@@ -24,9 +25,10 @@ export function InvitationStudio({ template }: Props) {
   const [fullPreview, setFullPreview] = useState(false);
   const [checkout, setCheckout] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("mobile");
   const photoDrag = useRef<{ clientX: number; clientY: number; positionX: number; positionY: number } | null>(null);
+  const previewDrag = useRef<{ clientX: number; clientY: number; scrollLeft: number; scrollTop: number } | null>(null);
+  const previewWasDragged = useRef(false);
 
   const required = [data.name, data.date, data.startTime, data.address, data.phone];
   const progress = Math.round((required.filter(Boolean).length / required.length) * 100);
@@ -67,6 +69,25 @@ export function InvitationStudio({ template }: Props) {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     photoDrag.current = null;
   };
+  const startPreviewDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    previewWasDragged.current = false;
+    previewDrag.current = { clientX: event.clientX, clientY: event.clientY, scrollLeft: event.currentTarget.scrollLeft, scrollTop: event.currentTarget.scrollTop };
+  };
+  const movePreview = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = previewDrag.current;
+    if (!drag) return;
+    const deltaX = event.clientX - drag.clientX;
+    const deltaY = event.clientY - drag.clientY;
+    if (Math.abs(deltaX) + Math.abs(deltaY) > 5) previewWasDragged.current = true;
+    event.currentTarget.scrollLeft = drag.scrollLeft - deltaX;
+    event.currentTarget.scrollTop = drag.scrollTop - deltaY;
+  };
+  const stopPreviewDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    previewDrag.current = null;
+  };
 
   return (
     <main className="studio-page">
@@ -77,13 +98,8 @@ export function InvitationStudio({ template }: Props) {
         <div className="studio-progress"><span>{progress}% klart</span><i><b style={{ width: `${progress}%` }} /></i></div>
       </div>
 
-      <div className="mobile-switch" role="tablist" aria-label="Växla vy">
-        <button className={mobileTab === "edit" ? "active" : ""} onClick={() => setMobileTab("edit")}><Settings2 size={16} /> Anpassa</button>
-        <button className={mobileTab === "preview" ? "active" : ""} onClick={() => setMobileTab("preview")}><Eye size={16} /> Förhandsvisa</button>
-      </div>
-
       <div className="studio-layout">
-        <aside className={`editor-panel ${mobileTab !== "edit" ? "mobile-hidden" : ""}`}>
+        <aside className="editor-panel">
           <div className="editor-intro"><p className="eyebrow">Gör den till din</p><h1>Din stund,<br /><em>dina ord.</em></h1><p>Vi tar hand om designen medan du fyller den med det som betyder något.</p></div>
           <section className="editor-section">
             <div className="editor-section-title"><span>01</span><div><h2>Berätta om stunden</h2><p>Texten uppdateras direkt i kortet.</p></div></div>
@@ -122,7 +138,7 @@ export function InvitationStudio({ template }: Props) {
               <label className="field">Datum<input type="date" value={data.date} onChange={(event) => update("date", event.target.value)} /></label>
               <label className="field">Starttid<input type="time" value={data.startTime} onChange={(event) => update("startTime", event.target.value)} /></label>
               <label className="field">Sluttid<input type="time" value={data.endTime} onChange={(event) => update("endTime", event.target.value)} /></label>
-              <label className="field field--wide">Adress<input value={data.address} onChange={(event) => update("address", event.target.value)} /></label>
+              <AddressAutocomplete value={data.address} onChange={(address) => update("address", address)} />
               <label className="field">Telefonnummer<input inputMode="tel" value={data.phone} onChange={(event) => update("phone", event.target.value)} /></label>
               <label className="field">Sista OSA-dag<input type="date" value={data.rsvpDate} onChange={(event) => update("rsvpDate", event.target.value)} /></label>
             </div>
@@ -169,9 +185,9 @@ export function InvitationStudio({ template }: Props) {
           </section>
         </aside>
 
-        <section className={`preview-panel ${mobileTab !== "preview" ? "mobile-hidden" : ""}`}>
-          <div className="preview-head"><div><span className="live-dot" />Mobilvy <em>· gästlänken anpassar sig även för dator</em></div><button onClick={() => setFullPreview(true)}><Eye size={15} /> Visa datorläge</button></div>
-          <div className="preview-canvas"><div className="phone-frame"><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive={false} /></div></div>
+        <section className="preview-panel">
+          <div className="preview-head"><div><span className="live-dot" />Liveförhandsvisning <em>· dra eller scrolla i kortet</em></div><button onClick={() => { setPreviewDevice("mobile"); setFullPreview(true); }}><Eye size={15} /> Förhandsvisa slutprodukten</button></div>
+          <div className="preview-canvas"><div className="phone-frame drag-scroll-area" onPointerDown={startPreviewDrag} onPointerMove={movePreview} onPointerUp={stopPreviewDrag} onPointerCancel={stopPreviewDrag} onClickCapture={(event) => { if (previewWasDragged.current) { event.preventDefault(); event.stopPropagation(); previewWasDragged.current = false; } }}><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive={false} /></div></div>
           <div className="preview-note"><Sparkles size={15} /><p><b>Designen anpassar sig.</b> Prova funktioner och färgvärldar. Vattenmärket finns bara i demon och tas bort helt från den betalda produkten.</p></div>
           <div className="buy-bar"><div><span>Din digitala inbjudan</span><strong>{template.price} kr</strong><small>Ett fast pris · inga tillägg</small></div><button className="button button-dark" onClick={() => setCheckout(true)}>Fortsätt till köp <ArrowRight size={16} /></button></div>
         </section>
@@ -189,7 +205,7 @@ export function InvitationStudio({ template }: Props) {
               <button onClick={() => setFullPreview(false)}><X /> Stäng</button>
             </div>
             <div className={`fullscreen-canvas fullscreen-canvas--${previewDevice}`} style={{ backgroundImage: `url(${template.artwork})` }}>
-              <div className={`fullscreen-device fullscreen-device--${previewDevice}`}>
+              <div className={`fullscreen-device fullscreen-device--${previewDevice} drag-scroll-area`} onPointerDown={startPreviewDrag} onPointerMove={movePreview} onPointerUp={stopPreviewDrag} onPointerCancel={stopPreviewDrag} onClickCapture={(event) => { if (previewWasDragged.current) { event.preventDefault(); event.stopPropagation(); previewWasDragged.current = false; } }}>
                 {previewDevice === "mobile" && <div className="fullscreen-phone-speaker" />}
                 <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive envelope />
               </div>
@@ -199,7 +215,7 @@ export function InvitationStudio({ template }: Props) {
       </AnimatePresence>
 
       <AnimatePresence>
-        {checkout && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.div className="checkout-modal" initial={{ y: 30, scale: .98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }}><button className="modal-close" onClick={() => setCheckout(false)} aria-label="Stäng"><X /></button><span className="success-icon"><CheckCircle2 /></span><p className="eyebrow">Demoköp klart</p><h2>Din inbjudan är redo att delas.</h2><p>I den riktiga tjänsten tas vattenmärket bort först efter verifierad betalning. Den lokala demonstrationslänken förblir vattenmärkt.</p><div className="share-link"><span>localhost:3000/i/{template.id}</span><button onClick={async () => { await navigator.clipboard.writeText(`${location.origin}/i/${template.id}`); setCopied(true); }}>{copied ? <Check /> : <Copy />}</button></div><Link className="button button-dark" href={`/i/${template.id}`}>Öppna den vattenmärkta demon <ArrowRight /></Link><small><ShoppingBag size={13} /> Ingen betalning har genomförts.</small></motion.div></motion.div>}
+        {checkout && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.div className="checkout-modal" initial={{ y: 30, scale: .98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }}><button className="modal-close" onClick={() => setCheckout(false)} aria-label="Stäng"><X /></button><span className="success-icon"><CheckCircle2 /></span><p className="eyebrow">Så levereras den</p><h2>Din personliga länk mejlas till dig.</h2><p>Efter betalning skapas en unik, svårgissad gästlänk utan vattenmärke. Ingen fil behöver laddas ner – du delar länken via SMS, mejl eller chatt och kan stänga den efter firandet.</p><div className="share-link"><span>minea.studio/i/din-personliga-länk</span><button onClick={async () => { await navigator.clipboard.writeText(`${location.origin}/i/${template.id}`); setCopied(true); }}>{copied ? <Check /> : <Copy />}</button></div><Link className="button button-dark" href={`/i/${template.id}`}>Öppna den vattenmärkta demon <ArrowRight /></Link><small><ShoppingBag size={13} /> Demoläget genomför ingen betalning.</small></motion.div></motion.div>}
       </AnimatePresence>
     </main>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { CalendarPlus, ChevronRight, Clock3, MapPin, MessageCircle, Sparkles } from "lucide-react";
+import { CalendarPlus, ChevronRight, Clock3, MapPin, MessageCircle } from "lucide-react";
 import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate } from "@/lib/invitations";
 import { InvitationPhoto } from "./invitation-photo";
 
@@ -32,6 +32,12 @@ function calendarUrl(data: InvitationData) {
   const start = `${data.date.replaceAll("-", "")}T${data.startTime.replace(":", "")}00`;
   const end = `${data.date.replaceAll("-", "")}T${(data.endTime || data.startTime).replace(":", "")}00`;
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Fira ${data.name}`)}&dates=${start}/${end}&location=${encodeURIComponent(data.address)}&details=${encodeURIComponent(data.greeting)}`;
+}
+
+function rsvpMessage(name: string) {
+  const title = name.trim() || "firandet";
+  const isEventTitle = /kalas|bröllop|dop|namngivning|fest|mottagning|middag/i.test(title);
+  return isEventTitle ? `Hej! Vi kommer gärna på ${title}!` : `Hej! Vi kommer gärna och firar ${title}!`;
 }
 
 function Countdown({ date, label }: { date: string; label: string }) {
@@ -68,7 +74,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
                 <div className="envelope-back" />
                 <motion.div className="envelope-letter" initial={false} animate={opening ? { y: -205, scale: 1.045, opacity: 1 } : { y: 82, scale: .97, opacity: 0 }} transition={{ y: { duration: 1.12, delay: .34, ease: [0.2, .82, .2, 1] }, scale: { duration: 1.12, delay: .34 }, opacity: { duration: .24, delay: opening ? .48 : 0 } }}>
                   <span className="envelope-letter-art" style={{ backgroundImage: `url(${template.artwork})` }} />
-                  <small>En inbjudan väntar</small>
+                  <small>{data.kicker}<b>{data.name}</b><em>{data.subtitle}</em></small>
                 </motion.div>
                 <motion.div className="envelope-flap" animate={opening ? { rotateX: -178 } : { rotateX: [0, -3, 0] }} transition={opening ? { duration: .78, ease: [0.3, 0, .2, 1] } : { duration: 3, repeat: Infinity }}>
                   <span className="envelope-flap-paper" /><span className="envelope-flap-lining" style={{ backgroundImage: `url(${template.artwork})` }} />
@@ -85,9 +91,9 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
 
       <div className="invite-decoration" aria-hidden="true">
         {template.palette === "rose" && <>{motionEnabled && Array.from({ length: playful ? 6 : 3 }, (_, bloom) => <motion.span key={bloom} className={`background-bloom bb-${bloom + 1}`} animate={{ y: playful ? [-8, 10, -8] : [0, 0, 0], scale: playful ? [.82, 1.24, .82] : [.94, 1.08, .94], rotate: playful ? [-10, 12, -10] : [-3, 4, -3], opacity: [.18, playful ? .68 : .48, .18] }} transition={{ duration: (playful ? 3.6 : 5.5) + bloom * .45, repeat: Infinity, delay: bloom * .35 }}>✿</motion.span>)}<div className="ribbon-mark"><span /><b /><span /></div></>}
-        {template.palette === "sand" && <><span className="sand-arch" />{motionEnabled && Array.from({ length: playful ? 6 : 3 }, (_, leaf) => <motion.span key={leaf} className={`sand-leaf sl-${leaf + 1}`} animate={{ y: playful ? [-9, 13, -9] : [-5, 8, -5], rotate: playful ? [-13, 12, -13] : [-4, 5, -4], scale: playful ? [.86, 1.14, .86] : [1, 1.05, 1], opacity: [.25, playful ? .82 : .58, .25] }} transition={{ duration: (playful ? 3.8 : 5.5) + leaf * .42, repeat: Infinity, delay: leaf * .32 }} />)}</>}
+        {template.palette === "sand" && <><span className="sand-arch" />{motionEnabled && Array.from({ length: playful ? 6 : 4 }, (_, leaf) => <motion.span key={leaf} className={`sand-leaf sl-${leaf + 1}`} animate={{ y: playful ? [-11, 15, -11] : [-8, 11, -8], rotate: playful ? [-13, 12, -13] : [-7, 8, -7], scale: playful ? [.86, 1.14, .86] : [.96, 1.1, .96], opacity: [.28, playful ? .82 : .7, .28] }} transition={{ duration: (playful ? 3.8 : 4.7) + leaf * .38, repeat: Infinity, delay: leaf * .28 }} />)}</>}
         {template.palette === "midnight" && <><span className="invite-moon" />{motionEnabled && Array.from({ length: playful ? 9 : 5 }, (_, star) => <motion.span key={star} className={`gold-star gs-${star + 1}`} animate={{ y: playful ? [-4, 7, -4] : 0, opacity: [.12, 1, .12], scale: playful ? [.5, 1.7, .5] : [.65, 1.45, .65], rotate: [0, playful ? 150 : 80, 0] }} transition={{ duration: (playful ? 1.65 : 2.1) + star * .28, repeat: Infinity, delay: star * .22 }}>✦</motion.span>)}</>}
-        {template.palette === "sky" && template.id === "olivkvist" && <>{motionEnabled && Array.from({ length: playful ? 5 : 3 }, (_, leaf) => <motion.span key={leaf} className={`olive-leaf ol-${leaf + 1}`} animate={{ rotate: playful ? [-10, 12, -10] : [-4, 5, -4], scale: playful ? [.92, 1.12, .92] : [.97, 1.04, .97], opacity: [.28, playful ? .72 : .5, .28] }} transition={{ duration: (playful ? 3.8 : 6.5) + leaf * .55, repeat: Infinity, delay: leaf * .38 }}><i /><b /></motion.span>)}</>}
+        {template.palette === "sky" && template.id === "olivkvist" && <>{motionEnabled && Array.from({ length: playful ? 6 : 5 }, (_, leaf) => <motion.span key={leaf} className={`olive-leaf ol-${leaf + 1}`} animate={{ y: playful ? [-8, 10, -8] : [-5, 7, -5], rotate: playful ? [-14, 15, -14] : [-8, 9, -8], scale: playful ? [.9, 1.16, .9] : [.94, 1.09, .94], opacity: [.3, playful ? .82 : .7, .3] }} transition={{ duration: (playful ? 3.5 : 4.8) + leaf * .42, repeat: Infinity, delay: leaf * .32 }}><i /><b /></motion.span>)}</>}
         {template.palette === "sky" && template.id !== "olivkvist" && <>{motionEnabled && <><motion.span className="invite-cloud c1" animate={{ x: playful ? [-75, 85, -75] : [-55, 65, -55], y: playful ? [-5, 8, -5] : 0 }} transition={{ duration: playful ? 8 : 12, repeat: Infinity }} /><motion.span className="invite-cloud c2" animate={{ x: playful ? [65, -75, 65] : [45, -55, 45], y: playful ? [6, -7, 6] : 0 }} transition={{ duration: playful ? 10 : 15, repeat: Infinity }} />{Array.from({ length: playful ? 7 : 3 }, (_, star) => <motion.span key={star} className={`sky-glint sg-${star + 1}`} animate={{ opacity: [.12, playful ? .9 : .48, .12], scale: playful ? [.65, 1.5, .65] : [.8, 1.15, .8], rotate: [0, playful ? 100 : 35, 0] }} transition={{ duration: (playful ? 2 : 3.8) + star * .35, repeat: Infinity, delay: star * .28 }}>✦</motion.span>)}</>}<span className="sky-star">✧</span></>}
         {playful && Array.from({ length: 6 }, (_, accent) => <motion.i key={accent} className={`playful-accent pa-${accent + 1}`} animate={{ x: accent % 2 ? [-5, 9, -5] : [6, -8, 6], y: [-7, 9, -7], opacity: [.1, .72, .1], scale: [.65, 1.25, .65] }} transition={{ duration: 3.1 + accent * .42, repeat: Infinity, delay: accent * .3 }}>✦</motion.i>)}
       </div>
@@ -109,12 +115,12 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
           {enabled.includes("greeting") && data.greeting && <motion.p key="greeting" layout className="invite-greeting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{data.greeting}</motion.p>}
           {enabled.includes("countdown") && data.date && <motion.div key="countdown" layout initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }}><Countdown date={data.date} label={data.countdownLabel} /></motion.div>}
           {actions.length > 0 && <motion.div layout key="actions" className={`invite-actions invite-actions--${actions.length}`}>
-            {enabled.includes("rsvp") && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(`Hej! Vi kommer gärna och firar ${data.name}!`)}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
+            {enabled.includes("rsvp") && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(rsvpMessage(data.name))}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
             {enabled.includes("map") && <motion.a layout key="map" target="_blank" rel="noreferrer" href={interactive ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}` : undefined}><MapPin /><span><small>{data.mapHint}</small>{data.mapLabel}</span><ChevronRight /></motion.a>}
             {enabled.includes("calendar") && <motion.a layout key="calendar" target="_blank" rel="noreferrer" href={interactive ? calendarUrl(data) : undefined}><CalendarPlus /><span><small>{data.calendarHint}</small>{data.calendarLabel}</span><ChevronRight /></motion.a>}
           </motion.div>}
         </AnimatePresence>
-        <footer><Sparkles size={12} /> {data.footerText}</footer>
+        <footer>{data.footerText}</footer>
       </div>
       {demoMark && <span className="demo-corner">DEMO<br />MINEA</span>}
     </motion.article>

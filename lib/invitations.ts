@@ -56,7 +56,7 @@ export const templates: InvitationTemplate[] = [
     description: "En handmålad kalasdröm i puderrosa, med mjuka rosetter och lekfulla detaljer som vaknar till liv.",
     artwork: "/art/rosendrom-world.jpg",
     palette: "rose",
-    recommended: ["rsvp", "map", "calendar", "countdown", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Sophia",
       age: "7",
@@ -89,7 +89,7 @@ export const templates: InvitationTemplate[] = [
     description: "En varm, handmålad kalasvärld med äppelblom, vimplar och en liten picknick under träden.",
     artwork: "/art/appelblom-world.png",
     palette: "rose",
-    recommended: ["rsvp", "map", "calendar", "countdown", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Elsa",
       age: "6",
@@ -122,7 +122,7 @@ export const templates: InvitationTemplate[] = [
     description: "En mjuk och professionell bröllopsinbjudan med taktil papperskänsla, luft och diskreta botaniska detaljer.",
     artwork: "/art/sandlofte-world.png",
     palette: "sand",
-    recommended: ["rsvp", "map", "calendar", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Alma & Ludvig",
       date: "2027-06-19",
@@ -154,7 +154,7 @@ export const templates: InvitationTemplate[] = [
     description: "En sofistikerad bröllopsinbjudan med botaniska linjer, mjukt ljus och högtidlig typografi.",
     artwork: "/art/nattblomma-world.jpg",
     palette: "midnight",
-    recommended: ["rsvp", "map", "calendar", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Elise & August",
       date: "2027-08-21",
@@ -186,7 +186,7 @@ export const templates: InvitationTemplate[] = [
     description: "En varsam inbjudan i disigt blått med svävande moln och små handritade stjärnor.",
     artwork: "/art/lilla-molnet-world.jpg",
     palette: "sky",
-    recommended: ["rsvp", "map", "calendar", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Noah",
       date: "2027-04-18",
@@ -218,7 +218,7 @@ export const templates: InvitationTemplate[] = [
     description: "En ljus botanisk inbjudan med varm papperskänsla och mjuka olivkvistar för dop eller namngivning.",
     artwork: "/art/olivkvist-world.png",
     palette: "sky",
-    recommended: ["rsvp", "map", "calendar", "greeting"],
+    recommended: ["rsvp", "map", "calendar"],
     defaultData: {
       name: "Lea",
       date: "2027-05-09",
@@ -279,6 +279,6 @@ export const colorwayOptions: Record<InvitationTemplate["palette"], Array<{ id: 
     { id: "soft", name: "Salviadis", colors: ["#dbe3d7", "#768575", "#fbf8ed"] },
     { id: "deep", name: "Pärlemor", colors: ["#eadfd9", "#9b766f", "#fff9f0"] },
     { id: "beige", name: "Havre", colors: ["#e9dfcf", "#8c755f", "#fffaf1"] },
-    { id: "boy", name: "Pojkblå", colors: ["#c9dce3", "#4f7180", "#f6faf9"] },
+    { id: "boy", name: "Mjuk aprikos", colors: ["#f1d8c8", "#9a6f60", "#fff8ef"] },
   ],
 };

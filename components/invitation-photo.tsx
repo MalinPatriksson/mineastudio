@@ -9,10 +9,10 @@ type InvitationPhotoProps = {
 const frameOrnaments: Record<string, string[]> = {
   rosendrom: ["✿", "❀", "❧", "✿", "❀", "❧"],
   appelblom: ["✤", "✿", "❦", "✤", "✿", "❦"],
-  sandlofte: ["❧", "⌁", "·", "❧", "⌁", "·"],
+  sandlofte: ["❦", "♡", "❧", "❦", "♡", "❧"],
   nattblomma: ["✦", "✧", "❦", "✦", "✧", "❦"],
-  "lilla-molnet": ["✧", "⋆", "⌁", "✦", "⋆", "⌁"],
-  olivkvist: ["❧", "❧", "·", "❧", "❧", "·"],
+  "lilla-molnet": ["☁", "✧", "♡", "☁", "✧", "♡"],
+  olivkvist: ["❧", "♡", "✦", "❧", "♡", "✦"],
 };
 
 export function InvitationPhoto({ data, templateId, className = "" }: InvitationPhotoProps) {
