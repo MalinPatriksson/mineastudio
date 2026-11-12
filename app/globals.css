@@ -202,15 +202,16 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .photo-upload-button { position:relative; overflow:hidden; align-self:start; width:max-content; padding:10px 16px; border-radius:999px; color:white; background:#2b2723; font-size:9px; text-transform:none; letter-spacing:0; cursor:pointer; }
 .photo-upload-button input { position:absolute; inset:0; opacity:0; cursor:pointer; }
 .photo-uploaded { min-height:49px; display:grid!important; grid-template-columns:44px 1fr 36px; align-items:center!important; gap:10px!important; padding:5px 6px; border-radius:15px; background:white; box-shadow:0 7px 18px rgba(64,49,38,.06); }
-.photo-uploaded>span { width:40px; height:40px; border-radius:50%; background-size:cover; background-position:center; }
+.photo-uploaded>span { width:40px; height:40px; border-radius:11px; background-size:cover; background-position:center; }
 .photo-uploaded b { font-size:9px; color:#6f665e; }
 .photo-uploaded button { width:34px; height:34px; display:grid; place-items:center; border:0; border-radius:50%; background:#f4ece7; color:#986a6c; cursor:pointer; }
-.photo-cropper { position:relative; width:100%; height:168px; overflow:hidden; border:1px solid rgba(105,84,69,.16); border-radius:24px; background-color:#eee7df; background-repeat:no-repeat; cursor:grab; touch-action:none; box-shadow:inset 0 0 34px rgba(74,54,42,.08); user-select:none; }
-.photo-cropper:active { cursor:grabbing; }
-.photo-cropper--organic { border-radius:35% 65% 38% 62%/56% 39% 61% 44%; }
-.photo-cropper--arch { border-radius:80px 80px 20px 20px; }
-.photo-cropper--circle { width:168px; margin-inline:auto; border-radius:50%; }
-.photo-cropper>span { position:absolute; left:50%; bottom:10px; display:flex; align-items:center; gap:6px; transform:translateX(-50%); white-space:nowrap; padding:7px 10px; border-radius:999px; color:white; background:rgba(35,30,27,.72); backdrop-filter:blur(8px); font:8px var(--sans); pointer-events:none; }
+.photo-editor-theme { min-height:0!important; display:grid; place-items:center; padding:13px!important; border-radius:22px; color:var(--theme-ink); background:color-mix(in srgb,var(--theme-surface) 72%,#fff)!important; box-shadow:none; overflow:visible; }
+.photo-editor-theme::before,.photo-editor-theme::after,.photo-editor-theme .invite-world-bg { display:none!important; }
+.photo-editor-drag-target { width:min(100%,300px); display:grid; place-items:center; cursor:grab; touch-action:none; user-select:none; }
+.photo-editor-drag-target:active { cursor:grabbing; }
+.photo-editor-drag-target .invite-photo-wrap { width:100%; margin:0; }
+.photo-editor-drag-target .invite-photo-wrap.photo-shape--circle { width:min(100%,205px); }
+.photo-drag-hint { display:flex; align-items:center; justify-content:center; gap:6px; margin:-3px 0 1px; color:#746a61; font:8px var(--sans); }
 .photo-controls { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .photo-controls>div>small { margin:0 0 6px 3px; color:#746a61; font:8px/1 var(--sans); text-transform:uppercase; letter-spacing:.08em; }
 .photo-choice-row { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; border-radius:14px; background:rgba(87,69,56,.07); }
@@ -412,15 +413,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 
 .invitation--rose::before,.invitation--midnight::before,.invitation--sky::before { inset:15px; border-radius:150px 150px 22px 22px; }
 .invite-header h1 { text-shadow:0 2px 18px rgba(93,58,61,.08); }
-.invite-photo-wrap { position:relative; z-index:2; width:205px; height:142px; margin:21px 0 2px; filter:drop-shadow(0 15px 20px rgba(67,48,43,.15)); -webkit-mask-image:radial-gradient(ellipse at center,black 53%,rgba(0,0,0,.96) 65%,transparent 98%); mask-image:radial-gradient(ellipse at center,black 53%,rgba(0,0,0,.96) 65%,transparent 98%); }
+.invite-photo-slot { position:relative; z-index:2; }
+.invite-photo-wrap { position:relative; z-index:2; width:205px; height:auto; aspect-ratio:205/142; margin:21px 0 2px; filter:drop-shadow(0 15px 20px rgba(67,48,43,.15)); }
 .invite-photo { position:absolute; inset:0; background-size:cover; background-position:center 35%; background-repeat:no-repeat; }
-.photo-vignette { position:absolute; inset:0; background:radial-gradient(ellipse at center,transparent 38%,currentColor 103%); opacity:.36; mix-blend-mode:multiply; }
-.photo-flourish { position:absolute; right:8px; bottom:15px; width:25px; height:25px; display:grid; place-items:center; border-radius:50%; background:rgba(255,255,255,.78); box-shadow:0 5px 14px rgba(58,43,36,.12); font-size:8px; }
-.invitation--rose .invite-photo { filter:saturate(.78) sepia(.08) brightness(1.04); }
-.invitation--rose .invite-photo-wrap { border-radius:46% 54% 48% 52%; }
-.invitation--midnight .invite-photo { filter:saturate(.72) sepia(.22) brightness(.84) contrast(1.06); }
-.invitation--midnight .invite-photo-wrap { width:190px; height:150px; }
-.invitation--sky .invite-photo { filter:saturate(.68) brightness(1.06); }
 .invite-details { border-radius:18px; padding-left:10px; padding-right:10px; }
 .invite-wishlist { border-radius:17px; backdrop-filter:blur(8px); }
 .invite-actions { gap:8px; }
@@ -546,7 +541,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .phone-frame .invitation--dense .invite-header h1 { font-size:36px; }
 .phone-frame .invitation--dense .invite-header h1.long-name { font-size:30px; }
 .phone-frame .invitation--dense .invite-header h2 { margin-top:5px; font-size:13px; }
-.phone-frame .invitation--dense .invite-photo-wrap { width:170px; height:108px; margin-top:12px; }
+.phone-frame .invitation--dense .invite-photo-wrap { width:170px; height:auto; aspect-ratio:205/142; margin-top:12px; }
 .phone-frame .invitation--dense .invite-details { margin-top:12px; padding-top:10px; padding-bottom:10px; }
 .phone-frame .invitation--dense .invite-details .invite-date { font-size:16px; margin-bottom:4px; }
 .phone-frame .invitation--dense .invite-greeting { margin-top:10px; font-size:11px; line-height:1.35; }
@@ -556,17 +551,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .phone-frame .invitation--dense .invite-actions a { min-height:40px; padding:5px 7px; }
 .phone-frame .invitation--dense footer { padding-top:10px!important; }
 
-/* Editable copy and draggable layout controls */
+/* Editable copy */
 .editable-copy { margin-top:28px; padding:20px; border:1px solid #e0d5c8; border-radius:22px; background:#f7f0e7; }
 .editable-copy-title { display:flex; align-items:center; gap:8px; margin:0 0 17px; color:#8e6267; font:700 9px var(--sans); text-transform:uppercase; letter-spacing:.1em; }
-.layout-sorter { display:grid; gap:8px; }
-.layout-sorter button { min-height:50px; display:grid; grid-template-columns:22px 1fr auto; gap:8px; align-items:center; padding:0 14px; border:1px solid #ddd3c7; border-radius:16px; background:#fffdf9; text-align:left; cursor:grab; transition:transform .18s,opacity .18s,box-shadow .18s; }
-.layout-sorter button:active { cursor:grabbing; }
-.layout-sorter button.dragging { opacity:.45; transform:scale(.98); }
-.layout-sorter button:hover { box-shadow:0 8px 22px rgba(55,43,34,.07); }
-.layout-sorter button svg { color:#a77a7c; }
-.layout-sorter button span { font-size:10px; font-weight:700; }
-.layout-sorter button small { color:var(--muted); font-size:8px; }
 
 /* Envelope depth: flap folds behind and the invitation rises in front */
 .envelope-flap { padding:0; background:transparent!important; overflow:visible; }
@@ -616,15 +603,21 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .playful-accent { color:var(--theme-accent); opacity:.45; filter:drop-shadow(0 0 7px var(--theme-surface)); }
 .pa-1{left:6%;top:13%}.pa-2{right:7%;top:20%}.pa-3{left:4%;top:47%}.pa-4{right:5%;top:57%}.pa-5{left:23%;bottom:8%}.pa-6{right:24%;bottom:10%}
 
-/* Uploaded photos are centred, colour-treated and softly merged into each design */
-.invite-photo-wrap { overflow:hidden; border:1px solid var(--theme-border); background:var(--theme-surface); box-shadow:0 16px 32px rgba(54,42,34,.12),inset 0 0 0 5px rgba(255,255,255,.22); }
+/* Uploaded photos keep their original colours and use the same crop everywhere */
+.invite-photo-wrap { overflow:hidden; border:1px solid var(--theme-border); background:var(--theme-surface); box-shadow:0 16px 32px rgba(54,42,34,.12); }
 .invite-photo-wrap.photo-shape--organic { border-radius:46% 54% 48% 52%/54% 43% 57% 46%; }
-.invite-photo-wrap.photo-shape--arch { border-radius:105px 105px 18px 18px; -webkit-mask-image:none; mask-image:none; }
-.invite-photo-wrap.photo-shape--circle { width:142px; height:142px; border-radius:50%; -webkit-mask-image:none; mask-image:none; }
-.invite-photo-wrap.photo-fit--contain .invite-photo { background-color:var(--theme-surface); }
-.invite-photo-wrap::after { content:""; position:absolute; z-index:3; inset:5px; border:1px solid color-mix(in srgb,var(--theme-accent) 28%,transparent); border-radius:inherit; box-shadow:inset 0 0 26px 13px var(--theme-surface); pointer-events:none; }
-.photo-vignette { z-index:2; opacity:.5; }
-.photo-flourish { z-index:4; }
+.invite-photo-wrap.photo-shape--arch { border-radius:105px 105px 18px 18px; }
+.invite-photo-wrap.photo-shape--circle { width:142px; height:auto; aspect-ratio:1; border-radius:50%; }
+.invite-photo-wrap::after { content:""; position:absolute; z-index:3; inset:4px; border:1px solid color-mix(in srgb,var(--theme-accent) 24%,transparent); border-radius:inherit; pointer-events:none; }
+.invite-photo-wrap.photo-frame--clean::after { inset:4px; box-shadow:none; }
+.invite-photo-wrap.photo-frame--fade::after { inset:0; border:0; box-shadow:inset 0 0 12px 2px color-mix(in srgb,var(--theme-surface) 68%,transparent); }
+.invite-photo-wrap.photo-frame--floral::after { inset:4px; box-shadow:inset 0 0 7px color-mix(in srgb,var(--theme-surface) 44%,transparent); }
+.photo-floral-frame { position:absolute; z-index:4; inset:0; color:var(--theme-accent); pointer-events:none; }
+.photo-floral-frame i,.photo-floral-frame b { position:absolute; display:grid; place-items:center; width:25px; height:25px; font:400 17px var(--serif); font-style:normal; text-shadow:0 1px 8px var(--theme-surface); }
+.photo-floral-frame i:first-child { left:4px; top:3px; transform:rotate(-18deg); }
+.photo-floral-frame i:nth-child(2) { left:24px; top:2px; font-size:9px; }
+.photo-floral-frame b:nth-child(3) { right:4px; bottom:3px; transform:rotate(18deg); }
+.photo-floral-frame b:last-child { right:25px; bottom:3px; font-size:9px; }
 
 /* Demo is a quiet corner signature, never a pill over the design */
 .demo-corner { top:10px; right:10px; left:auto; width:72px; height:52px; display:flex; align-items:flex-start; justify-content:flex-end; padding:8px 9px 0 0; border-top:1px solid currentColor; border-right:1px solid currentColor; border-radius:0; color:var(--theme-ink,#403934); background:transparent; backdrop-filter:none; box-shadow:none; font:700 7px/1.35 var(--sans); letter-spacing:.14em; text-align:right; opacity:.68; }
@@ -648,9 +641,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .phone-frame .invitation--extra-dense .invite-header h1 { font-size:31px; }
 .phone-frame .invitation--extra-dense .invite-header h1.long-name { font-size:27px; }
 .phone-frame .invitation--extra-dense .invite-header h2 { font-size:11px; }
-.phone-frame .invitation--extra-dense .invite-photo-wrap { width:148px; height:88px; margin-top:8px; }
-.phone-frame .invitation--dense .invite-photo-wrap.photo-shape--circle { width:108px; height:108px; }
-.phone-frame .invitation--extra-dense .invite-photo-wrap.photo-shape--circle { width:88px; height:88px; }
+.phone-frame .invitation--extra-dense .invite-photo-wrap { width:148px; height:auto; aspect-ratio:205/142; margin-top:8px; }
+.phone-frame .invitation--dense .invite-photo-wrap.photo-shape--circle { width:108px; height:auto; aspect-ratio:1; }
+.phone-frame .invitation--extra-dense .invite-photo-wrap.photo-shape--circle { width:88px; height:auto; aspect-ratio:1; }
 .phone-frame .invitation--extra-dense .invite-details { margin-top:8px; padding:7px; }
 .phone-frame .invitation--extra-dense .invite-details p { margin:3px 0; font-size:8px; }
 .phone-frame .invitation--extra-dense .invite-greeting { margin-top:7px; font-size:10px; }

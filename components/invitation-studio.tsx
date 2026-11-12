@@ -1,21 +1,20 @@
 "use client";
 
-import { useRef, useState, type DragEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, GripVertical, ImagePlus, Monitor, Move, Settings2, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
-import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, LayoutBlock, PhotoFit, PhotoShape } from "@/lib/invitations";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, ImagePlus, Monitor, Move, Settings2, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape } from "@/lib/invitations";
 import { colorwayOptions, featureLabels } from "@/lib/invitations";
 import { InvitationRenderer } from "./invitation-renderer";
+import { InvitationPhoto } from "./invitation-photo";
 import { SiteHeader } from "./site-header";
 
 type Props = { template: InvitationTemplate };
 
 const featureKeys: FeatureKey[] = ["rsvp", "map", "calendar", "countdown", "greeting"];
-const initialLayout: LayoutBlock[] = ["photo", "details", "greeting", "countdown", "actions"];
-const layoutLabels: Record<LayoutBlock, string> = { photo: "Egen bild", details: "Datum & plats", greeting: "Hälsning", countdown: "Nedräkning", actions: "Knappar" };
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
-const photoFits: Array<{ id: PhotoFit; label: string }> = [{ id: "cover", label: "Fyll" }, { id: "contain", label: "Visa hela" }, { id: "close", label: "Närbild" }];
+const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Blomram" }];
 
 export function InvitationStudio({ template }: Props) {
   const [data, setData] = useState<InvitationData>(template.defaultData);
@@ -27,8 +26,6 @@ export function InvitationStudio({ template }: Props) {
   const [copied, setCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
-  const [layoutOrder, setLayoutOrder] = useState<LayoutBlock[]>(initialLayout);
-  const [draggedBlock, setDraggedBlock] = useState<LayoutBlock | null>(null);
   const photoDrag = useRef<{ clientX: number; clientY: number; positionX: number; positionY: number } | null>(null);
 
   const required = [data.name, data.date, data.startTime, data.address, data.phone];
@@ -45,7 +42,7 @@ export function InvitationStudio({ template }: Props) {
       photoPositionX: 50,
       photoPositionY: 50,
       photoShape: current.photoShape ?? "organic",
-      photoFit: current.photoFit ?? "cover",
+      photoFrame: current.photoFrame ?? "fade",
     }));
     reader.readAsDataURL(file);
   };
@@ -69,20 +66,6 @@ export function InvitationStudio({ template }: Props) {
   const stopPhotoDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     photoDrag.current = null;
-  };
-  const moveBlock = (target: LayoutBlock) => {
-    if (!draggedBlock || draggedBlock === target) return;
-    setLayoutOrder((current) => {
-      const next = current.filter((block) => block !== draggedBlock);
-      next.splice(next.indexOf(target), 0, draggedBlock);
-      return next;
-    });
-    setDraggedBlock(null);
-  };
-  const startDrag = (event: DragEvent<HTMLButtonElement>, block: LayoutBlock) => {
-    setDraggedBlock(block);
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", block);
   };
 
   return (
@@ -109,28 +92,26 @@ export function InvitationStudio({ template }: Props) {
               <div className="photo-upload field--wide">
                 <div>
                   <span className="photo-upload-icon"><ImagePlus size={19} /></span>
-                  <span><b>Egen bild <em>valfritt</em></b><small>Välj form, inpassning och dra fram precis rätt utsnitt.</small></span>
+                  <span><b>Egen bild <em>valfritt</em></b><small>Välj form och finish, dra sedan fram precis rätt utsnitt.</small></span>
                 </div>
                 {data.photoUrl ? (
                   <>
                     <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>Justera bilden nedan</b><button type="button" aria-label="Ta bort bild" onClick={() => setData((current) => ({ ...current, photoUrl: undefined }))}><Trash2 size={15} /></button></div>
-                    <div
-                      className={`photo-cropper photo-cropper--${data.photoShape ?? "organic"}`}
-                      style={{
-                        backgroundImage: `url(${data.photoUrl})`,
-                        backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%`,
-                        backgroundSize: data.photoFit === "contain" ? "contain" : data.photoFit === "close" ? "155%" : "cover",
-                      }}
-                      onPointerDown={startPhotoDrag}
-                      onPointerMove={movePhoto}
-                      onPointerUp={stopPhotoDrag}
-                      onPointerCancel={stopPhotoDrag}
-                      role="img"
-                      aria-label="Dra bilden för att välja vilket utsnitt som ska synas"
-                    ><span><Move size={14} /> Dra bilden till rätt utsnitt</span></div>
+                    <div className={`photo-editor-theme invitation invitation--${template.palette} colorway--${colorway}`}>
+                      <div
+                        className="photo-editor-drag-target"
+                        onPointerDown={startPhotoDrag}
+                        onPointerMove={movePhoto}
+                        onPointerUp={stopPhotoDrag}
+                        onPointerCancel={stopPhotoDrag}
+                      >
+                        <InvitationPhoto data={data} className="invite-photo-wrap--editor" />
+                      </div>
+                    </div>
+                    <p className="photo-drag-hint"><Move size={13} /> Dra bilden för att välja exakt utsnitt</p>
                     <div className="photo-controls">
                       <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
-                      <div><small>Inpassning</small><div className="photo-choice-row">{photoFits.map((fit) => <button type="button" key={fit.id} className={(data.photoFit ?? "cover") === fit.id ? "active" : ""} aria-pressed={(data.photoFit ?? "cover") === fit.id} onClick={() => update("photoFit", fit.id)}>{fit.label}</button>)}</div></div>
+                      <div><small>Finish</small><div className="photo-choice-row">{photoFrames.map((frame) => <button type="button" key={frame.id} className={(data.photoFrame ?? "fade") === frame.id ? "active" : ""} aria-pressed={(data.photoFrame ?? "fade") === frame.id} onClick={() => update("photoFrame", frame.id)}>{frame.label}</button>)}</div></div>
                     </div>
                   </>
                 ) : (
@@ -167,32 +148,14 @@ export function InvitationStudio({ template }: Props) {
           </section>
 
           <section className="editor-section">
-            <div className="editor-section-title"><span>03</span><div><h2>Ordna innehållet</h2><p>Dra delarna till den ordning som känns bäst.</p></div></div>
-            <div className="layout-sorter">
-              {layoutOrder.map((block) => (
-                <button
-                  type="button"
-                  draggable
-                  key={block}
-                  className={draggedBlock === block ? "dragging" : ""}
-                  onDragStart={(event) => startDrag(event, block)}
-                  onDragEnd={() => setDraggedBlock(null)}
-                  onDragOver={(event) => event.preventDefault()}
-                  onDrop={() => moveBlock(block)}
-                ><GripVertical size={16} /><span>{layoutLabels[block]}</span><small>Dra för att flytta</small></button>
-              ))}
-            </div>
-          </section>
-
-          <section className="editor-section">
-            <div className="editor-section-title"><span>04</span><div><h2>Välj rörelse</h2><p>Stilla visar en färdig komposition utan pausade objekt.</p></div></div>
+            <div className="editor-section-title"><span>03</span><div><h2>Välj rörelse</h2><p>Stilla visar en färdig komposition utan pausade objekt.</p></div></div>
             <div className="animation-options">
               {([{ key: "none", title: "Stilla", symbol: "—" }, { key: "soft", title: "Mjuk", symbol: "∿" }, { key: "playful", title: "Lekfull", symbol: "✦" }] as const).map((option) => <button key={option.key} className={animation === option.key ? "active" : ""} onClick={() => setAnimation(option.key)}><i>{option.symbol}</i><span>{option.title}</span>{animation === option.key && <Check size={14} />}</button>)}
             </div>
           </section>
 
           <section className="editor-section">
-            <div className="editor-section-title"><span>05</span><div><h2>Välj färgvärld</h2><p>Alla toner anpassas tillsammans av designen.</p></div></div>
+            <div className="editor-section-title"><span>04</span><div><h2>Välj färgvärld</h2><p>Alla toner anpassas tillsammans av designen.</p></div></div>
             <div className="colorway-options">
               {colorwayOptions[template.palette].map((option) => (
                 <button type="button" key={option.id} className={colorway === option.id ? "active" : ""} onClick={() => setColorway(option.id)} aria-pressed={colorway === option.id}>
@@ -208,7 +171,7 @@ export function InvitationStudio({ template }: Props) {
 
         <section className={`preview-panel ${mobileTab !== "preview" ? "mobile-hidden" : ""}`}>
           <div className="preview-head"><div><span className="live-dot" />Mobilvy <em>· gästlänken anpassar sig även för dator</em></div><button onClick={() => setFullPreview(true)}><Eye size={15} /> Visa datorläge</button></div>
-          <div className="preview-canvas"><div className="phone-frame"><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} layoutOrder={layoutOrder} interactive={false} /></div></div>
+          <div className="preview-canvas"><div className="phone-frame"><div className="phone-speaker" /><InvitationRenderer template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive={false} /></div></div>
           <div className="preview-note"><Sparkles size={15} /><p><b>Designen anpassar sig.</b> Prova funktioner och färgvärldar. Vattenmärket finns bara i demon och tas bort helt från den betalda produkten.</p></div>
           <div className="buy-bar"><div><span>Din digitala inbjudan</span><strong>{template.price} kr</strong><small>Ett fast pris · inga tillägg</small></div><button className="button button-dark" onClick={() => setCheckout(true)}>Fortsätt till köp <ArrowRight size={16} /></button></div>
         </section>
@@ -228,7 +191,7 @@ export function InvitationStudio({ template }: Props) {
             <div className={`fullscreen-canvas fullscreen-canvas--${previewDevice}`} style={{ backgroundImage: `url(${template.artwork})` }}>
               <div className={`fullscreen-device fullscreen-device--${previewDevice}`}>
                 {previewDevice === "mobile" && <div className="fullscreen-phone-speaker" />}
-                <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} layoutOrder={layoutOrder} interactive envelope />
+                <InvitationRenderer key={`${template.id}-${previewDevice}`} template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} interactive envelope />
               </div>
             </div>
           </motion.div>

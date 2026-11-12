@@ -1,9 +1,8 @@
 export type AnimationStyle = "none" | "soft" | "playful";
 export type Colorway = "signature" | "soft" | "deep" | "beige" | "boy";
 export type FeatureKey = "rsvp" | "map" | "calendar" | "countdown" | "greeting";
-export type LayoutBlock = "photo" | "details" | "greeting" | "countdown" | "actions";
 export type PhotoShape = "organic" | "arch" | "circle";
-export type PhotoFit = "cover" | "contain" | "close";
+export type PhotoFrameStyle = "clean" | "fade" | "floral";
 
 export type InvitationData = {
   name: string;
@@ -11,7 +10,7 @@ export type InvitationData = {
   photoPositionX?: number;
   photoPositionY?: number;
   photoShape?: PhotoShape;
-  photoFit?: PhotoFit;
+  photoFrame?: PhotoFrameStyle;
   age?: string;
   date: string;
   startTime: string;

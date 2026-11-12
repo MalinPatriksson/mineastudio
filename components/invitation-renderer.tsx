@@ -1,9 +1,10 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CalendarPlus, ChevronRight, Clock3, MapPin, MessageCircle, Sparkles } from "lucide-react";
-import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, LayoutBlock } from "@/lib/invitations";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate } from "@/lib/invitations";
+import { InvitationPhoto } from "./invitation-photo";
 
 type Props = {
   template: InvitationTemplate;
@@ -11,13 +12,10 @@ type Props = {
   enabled: FeatureKey[];
   animation: AnimationStyle;
   colorway?: Colorway;
-  layoutOrder?: LayoutBlock[];
   interactive?: boolean;
   demoMark?: boolean;
   envelope?: boolean;
 };
-
-const defaultLayout: LayoutBlock[] = ["photo", "details", "greeting", "countdown", "actions"];
 
 const sealName = (name: string) => {
   const names = name.split("&").map((part) => part.trim()).filter(Boolean);
@@ -41,7 +39,7 @@ function Countdown({ date, label }: { date: string; label: string }) {
   return <div className="invite-countdown"><span>{days}</span><small>{label}</small></div>;
 }
 
-export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", layoutOrder = defaultLayout, interactive = true, demoMark = true, envelope = false }: Props) {
+export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false }: Props) {
   const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature));
   const motionEnabled = animation !== "none";
   const playful = animation === "playful";
@@ -50,9 +48,6 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
   const extraDense = densityScore >= 8;
   const [opened, setOpened] = useState(!envelope);
   const [opening, setOpening] = useState(false);
-  const photoShape = data.photoShape ?? "organic";
-  const photoFit = data.photoFit ?? "cover";
-  const photoPosition = `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%`;
 
   const openEnvelope = () => {
     if (opening) return;
@@ -105,35 +100,19 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
         </header>
 
         <AnimatePresence mode="popLayout" initial={false}>
-          {layoutOrder.map((block) => {
-            if (block === "photo") return data.photoUrl ? (
-              <motion.div key="photo" layout className={`invite-photo-wrap photo-shape--${photoShape} photo-fit--${photoFit}`} initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}>
-                <div className="invite-photo" style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: photoPosition, backgroundSize: photoFit === "contain" ? "contain" : photoFit === "close" ? "155%" : "cover" }} role="img" aria-label={`Personlig bild för ${data.name}`} />
-                <span className="photo-vignette" /><span className="photo-flourish">✦</span>
-              </motion.div>
-            ) : <Fragment key="photo" />;
-
-            if (block === "details") return (
-              <motion.div key="details" layout className="invite-details">
-                <p className="invite-date">{formatDate(data.date)}</p>
-                <p><Clock3 size={14} /> {data.startTime || "14:00"}{data.endTime ? `–${data.endTime}` : ""}</p>
-                <p><MapPin size={14} /> {data.address || "Platsen kommer snart"}</p>
-              </motion.div>
-            );
-
-            if (block === "greeting") return enabled.includes("greeting") && data.greeting ? <motion.p key="greeting" layout className="invite-greeting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{data.greeting}</motion.p> : <Fragment key="greeting" />;
-            if (block === "countdown") return enabled.includes("countdown") && data.date ? <motion.div key="countdown" layout initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }}><Countdown date={data.date} label={data.countdownLabel} /></motion.div> : <Fragment key="countdown" />;
-
-            if (block === "actions") return actions.length > 0 ? (
-              <motion.div layout key="actions" className={`invite-actions invite-actions--${actions.length}`}>
-                {enabled.includes("rsvp") && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(`Hej! Vi kommer gärna och firar ${data.name}!`)}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
-                {enabled.includes("map") && <motion.a layout key="map" target="_blank" rel="noreferrer" href={interactive ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}` : undefined}><MapPin /><span><small>{data.mapHint}</small>{data.mapLabel}</span><ChevronRight /></motion.a>}
-                {enabled.includes("calendar") && <motion.a layout key="calendar" target="_blank" rel="noreferrer" href={interactive ? calendarUrl(data) : undefined}><CalendarPlus /><span><small>{data.calendarHint}</small>{data.calendarLabel}</span><ChevronRight /></motion.a>}
-              </motion.div>
-            ) : <Fragment key="actions" />;
-
-            return <Fragment key={block} />;
-          })}
+          {data.photoUrl && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} /></motion.div>}
+          <motion.div key="details" layout className="invite-details">
+            <p className="invite-date">{formatDate(data.date)}</p>
+            <p><Clock3 size={14} /> {data.startTime || "14:00"}{data.endTime ? `–${data.endTime}` : ""}</p>
+            <p><MapPin size={14} /> {data.address || "Platsen kommer snart"}</p>
+          </motion.div>
+          {enabled.includes("greeting") && data.greeting && <motion.p key="greeting" layout className="invite-greeting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{data.greeting}</motion.p>}
+          {enabled.includes("countdown") && data.date && <motion.div key="countdown" layout initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96 }}><Countdown date={data.date} label={data.countdownLabel} /></motion.div>}
+          {actions.length > 0 && <motion.div layout key="actions" className={`invite-actions invite-actions--${actions.length}`}>
+            {enabled.includes("rsvp") && <motion.a layout key="rsvp" href={interactive ? `sms:${data.phone}?&body=${encodeURIComponent(`Hej! Vi kommer gärna och firar ${data.name}!`)}` : undefined}><MessageCircle /><span><small>{data.rsvpHint}</small>{data.rsvpLabel}</span><ChevronRight /></motion.a>}
+            {enabled.includes("map") && <motion.a layout key="map" target="_blank" rel="noreferrer" href={interactive ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.address)}` : undefined}><MapPin /><span><small>{data.mapHint}</small>{data.mapLabel}</span><ChevronRight /></motion.a>}
+            {enabled.includes("calendar") && <motion.a layout key="calendar" target="_blank" rel="noreferrer" href={interactive ? calendarUrl(data) : undefined}><CalendarPlus /><span><small>{data.calendarHint}</small>{data.calendarLabel}</span><ChevronRight /></motion.a>}
+          </motion.div>}
         </AnimatePresence>
         <footer><Sparkles size={12} /> {data.footerText}</footer>
       </div>
