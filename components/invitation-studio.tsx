@@ -3,13 +3,14 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Copy, Eye, ImagePlus, Monitor, Move, ShoppingBag, Smartphone, Sparkles, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Eye, ImagePlus, Monitor, Move, Smartphone, Sparkles, Trash2, X } from "lucide-react";
 import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape, RsvpMode, RsvpQuestionConfig } from "@/lib/invitations";
 import { colorwayOptions, defaultRsvpQuestions, featureLabels } from "@/lib/invitations";
 import { InvitationRenderer } from "./invitation-renderer";
 import { InvitationPhoto } from "./invitation-photo";
 import { SiteHeader } from "./site-header";
 import { AddressAutocomplete } from "./address-autocomplete";
+import { TestCheckoutModal } from "./test-checkout-modal";
 
 type Props = { template: InvitationTemplate };
 
@@ -26,7 +27,6 @@ export function InvitationStudio({ template }: Props) {
   const [rsvpQuestions, setRsvpQuestions] = useState<RsvpQuestionConfig>(defaultRsvpQuestions);
   const [fullPreview, setFullPreview] = useState(false);
   const [checkout, setCheckout] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("mobile");
   const photoDrag = useRef<{ clientX: number; clientY: number; positionX: number; positionY: number } | null>(null);
   const previewDrag = useRef<{ clientX: number; clientY: number; scrollLeft: number; scrollTop: number } | null>(null);
@@ -246,7 +246,7 @@ export function InvitationStudio({ template }: Props) {
       </AnimatePresence>
 
       <AnimatePresence>
-        {checkout && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.div className="checkout-modal" initial={{ y: 30, scale: .98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }}><button className="modal-close" onClick={() => setCheckout(false)} aria-label="Stäng"><X /></button><span className="success-icon"><CheckCircle2 /></span><p className="eyebrow">Så levereras den</p><h2>Din personliga länk mejlas till dig.</h2><p>Efter betalning skapas en unik, svårgissad gästlänk utan vattenmärke. Ingen fil behöver laddas ner – du delar länken via SMS, mejl eller chatt och kan stänga den efter firandet.</p><div className="share-link"><span>minea.studio/i/din-personliga-länk</span><button onClick={async () => { await navigator.clipboard.writeText(`${location.origin}/i/${template.id}`); setCopied(true); }}>{copied ? <Check /> : <Copy />}</button></div><Link className="button button-dark" href={`/i/${template.id}`}>Öppna den vattenmärkta demon <ArrowRight /></Link><small><ShoppingBag size={13} /> Demoläget genomför ingen betalning.</small></motion.div></motion.div>}
+        {checkout && <TestCheckoutModal template={template} data={data} enabled={enabled} animation={animation} colorway={colorway} rsvpMode={rsvpMode} rsvpQuestions={rsvpQuestions} onClose={() => setCheckout(false)} />}
       </AnimatePresence>
     </main>
   );
