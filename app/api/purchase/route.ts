@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 const invitationDataSchema = z.object({
   name: z.string().trim().min(1).max(32),
-  photoUrl: z.string().max(3_500_000).optional(),
+  photoUrl: z.string().max(4_200_000).optional(),
   photoPositionX: z.number().min(0).max(100).optional(),
   photoPositionY: z.number().min(0).max(100).optional(),
   photoShape: z.enum(["organic", "arch", "circle"]).optional(),
@@ -17,7 +17,7 @@ const invitationDataSchema = z.object({
   age: z.string().max(3).optional(),
   date: z.iso.date(),
   startTime: z.string().regex(/^\d{2}:\d{2}$/),
-  endTime: z.string().regex(/^\d{2}:\d{2}$/).optional(),
+  endTime: z.union([z.string().regex(/^\d{2}:\d{2}$/), z.literal("")]).optional(),
   address: z.string().trim().min(2).max(180),
   kicker: z.string().max(48),
   subtitle: z.string().max(48),
@@ -31,7 +31,7 @@ const invitationDataSchema = z.object({
   calendarHint: z.string().max(80),
   calendarLabel: z.string().max(80),
   phone: z.string().trim().min(5).max(30),
-  rsvpDate: z.iso.date(),
+  rsvpDate: z.union([z.iso.date(), z.literal("")]),
 });
 
 const purchaseSchema = z.object({
@@ -72,7 +72,15 @@ async function findOrCreateBuyer(email: string) {
 export async function POST(request: Request) {
   if (!isRsvpBackendConfigured) return Response.json({ error: "Köpet är inte konfigurerat ännu." }, { status: 503 });
   const parsed = purchaseSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return Response.json({ error: "Kontrollera uppgifterna i inbjudan och försök igen." }, { status: 400 });
+  if (!parsed.success) {
+    const field = parsed.error.issues[0]?.path.join(".");
+    const error = field === "data.photoUrl"
+      ? "Bilden är för stor för att publiceras. Ladda upp den igen så optimeras den automatiskt."
+      : field === "email"
+        ? "Kontrollera att mejladressen är korrekt."
+        : "Kontrollera datum, tider och obligatoriska uppgifter i inbjudan.";
+    return Response.json({ error, field }, { status: 400 });
+  }
   if (parsed.data.website) return Response.json({ error: "Köpet kunde inte genomföras." }, { status: 400 });
 
   const template = templateById[parsed.data.templateId];

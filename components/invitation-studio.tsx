@@ -18,6 +18,22 @@ const featureKeys: FeatureKey[] = ["map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
 const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
 
+async function optimizePhoto(file: File) {
+  const image = await createImageBitmap(file);
+  const maxSide = 1600;
+  const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(image.width * scale));
+  canvas.height = Math.max(1, Math.round(image.height * scale));
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Bilden kunde inte bearbetas.");
+  context.fillStyle = "#fffaf4";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  image.close();
+  return canvas.toDataURL("image/jpeg", .86);
+}
+
 export function InvitationStudio({ template }: Props) {
   const [data, setData] = useState<InvitationData>(template.defaultData);
   const [enabled, setEnabled] = useState<FeatureKey[]>(template.id === "tidlos" ? [...template.recommended, "greeting", "countdown"] : template.recommended);
@@ -43,18 +59,17 @@ export function InvitationStudio({ template }: Props) {
     setEnabled((current) => mode === "none" ? current.filter((item) => item !== "rsvp") : current.includes("rsvp") ? current : ["rsvp", ...current]);
   };
   const toggleRsvpQuestion = (question: keyof RsvpQuestionConfig) => setRsvpQuestions((current) => ({ ...current, [question]: !current[question] }));
-  const addPhoto = (file?: File) => {
+  const addPhoto = async (file?: File) => {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setData((current) => ({
+    const photoUrl = await optimizePhoto(file);
+    setData((current) => ({
       ...current,
-      photoUrl: String(reader.result),
+      photoUrl,
       photoPositionX: 50,
       photoPositionY: 50,
       photoShape: current.photoShape ?? "organic",
       photoFrame: current.photoFrame ?? "fade",
     }));
-    reader.readAsDataURL(file);
   };
   const startPhotoDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -153,7 +168,7 @@ export function InvitationStudio({ template }: Props) {
                     </div>}
                   </>
                 ) : (
-                  <label className="photo-upload-button">Välj bild<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => addPhoto(event.target.files?.[0])} /></label>
+                  <label className="photo-upload-button">Välj bild<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
                 )}
               </div>
               {template.category === "Barnkalas" && <label className="field">Ålder<input type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
