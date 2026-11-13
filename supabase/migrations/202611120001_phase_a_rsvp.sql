@@ -45,6 +45,14 @@ create index if not exists invitations_public_status_idx on public.invitations(p
 alter table public.invitations enable row level security;
 alter table public.rsvp_responses enable row level security;
 
+-- PostgreSQL privileges and RLS policies are separate checks. Authenticated
+-- organisers need the privileges below for the owner policies to take effect,
+-- while all public RSVP writes continue to go through the server-only client.
+grant select, update on table public.invitations to authenticated;
+grant select on table public.rsvp_responses to authenticated;
+grant select, insert, update, delete on table public.invitations to service_role;
+grant select, insert, update, delete on table public.rsvp_responses to service_role;
+
 drop policy if exists "owners can read their invitations" on public.invitations;
 create policy "owners can read their invitations"
 on public.invitations for select to authenticated
