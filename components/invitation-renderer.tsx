@@ -90,9 +90,10 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
                   <span className="envelope-letter-art" style={{ backgroundImage: `url(${template.artwork})` }} />
                   <small>{data.kicker}<b>{data.name}</b><em>{data.subtitle}</em></small>
                 </motion.div>
-                <motion.div className="envelope-flap" animate={opening ? { rotateX: 178 } : { rotateX: [0, 3, 0] }} transition={opening ? { duration: .78, ease: [0.3, 0, .2, 1] } : { duration: 3, repeat: Infinity }}>
-                  <span className="envelope-flap-paper" /><span className="envelope-flap-lining" style={{ backgroundImage: `url(${template.artwork})` }} />
+                <motion.div className="envelope-flap" animate={opening ? { rotateX: -88, opacity: 0 } : { rotateX: [0, -3, 0], opacity: 1 }} transition={opening ? { duration: .38, ease: [0.4, 0, 1, 1] } : { duration: 3, repeat: Infinity }}>
+                  <span className="envelope-flap-paper" />
                 </motion.div>
+                <motion.div className="envelope-flap-open" initial={false} animate={opening ? { scaleY: -1, opacity: 1 } : { scaleY: 0, opacity: 0 }} transition={{ duration: .48, delay: opening ? .26 : 0, ease: [0.2, .75, .2, 1] }} aria-hidden="true" />
                 <div className="envelope-front"><span className="envelope-seam envelope-seam--left" /><span className="envelope-seam envelope-seam--right" /></div>
                 <span className="wax-seal wax-seal--name">{sealName(data.name)}</span>
                 {[0, 1, 2, 3].map((particle) => <motion.i key={particle} className={`envelope-particle ep-${particle + 1}`} animate={opening ? { y: -90 - particle * 14, x: particle % 2 ? 32 : -30, opacity: [0, 1, 0], scale: [0, 1.2, .4] } : { opacity: 0 }} transition={{ duration: 1.1, delay: .35 + particle * .08 }}>✦</motion.i>)}

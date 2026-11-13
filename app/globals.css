@@ -743,10 +743,8 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .rsvp-question-options p { width:100%; margin:0 0 2px; color:#746a61; font:8px var(--sans); text-transform:uppercase; letter-spacing:.08em; }
 .rsvp-question-options label { display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid #ddd2c6; border-radius:999px; background:#fffdfa; font:8px var(--sans); cursor:pointer; }
 .rsvp-question-options input { position:absolute; opacity:0; pointer-events:none; }
-.rsvp-question-options label>span { width:15px; height:15px; display:grid; place-items:center; border:1px solid #bbaea3; border-radius:4px; }
-.rsvp-question-options label>span svg { width:10px; opacity:0; }
-.rsvp-question-options input:checked+span { color:#fff; border-color:#a97579; background:#a97579; }
-.rsvp-question-options input:checked+span svg { opacity:1; }
+.rsvp-question-options label>span { width:15px; height:15px; display:block; border:1px solid #bbaea3; border-radius:50%; background:transparent; box-shadow:inset 0 0 0 3px #fffdfa; transition:background .18s,border-color .18s; }
+.rsvp-question-options input:checked+span { border-color:#a97579; background:#a97579; }
 
 .invite-actions button { min-height:49px; display:grid; grid-template-columns:25px 1fr 13px; align-items:center; gap:7px; padding:8px 10px; border:1px solid var(--theme-border); border-radius:17px; color:var(--theme-ink); background:var(--theme-surface); box-shadow:0 8px 20px rgba(70,50,43,.055); backdrop-filter:blur(9px); font-family:inherit; text-align:left; cursor:pointer; }
 .invite-actions--3>button:first-child { grid-column:1/-1; }
@@ -1083,12 +1081,15 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation .envelope-flap { top:69px; height:137px; overflow:visible; clip-path:none; border-radius:24px 24px 0 0; }
 .invitation .envelope-flap-paper,.invitation .envelope-flap-lining { clip-path:polygon(5% 0,95% 0,100% 5%,50% 100%,0 5%); border-radius:24px 24px 0 0; }
 .invitation .envelope-flap-paper { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 15%,#f7f0e7),color-mix(in srgb,var(--theme-accent) 24%,#dfd3c7)); }
+.invitation .envelope-flap-open { position:absolute; z-index:2; left:0; right:0; top:69px; height:137px; transform-origin:top center; clip-path:polygon(5% 0,95% 0,100% 5%,50% 100%,0 5%); border-radius:24px 24px 0 0; background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 12%,#fff8ee),color-mix(in srgb,var(--theme-accent) 21%,#e5d8ca)); box-shadow:inset 0 1px rgba(255,255,255,.5); pointer-events:none; }
 .invitation .wax-seal--name { top:69%; }
 .invitation--midnight .envelope-back { background:linear-gradient(145deg,color-mix(in srgb,var(--theme-accent) 13%,#15243a),color-mix(in srgb,var(--theme-accent) 8%,#091321)); }
 .invitation--midnight .envelope-front { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 12%,#14243a),color-mix(in srgb,var(--theme-accent) 7%,#091321) 62%,color-mix(in srgb,var(--theme-accent) 15%,#20324a)); }
 .invitation--midnight .envelope-flap-paper { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 12%,#213550),color-mix(in srgb,var(--theme-accent) 8%,#091321)); }
+.invitation--midnight .envelope-flap-open { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 10%,#263b57),color-mix(in srgb,var(--theme-accent) 7%,#0b1728)); }
 .colorway--soft .envelope-front,.colorway--soft .envelope-back,.colorway--soft .envelope-flap,.colorway--deep .envelope-front,.colorway--deep .envelope-back,.colorway--deep .envelope-flap { filter:none!important; }
 .fullscreen-device--desktop .invitation .envelope-flap { top:98px; height:194px; }
+.fullscreen-device--desktop .invitation .envelope-flap-open { top:98px; height:194px; }
 .fullscreen-device--desktop .invitation .wax-seal--name { top:69%; }
 
 /* Artwork always stays intact; colour choices restyle ink, surfaces, frames and envelope */

@@ -170,7 +170,7 @@ export function InvitationStudio({ template }: Props) {
                   <button type="button" role="radio" aria-checked={rsvpMode === option.id} className={rsvpMode === option.id ? "active" : ""} key={option.id} onClick={() => selectRsvpMode(option.id)}><span aria-hidden="true" /><b>{option.title}</b><small>{option.note}</small></button>
                 ))}
               </div>
-              {rsvpMode === "form" && <div className="rsvp-question-options"><p>Frågor i formuläret</p>{([{ key: "partySize", label: "Antal personer" }, { key: "allergies", label: "Allergier & kost" }, { key: "message", label: "Meddelande" }] as const).map((question) => <label key={question.key}><input type="checkbox" checked={rsvpQuestions[question.key]} onChange={() => toggleRsvpQuestion(question.key)} /><span><Check /></span>{question.label}</label>)}</div>}
+              {rsvpMode === "form" && <div className="rsvp-question-options"><p>Frågor i formuläret</p>{([{ key: "partySize", label: "Antal personer" }, { key: "allergies", label: "Allergier & kost" }, { key: "message", label: "Meddelande" }] as const).map((question) => <label key={question.key}><input type="checkbox" checked={rsvpQuestions[question.key]} onChange={() => toggleRsvpQuestion(question.key)} /><span aria-hidden="true" />{question.label}</label>)}</div>}
             </div>
             <div className="feature-toggles">
               {featureKeys.map((feature) => {
