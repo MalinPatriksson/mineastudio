@@ -31,7 +31,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   return (
     <main className={`category-page category-page--${category.palette}`}>
       <SiteHeader />
-      <section className="category-hero">
+      <section className="category-hero" style={{ backgroundImage: `url(/category-heroes/${slug}.webp)` }}>
         <Link href="/#kollektion"><ArrowLeft size={15} /> Alla kategorier</Link>
         <p className="eyebrow">Kollektionen</p>
         <h1>{category.name}</h1>

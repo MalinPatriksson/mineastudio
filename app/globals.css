@@ -1176,13 +1176,21 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation.invitation--layout-cinematic .invite-header p,.invitation.invitation--layout-cinematic .invite-header h1,.invitation.invitation--layout-cinematic .invite-header h2,.invitation.invitation--layout-cinematic .invite-date,.invitation.invitation--layout-cinematic .invite-greeting,.invitation.invitation--layout-cinematic .invite-countdown,.invitation.invitation--layout-cinematic footer { color:#fff4dc!important; text-shadow:0 2px 15px rgba(14,8,4,.72); }
 .invitation.invitation--layout-cinematic .invite-actions a { color:#fff4dc!important; background:rgba(255,246,225,.1)!important; border-color:rgba(255,235,194,.3)!important; }
 
-/* Tidlös keeps its editorial rail, while the invitation content is optically centred. */
+/* Tidlös: names remain editorial and left-aligned; details align to the card's true centre. */
 .invitation.invitation--layout-editorial .invite-content { align-items:center; text-align:center; }
-.invitation.invitation--layout-editorial .invite-header { text-align:center; }
-.invitation.invitation--layout-editorial .invite-header h1,.invitation.invitation--layout-editorial .invite-header h2 { margin-left:auto; margin-right:auto; }
-.invitation.invitation--layout-editorial .invite-photo-slot { align-self:center; }
-.invitation.invitation--layout-editorial .invite-details { width:100%; margin-left:0; border-left:0; border-top:1px solid color-mix(in srgb,currentColor 24%,transparent); border-bottom:1px solid color-mix(in srgb,currentColor 24%,transparent); text-align:center; }
+.invitation.invitation--layout-editorial .invite-header { text-align:left; }
+.invitation.invitation--layout-editorial .invite-header h1,.invitation.invitation--layout-editorial .invite-header h2 { margin-left:0; margin-right:auto; }
+.invitation.invitation--layout-editorial .invite-photo-slot { align-self:center; position:relative; left:-36px; }
+.invitation.invitation--layout-editorial .invite-details { position:relative; left:-36px; width:100%; margin-left:0; border-left:0; border-top:1px solid color-mix(in srgb,currentColor 24%,transparent); border-bottom:1px solid color-mix(in srgb,currentColor 24%,transparent); text-align:center; }
 .invitation.invitation--layout-editorial .invite-greeting { text-align:center; }
+.invitation.invitation--layout-editorial .invite-greeting,.invitation.invitation--layout-editorial .invite-countdown,.invitation.invitation--layout-editorial .invite-actions,.invitation.invitation--layout-editorial footer { position:relative; left:-36px; }
+
+/* Each collection opens with its own editorial image rather than a flat colour field. */
+.category-hero { position:relative; isolation:isolate; min-height:440px; display:flex; flex-direction:column; justify-content:center; overflow:hidden; background-size:cover!important; background-position:center!important; background-repeat:no-repeat!important; text-shadow:0 3px 24px rgba(16,11,8,.5); }
+.category-hero::before { content:""; position:absolute; z-index:0; inset:0; background:linear-gradient(90deg,rgba(18,13,10,.42),rgba(24,17,12,.5) 38%,rgba(24,17,12,.5) 62%,rgba(18,13,10,.42)),linear-gradient(180deg,rgba(12,9,7,.16),rgba(12,9,7,.32)); }
+.category-hero>* { position:relative; z-index:1; }
+.category-hero .eyebrow { color:#f0c9c4; }
+.category-hero>p:last-child { color:rgba(255,255,255,.82); }
 
 /* Theme-specific motion particles */
 .theme-motion { position:absolute; z-index:2; display:block; pointer-events:none; }
@@ -1200,6 +1208,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 
 @media (max-width:1150px) { .category-product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:700px) {
+  .category-hero { min-height:380px; background-position:center!important; }
   .category-entry { flex:0 0 min(82vw,340px); }
   .category-entry:last-child { flex-basis:min(82vw,340px); }
   .category-product-grid { grid-template-columns:1fr; }
