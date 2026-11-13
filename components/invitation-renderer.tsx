@@ -107,7 +107,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
 
       {template.layout === "storybook" && <div className="storybook-layers" aria-hidden="true"><motion.span animate={motionEnabled ? { y: playful ? [-18, 16, -18] : [-8, 8, -8] } : undefined} transition={{ duration: 7, repeat: Infinity }} /><motion.span animate={motionEnabled ? { y: playful ? [12, -20, 12] : [6, -6, 6] } : undefined} transition={{ duration: 9, repeat: Infinity }} /><i>Kapitel ett</i><b>Följ stigen</b></div>}
       {template.layout === "poster" && <div className="poster-graphics" aria-hidden="true"><span>JA!</span><i>{data.age || "WOW"}</i><b>✦ ✦ ✦</b></div>}
-      {template.layout === "editorial" && <div className="editorial-rail" aria-hidden="true"><span>MINEA / BRÖLLOP</span><i>{formatDate(data.date)}</i></div>}
+      {template.layout === "editorial" && <div className="editorial-rail" aria-hidden="true"><span>{data.kicker}</span><i>{formatDate(data.date)}</i></div>}
       {template.layout === "cinematic" && <div className="cinematic-sequence" aria-hidden="true"><span>01</span><span>02</span><span>03</span></div>}
       {template.layout === "celestial" && <div className="celestial-orbit" aria-hidden="true"><motion.span animate={motionEnabled ? { rotate: 360 } : undefined} transition={{ duration: playful ? 12 : 24, repeat: Infinity, ease: "linear" }}><i>✦</i><b>✧</b><em>✦</em></motion.span></div>}
       {template.layout === "vintage" && <div className="vintage-frame" aria-hidden="true"><span /><i /><b /></div>}

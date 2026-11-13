@@ -954,8 +954,8 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 /* Tidlös: editorial grid with a vertical rail and asymmetric content */
 .invitation--layout-editorial { padding:70px 34px 42px 92px; background:#f2eee7; }
 .invitation--layout-editorial::before { inset:22px; border-radius:0; border-color:rgba(25,25,24,.35); }
-.invitation--layout-editorial .invite-world-bg { opacity:.32; }
-.invitation--layout-editorial .invite-world-bg::after { background:linear-gradient(90deg,rgba(242,238,231,.7),rgba(242,238,231,.92)); }
+.invitation--layout-editorial .invite-world-bg { inset:0; opacity:1; background-size:cover; background-position:center top; }
+.invitation--layout-editorial .invite-world-bg::after { background:linear-gradient(180deg,rgba(255,252,246,.02),rgba(242,238,231,.08)); }
 .invitation--layout-editorial .invite-content { align-items:flex-start; text-align:left; }
 .invitation--layout-editorial .invite-header { width:100%; text-align:left; }
 .invitation--layout-editorial .invite-header h1 { max-width:290px; color:#181817!important; font-size:54px; line-height:.82; }
@@ -964,7 +964,8 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation--layout-editorial .invite-actions { width:100%; }
 .editorial-rail { right:auto; width:55px; border-right:1px solid rgba(20,20,19,.3); }
 .editorial-rail span,.editorial-rail i { position:absolute; left:18px; writing-mode:vertical-rl; font:8px var(--sans); letter-spacing:.14em; }
-.editorial-rail span { top:70px; }.editorial-rail i { bottom:40px; }
+.editorial-rail span { top:70px; color:#ead9c4; }.editorial-rail i { bottom:40px; color:#ead9c4; }
+.invitation--layout-editorial .invite-header>p { visibility:hidden; }
 
 /* Gyllene timmen: full-screen photography with separate glass chapters */
 .invitation--layout-cinematic { min-height:1120px; padding:470px 24px 44px; background:#4a3425; }
