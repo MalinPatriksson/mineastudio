@@ -1176,6 +1176,14 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation.invitation--layout-cinematic .invite-header p,.invitation.invitation--layout-cinematic .invite-header h1,.invitation.invitation--layout-cinematic .invite-header h2,.invitation.invitation--layout-cinematic .invite-date,.invitation.invitation--layout-cinematic .invite-greeting,.invitation.invitation--layout-cinematic .invite-countdown,.invitation.invitation--layout-cinematic footer { color:#fff4dc!important; text-shadow:0 2px 15px rgba(14,8,4,.72); }
 .invitation.invitation--layout-cinematic .invite-actions a { color:#fff4dc!important; background:rgba(255,246,225,.1)!important; border-color:rgba(255,235,194,.3)!important; }
 
+/* Tidlös keeps its editorial rail, while the invitation content is optically centred. */
+.invitation.invitation--layout-editorial .invite-content { align-items:center; text-align:center; }
+.invitation.invitation--layout-editorial .invite-header { text-align:center; }
+.invitation.invitation--layout-editorial .invite-header h1,.invitation.invitation--layout-editorial .invite-header h2 { margin-left:auto; margin-right:auto; }
+.invitation.invitation--layout-editorial .invite-photo-slot { align-self:center; }
+.invitation.invitation--layout-editorial .invite-details { width:100%; margin-left:0; border-left:0; border-top:1px solid color-mix(in srgb,currentColor 24%,transparent); border-bottom:1px solid color-mix(in srgb,currentColor 24%,transparent); text-align:center; }
+.invitation.invitation--layout-editorial .invite-greeting { text-align:center; }
+
 /* Theme-specific motion particles */
 .theme-motion { position:absolute; z-index:2; display:block; pointer-events:none; }
 .theme-motion.tm-1{left:9%;top:18%}.theme-motion.tm-2{right:11%;top:24%}.theme-motion.tm-3{left:17%;top:54%}.theme-motion.tm-4{right:16%;top:62%}.theme-motion.tm-5{left:47%;top:11%}.theme-motion.tm-6{left:8%;top:77%}.theme-motion.tm-7{right:8%;top:44%}.theme-motion.tm-8{left:42%;top:83%}.theme-motion.tm-9{right:32%;top:17%}.theme-motion.tm-10{left:28%;top:34%}.theme-motion.tm-11{right:29%;top:72%}.theme-motion.tm-12{left:55%;top:48%}
