@@ -19,7 +19,7 @@ const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean
 
 export function InvitationStudio({ template }: Props) {
   const [data, setData] = useState<InvitationData>(template.defaultData);
-  const [enabled, setEnabled] = useState<FeatureKey[]>(template.recommended);
+  const [enabled, setEnabled] = useState<FeatureKey[]>(template.id === "tidlos" ? [...template.recommended, "greeting", "countdown"] : template.recommended);
   const [animation, setAnimation] = useState<AnimationStyle>("soft");
   const [colorway, setColorway] = useState<Colorway>("signature");
   const [rsvpMode, setRsvpMode] = useState<RsvpMode>("form");

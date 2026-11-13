@@ -1192,6 +1192,22 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .category-hero .eyebrow { color:#f0c9c4; }
 .category-hero>p:last-child { color:rgba(255,255,255,.82); }
 
+/* Frosted lower panels let the invitation artwork remain the hero. */
+.product-card--collection .product-info { background:linear-gradient(135deg,rgba(255,255,255,.32),rgba(255,255,255,.1)); border-top:1px solid rgba(255,255,255,.42); backdrop-filter:blur(22px) saturate(1.16); -webkit-backdrop-filter:blur(22px) saturate(1.16); box-shadow:inset 0 1px rgba(255,255,255,.2); }
+.product-card--collection .product-link { border:1px solid rgba(255,255,255,.34); background:linear-gradient(135deg,rgba(255,255,255,.38),rgba(255,255,255,.16)); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); box-shadow:inset 0 1px rgba(255,255,255,.24),0 8px 22px rgba(61,43,31,.06); }
+
+/* Homepage category cards use category worlds, not a single invitation design. */
+.category-entry { border:0; background:transparent; box-shadow:0 24px 58px rgba(56,43,34,.12); }
+.category-entry-art { aspect-ratio:1.12; padding:0; background-size:cover; background-position:center; background-repeat:no-repeat; }
+.category-entry-copy { color:var(--category-ink); background:var(--category-glass); border-top:1px solid rgba(255,255,255,.46); backdrop-filter:blur(22px) saturate(1.12); -webkit-backdrop-filter:blur(22px) saturate(1.12); box-shadow:inset 0 1px rgba(255,255,255,.25); }
+.category-entry--barnkalas { --category-glass:linear-gradient(145deg,rgba(245,209,215,.76),rgba(238,220,195,.66)); --category-ink:#6d3e4b; }
+.category-entry--brollop { --category-glass:linear-gradient(145deg,rgba(235,224,207,.8),rgba(205,184,155,.65)); --category-ink:#59493b; }
+.category-entry--dop { --category-glass:linear-gradient(145deg,rgba(225,238,239,.82),rgba(181,207,211,.66)); --category-ink:#415f69; }
+.category-entry--babyshower { --category-glass:linear-gradient(145deg,rgba(244,229,214,.84),rgba(229,198,192,.66)); --category-ink:#73545a; }
+.category-entry--fodelsedag-jubileum { --category-glass:linear-gradient(145deg,rgba(65,55,68,.84),rgba(126,95,92,.72)); --category-ink:#fff1db; }
+.category-entry--student-examen { --category-glass:linear-gradient(145deg,rgba(210,224,231,.82),rgba(188,168,119,.62)); --category-ink:#344f60; }
+.category-entry--fest-middag { --category-glass:linear-gradient(145deg,rgba(239,231,177,.8),rgba(189,209,177,.66)); --category-ink:#536344; }
+
 /* Theme-specific motion particles */
 .theme-motion { position:absolute; z-index:2; display:block; pointer-events:none; }
 .theme-motion.tm-1{left:9%;top:18%}.theme-motion.tm-2{right:11%;top:24%}.theme-motion.tm-3{left:17%;top:54%}.theme-motion.tm-4{right:16%;top:62%}.theme-motion.tm-5{left:47%;top:11%}.theme-motion.tm-6{left:8%;top:77%}.theme-motion.tm-7{right:8%;top:44%}.theme-motion.tm-8{left:42%;top:83%}.theme-motion.tm-9{right:32%;top:17%}.theme-motion.tm-10{left:28%;top:34%}.theme-motion.tm-11{right:29%;top:72%}.theme-motion.tm-12{left:55%;top:48%}

@@ -73,8 +73,8 @@ export function HomePage() {
         </div>
         <div className="category-entry-grid">
           {invitationCategories.map((occasion) => (
-            <Link href={`/kategori/${occasion.slug}`} key={occasion.slug} className={`category-entry category-entry--${templateById[occasion.templateId].palette}`}>
-              <div className="category-entry-art"><TemplateArt template={templateById[occasion.templateId]} compact animated={false} /></div>
+            <Link href={`/kategori/${occasion.slug}`} key={occasion.slug} className={`category-entry category-entry--${occasion.slug}`}>
+              <div className="category-entry-art" style={{ backgroundImage: `url(/category-heroes/${occasion.slug}.webp)` }} aria-hidden="true" />
               <div className="category-entry-copy"><span>{occasion.number}</span><p>{occasion.note}</p><h3>{occasion.name}</h3><i>Se alla designer <ArrowRight size={16} /></i></div>
             </Link>
           ))}
