@@ -52,6 +52,7 @@ function Countdown({ date, label }: { date: string; label: string }) {
 }
 
 export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false, rsvpMode = "sms", rsvpQuestions = defaultRsvpQuestions, invitationToken, thumbnail = false }: Props) {
+  const photoIsBackground = template.layout === "cinematic" && Boolean(data.photoUrl);
   const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature) && (feature !== "rsvp" || rsvpMode !== "none"));
   const motionEnabled = animation !== "none";
   const playful = animation === "playful";
@@ -77,7 +78,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
 
   return (
     <motion.article className={`invitation invitation--${template.palette} invitation--layout-${template.layout} colorway--${colorway} animation--${animation} ${thumbnail ? "invitation--thumbnail" : ""} ${postcardFlipped ? "is-postcard-flipped" : ""} ${dense ? "invitation--dense" : ""} ${extraDense ? "invitation--extra-dense" : ""} ${envelope && !opened ? "invitation--sealed" : ""}`}>
-      <div className="invite-world-bg" style={{ backgroundImage: `url(${template.artwork})` }} />
+      <div className="invite-world-bg" style={{ backgroundImage: `url(${photoIsBackground ? data.photoUrl : template.artwork})`, ...(photoIsBackground ? { backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` } : {}) }} />
 
       <AnimatePresence>
         {!opened && (
@@ -141,7 +142,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
         </header>
 
         <AnimatePresence mode="popLayout" initial={false}>
-          {data.photoUrl && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} templateId={template.id} /></motion.div>}
+          {data.photoUrl && !photoIsBackground && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} templateId={template.id} /></motion.div>}
           <motion.div key="details" layout className="invite-details">
             <p className="invite-date">{formatDate(data.date)}</p>
             <p><Clock3 size={14} /> {data.startTime || "14:00"}{data.endTime ? `–${data.endTime}` : ""}</p>

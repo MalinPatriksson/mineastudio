@@ -34,6 +34,7 @@ export function InvitationStudio({ template }: Props) {
 
   const required = [data.name, data.date, data.startTime, data.address, data.phone];
   const progress = Math.round((required.filter(Boolean).length / required.length) * 100);
+  const photoIsBackground = template.layout === "cinematic";
 
   const update = <K extends keyof InvitationData>(key: K, value: InvitationData[K]) => setData((current) => ({ ...current, [key]: value }));
   const toggleFeature = (feature: FeatureKey) => setEnabled((current) => current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature]);
@@ -116,27 +117,40 @@ export function InvitationStudio({ template }: Props) {
               <div className="photo-upload field--wide">
                 <div>
                   <span className="photo-upload-icon"><ImagePlus size={19} /></span>
-                  <span><b>Egen bild <em>valfritt</em></b><small>Välj form och finish, dra sedan fram precis rätt utsnitt.</small></span>
+                  <span><b>{photoIsBackground ? "Egen bakgrundsbild" : "Egen bild"} <em>valfritt</em></b><small>{photoIsBackground ? "Bilden fyller hela inbjudan. Dra den för att välja exakt utsnitt." : "Välj form och finish, dra sedan fram precis rätt utsnitt."}</small></span>
                 </div>
                 {data.photoUrl ? (
                   <>
                     <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>Justera bilden nedan</b><button type="button" aria-label="Ta bort bild" onClick={() => setData((current) => ({ ...current, photoUrl: undefined }))}><Trash2 size={15} /></button></div>
-                    <div className={`photo-editor-theme invitation invitation--${template.palette} colorway--${colorway}`}>
+                    {photoIsBackground ? (
                       <div
-                        className="photo-editor-drag-target"
+                        className="cinematic-photo-editor"
                         onPointerDown={startPhotoDrag}
                         onPointerMove={movePhoto}
                         onPointerUp={stopPhotoDrag}
                         onPointerCancel={stopPhotoDrag}
+                        style={{ backgroundImage: `linear-gradient(180deg,transparent 38%,rgba(27,17,11,.78)),url(${data.photoUrl})`, backgroundPosition: `center,${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }}
                       >
-                        <InvitationPhoto data={data} templateId={template.id} className="invite-photo-wrap--editor" />
+                        <span><small>{data.kicker}</small><b>{data.name}</b><em>{data.subtitle}</em></span>
                       </div>
-                    </div>
+                    ) : (
+                      <div className={`photo-editor-theme invitation invitation--${template.palette} colorway--${colorway}`}>
+                        <div
+                          className="photo-editor-drag-target"
+                          onPointerDown={startPhotoDrag}
+                          onPointerMove={movePhoto}
+                          onPointerUp={stopPhotoDrag}
+                          onPointerCancel={stopPhotoDrag}
+                        >
+                          <InvitationPhoto data={data} templateId={template.id} className="invite-photo-wrap--editor" />
+                        </div>
+                      </div>
+                    )}
                     <p className="photo-drag-hint"><Move size={13} /> Dra bilden för att välja exakt utsnitt</p>
-                    <div className="photo-controls">
+                    {!photoIsBackground && <div className="photo-controls">
                       <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
                       <div><small>Finish</small><div className="photo-choice-row">{photoFrames.map((frame) => <button type="button" key={frame.id} className={(data.photoFrame ?? "fade") === frame.id ? "active" : ""} aria-pressed={(data.photoFrame ?? "fade") === frame.id} onClick={() => update("photoFrame", frame.id)}>{frame.label}</button>)}</div></div>
-                    </div>
+                    </div>}
                   </>
                 ) : (
                   <label className="photo-upload-button">Välj bild<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => addPhoto(event.target.files?.[0])} /></label>
