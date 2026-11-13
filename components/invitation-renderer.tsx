@@ -90,7 +90,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
                   <span className="envelope-letter-art" style={{ backgroundImage: `url(${template.artwork})` }} />
                   <small>{data.kicker}<b>{data.name}</b><em>{data.subtitle}</em></small>
                 </motion.div>
-                <motion.div className="envelope-flap" animate={opening ? { rotateX: -178 } : { rotateX: [0, -3, 0] }} transition={opening ? { duration: .78, ease: [0.3, 0, .2, 1] } : { duration: 3, repeat: Infinity }}>
+                <motion.div className="envelope-flap" animate={opening ? { rotateX: 178 } : { rotateX: [0, 3, 0] }} transition={opening ? { duration: .78, ease: [0.3, 0, .2, 1] } : { duration: 3, repeat: Infinity }}>
                   <span className="envelope-flap-paper" /><span className="envelope-flap-lining" style={{ backgroundImage: `url(${template.artwork})` }} />
                 </motion.div>
                 <div className="envelope-front"><span className="envelope-seam envelope-seam--left" /><span className="envelope-seam envelope-seam--right" /></div>
