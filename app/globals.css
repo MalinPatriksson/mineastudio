@@ -1179,8 +1179,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 
 /* Tidlös: names remain editorial and left-aligned; details align to the card's true centre. */
 .invitation.invitation--layout-editorial .invite-content { align-items:center; text-align:center; }
-.invitation.invitation--layout-editorial .invite-header { text-align:left; }
-.invitation.invitation--layout-editorial .invite-header h1,.invitation.invitation--layout-editorial .invite-header h2 { margin-left:0; margin-right:auto; }
+.invitation.invitation--layout-editorial .invite-header { text-align:center; }
+.invitation.invitation--layout-editorial .invite-header h1 { margin-left:0; margin-right:auto; text-align:left; }
+.invitation.invitation--layout-editorial .invite-header h2 { position:relative; left:-36px; margin-left:auto; margin-right:auto; text-align:center; }
 .invitation.invitation--layout-editorial .invite-photo-slot { align-self:center; position:relative; left:-36px; }
 .invitation.invitation--layout-editorial .invite-details { position:relative; left:-36px; width:100%; margin-left:0; border-left:0; border-top:1px solid color-mix(in srgb,currentColor 24%,transparent); border-bottom:1px solid color-mix(in srgb,currentColor 24%,transparent); text-align:center; }
 .invitation.invitation--layout-editorial .invite-greeting { text-align:center; }
