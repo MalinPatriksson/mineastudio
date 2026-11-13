@@ -12,6 +12,9 @@ create index if not exists purchase_requests_rate_limit_idx
 
 alter table public.purchase_requests enable row level security;
 
+grant select, insert on table public.purchase_requests to service_role;
+grant usage, select on sequence public.purchase_requests_id_seq to service_role;
+
 comment on column public.invitations.checkout_reference is
   'Client-generated idempotency key. Replaced by the Stripe checkout/session id when payments are connected.';
 
