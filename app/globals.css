@@ -507,7 +507,9 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .category-products-head { display:flex; align-items:end; justify-content:space-between; gap:35px; margin-bottom:48px; }
 .category-products-head h2 { margin:12px 0 0; font:400 clamp(40px,5vw,66px)/.96 var(--serif); letter-spacing:-.035em; }
 .category-products-head h2 em { color:#a66f75; font-weight:400; }
-.category-products-head>p { margin:0; padding:10px 14px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.1em; white-space:nowrap; }
+.category-products-summary { max-width:330px; text-align:right; }
+.category-products-summary p { margin:0 0 9px; color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.1em; }
+.category-products-summary span { display:flex; align-items:center; justify-content:flex-end; gap:7px; color:#7a6c61; font:italic 13px/1.4 var(--serif); }
 .category-product-grid { grid-template-columns:repeat(auto-fit,minmax(290px,390px)); }
 .category-product-grid .product-card { width:100%; }
 
@@ -1134,15 +1136,33 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .category-products { max-width:1500px; }
 .category-product-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
 .product-art { aspect-ratio:.78; }
-.product-invitation-preview { position:absolute; inset:25px 25px 0; overflow:hidden; border-radius:26px; box-shadow:0 24px 45px rgba(41,31,25,.2); }
-.product-invitation-preview .invitation { width:170%; min-height:660px; transform:scale(.59); transform-origin:top left; border-radius:35px; box-shadow:none; }
-.product-invitation-preview .invitation--layout-storybook,.product-invitation-preview .invitation--layout-cinematic { min-height:760px; padding-top:270px; }
+.product-invitation-preview { position:absolute; inset:0; overflow:hidden; border-radius:0; box-shadow:none; }
+.product-invitation-preview .invitation { width:170%; min-height:660px; transform:scale(.59); transform-origin:top left; border-radius:0; box-shadow:none; }
+.product-invitation-preview .invitation--layout-storybook { min-height:760px; padding-top:270px; }
+.product-invitation-preview .invitation--layout-cinematic { min-height:760px; padding-top:185px; }
+.product-invitation-preview .invitation--layout-cinematic .invite-content { gap:5px; }
+.product-invitation-preview .invitation--layout-cinematic .invite-header,.product-invitation-preview .invitation--layout-cinematic .invite-details,.product-invitation-preview .invitation--layout-cinematic .invite-greeting,.product-invitation-preview .invitation--layout-cinematic .invite-actions { padding:8px 11px; }
+.product-invitation-preview .invitation--layout-cinematic .invite-header h1 { font-size:34px; }
 .product-invitation-preview .invitation--layout-vintage { padding-top:245px; }
 .product-invitation-preview .invitation--layout-patisserie { padding-top:185px; }
 .product-invitation-preview .invitation--layout-celestial { padding-top:170px; }
 .product-invitation-preview .invitation--layout-postcard { min-height:660px; padding:42px 28px; }
 .product-art-hit { position:absolute; z-index:12; inset:0; }
 .product-art .card-index,.product-art .card-badge { z-index:14; pointer-events:none; }
+
+/* Product information is one category-coloured glass surface; the invitation itself stays edge-to-edge. */
+.product-card--collection { border:0; background:var(--category-glass); color:var(--category-ink); box-shadow:0 22px 55px var(--category-shadow); backdrop-filter:blur(20px) saturate(1.08); -webkit-backdrop-filter:blur(20px) saturate(1.08); }
+.product-card--collection .product-art { padding:0; background:transparent; }
+.product-card--collection .product-info { color:inherit; border-bottom-color:color-mix(in srgb,currentColor 15%,transparent); }
+.product-card--collection .product-info p,.product-card--collection .product-price small { color:inherit; opacity:.62; }
+.product-card--collection .product-link { color:inherit; background:rgba(255,255,255,.27); }
+.product-card--category-barnkalas { --category-glass:linear-gradient(145deg,rgba(245,209,215,.82),rgba(238,220,195,.72)); --category-ink:#6d3e4b; --category-shadow:rgba(121,72,78,.14); }
+.product-card--category-brollop { --category-glass:linear-gradient(145deg,rgba(235,224,207,.88),rgba(205,184,155,.72)); --category-ink:#59493b; --category-shadow:rgba(94,75,57,.15); }
+.product-card--category-dop { --category-glass:linear-gradient(145deg,rgba(225,238,239,.88),rgba(181,207,211,.72)); --category-ink:#415f69; --category-shadow:rgba(65,94,102,.13); }
+.product-card--category-babyshower { --category-glass:linear-gradient(145deg,rgba(244,229,214,.9),rgba(229,198,192,.72)); --category-ink:#73545a; --category-shadow:rgba(113,77,80,.13); }
+.product-card--category-fodelsedag-jubileum { --category-glass:linear-gradient(145deg,rgba(65,55,68,.9),rgba(126,95,92,.78)); --category-ink:#fff1db; --category-shadow:rgba(45,30,40,.2); }
+.product-card--category-student-examen { --category-glass:linear-gradient(145deg,rgba(210,224,231,.88),rgba(188,168,119,.68)); --category-ink:#344f60; --category-shadow:rgba(57,76,86,.15); }
+.product-card--category-fest-middag { --category-glass:linear-gradient(145deg,rgba(239,231,177,.86),rgba(189,209,177,.74)); --category-ink:#536344; --category-shadow:rgba(76,91,62,.14); }
 
 /* Theme-specific motion particles */
 .theme-motion { position:absolute; z-index:2; display:block; pointer-events:none; }
@@ -1164,4 +1184,6 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
   .category-entry:last-child { flex-basis:min(82vw,340px); }
   .category-product-grid { grid-template-columns:1fr; }
   .collection-menu { display:none; }
+  .category-products-summary { max-width:none; margin-top:20px; text-align:left; }
+  .category-products-summary span { justify-content:flex-start; }
 }

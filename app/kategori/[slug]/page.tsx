@@ -40,16 +40,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <section className="category-products">
         <div className="category-products-head">
           <div><p className="eyebrow">Välj en design</p><h2>Hitta känslan som<br /><em>är alldeles er.</em></h2></div>
-          <p>{items.length} {items.length === 1 ? "design" : "designer"} i kollektionen</p>
+          <div className="category-products-summary"><p>{items.length} {items.length === 1 ? "design" : "designer"} i kollektionen</p><span><Sparkles size={13} /> Alla designer är interaktiva och visas med samtliga funktioner</span></div>
         </div>
         <div className="product-grid category-product-grid">
           {items.map((template, index) => (
-            <article className={`product-card product-card--${template.palette}`} key={template.id}>
-              <div className={`product-art product-art--${template.palette}`}>
+            <article className={`product-card product-card--collection product-card--category-${slug}`} key={template.id}>
+              <div className="product-art">
                 <span className="card-index">{String(index + 1).padStart(2, "0")}</span>
-                <div className="product-invitation-preview"><InvitationRenderer template={template} data={template.defaultData} enabled={[]} animation="none" interactive={false} demoMark={false} rsvpMode="none" thumbnail /></div>
+                <div className="product-invitation-preview"><InvitationRenderer template={template} data={template.defaultData} enabled={["rsvp", "map", "calendar", "countdown", "greeting"]} animation="soft" interactive={false} demoMark={false} rsvpMode="form" thumbnail /></div>
                 <Link className="product-art-hit" href={`/studio/${template.id}`} aria-label={`Anpassa ${template.name}`} />
-                <span className="card-badge"><Sparkles size={12} /> Interaktiv</span>
               </div>
               <div className="product-info">
                 <div><p>{template.category}</p><h3>{template.name}</h3></div>
