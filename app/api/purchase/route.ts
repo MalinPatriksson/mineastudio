@@ -9,7 +9,9 @@ export const runtime = "nodejs";
 
 const invitationDataSchema = z.object({
   name: z.string().trim().min(1).max(32),
-  photoUrl: z.string().max(4_200_000).optional(),
+  // The platform request limit is the outer guard. Existing editor sessions may
+  // still contain an original data URL; newly selected photos are compressed client-side.
+  photoUrl: z.string().optional(),
   photoPositionX: z.number().min(0).max(100).optional(),
   photoPositionY: z.number().min(0).max(100).optional(),
   photoShape: z.enum(["organic", "arch", "circle"]).optional(),
@@ -74,11 +76,9 @@ export async function POST(request: Request) {
   const parsed = purchaseSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     const field = parsed.error.issues[0]?.path.join(".");
-    const error = field === "data.photoUrl"
-      ? "Bilden är för stor för att publiceras. Ladda upp den igen så optimeras den automatiskt."
-      : field === "email"
-        ? "Kontrollera att mejladressen är korrekt."
-        : "Kontrollera datum, tider och obligatoriska uppgifter i inbjudan.";
+    const error = field === "email"
+      ? "Kontrollera att mejladressen är korrekt."
+      : "Kontrollera datum, tider och obligatoriska uppgifter i inbjudan.";
     return Response.json({ error, field }, { status: 400 });
   }
   if (parsed.data.website) return Response.json({ error: "Köpet kunde inte genomföras." }, { status: 400 });
