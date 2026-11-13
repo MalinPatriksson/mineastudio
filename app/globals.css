@@ -1076,3 +1076,91 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
   .invitation--layout-poster .invite-header h1 { font-size:49px; }
   .invitation--layout-ticket { padding-left:35px; padding-right:35px; }
 }
+
+/* Refined envelope construction: softly theme-matched paper, rounded top and seal on the closing V */
+.invitation .envelope-back { border-radius:24px; background:linear-gradient(145deg,color-mix(in srgb,var(--theme-accent) 17%,#f4eee5),color-mix(in srgb,var(--theme-accent) 9%,#fffaf1)); }
+.invitation .envelope-front { border-radius:0 0 24px 24px; background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 18%,#e9dfd4),color-mix(in srgb,var(--theme-accent) 9%,#fff8ed) 58%,color-mix(in srgb,var(--theme-accent) 22%,#dfd3c6)); }
+.invitation .envelope-flap { top:69px; height:137px; overflow:visible; clip-path:none; border-radius:24px 24px 0 0; }
+.invitation .envelope-flap-paper,.invitation .envelope-flap-lining { clip-path:polygon(5% 0,95% 0,100% 5%,50% 100%,0 5%); border-radius:24px 24px 0 0; }
+.invitation .envelope-flap-paper { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 15%,#f7f0e7),color-mix(in srgb,var(--theme-accent) 24%,#dfd3c7)); }
+.invitation .wax-seal--name { top:69%; }
+.invitation--midnight .envelope-back { background:linear-gradient(145deg,color-mix(in srgb,var(--theme-accent) 13%,#15243a),color-mix(in srgb,var(--theme-accent) 8%,#091321)); }
+.invitation--midnight .envelope-front { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 12%,#14243a),color-mix(in srgb,var(--theme-accent) 7%,#091321) 62%,color-mix(in srgb,var(--theme-accent) 15%,#20324a)); }
+.invitation--midnight .envelope-flap-paper { background:linear-gradient(155deg,color-mix(in srgb,var(--theme-accent) 12%,#213550),color-mix(in srgb,var(--theme-accent) 8%,#091321)); }
+.colorway--soft .envelope-front,.colorway--soft .envelope-back,.colorway--soft .envelope-flap,.colorway--deep .envelope-front,.colorway--deep .envelope-back,.colorway--deep .envelope-flap { filter:none!important; }
+.fullscreen-device--desktop .invitation .envelope-flap { top:98px; height:194px; }
+.fullscreen-device--desktop .invitation .wax-seal--name { top:69%; }
+
+/* Artwork always stays intact; colour choices restyle ink, surfaces, frames and envelope */
+.invitation .invite-world-bg { filter:none!important; }
+.colorway--soft .envelope-atmosphere,.colorway--deep .envelope-atmosphere,.colorway--beige .envelope-atmosphere,.colorway--boy .envelope-atmosphere { filter:none!important; }
+.invitation.colorway--soft::after { border-color:color-mix(in srgb,var(--theme-accent) 48%,transparent); }
+.invitation.colorway--deep::after { border-color:color-mix(in srgb,var(--theme-accent) 60%,transparent); }
+.invitation.colorway--beige::after,.invitation.colorway--boy::after { border-color:color-mix(in srgb,var(--theme-accent) 42%,transparent); }
+
+/* OSA is a translucent themed layer over the actual artwork */
+.rsvp-overlay { background:rgba(255,249,241,.76); backdrop-filter:blur(18px) saturate(.86); }
+.invitation--rose .rsvp-overlay { background:rgba(255,242,238,.76); }
+.invitation--sand .rsvp-overlay { background:rgba(248,240,226,.78); }
+.invitation--sky .rsvp-overlay { background:rgba(235,243,241,.76); }
+.invitation--midnight .rsvp-overlay { background:rgba(7,14,25,.79); }
+.rsvp-overlay::before { content:""; position:fixed; z-index:-1; inset:0; background:linear-gradient(150deg,color-mix(in srgb,var(--theme-accent) 10%,transparent),transparent 45%,color-mix(in srgb,var(--theme-accent) 15%,transparent)); pointer-events:none; }
+.rsvp-submit,.rsvp-confirmation>.button { border-color:color-mix(in srgb,var(--theme-accent) 75%,#1b1714)!important; color:#fff!important; background:var(--theme-accent)!important; box-shadow:0 12px 30px color-mix(in srgb,var(--theme-accent) 25%,transparent)!important; }
+.invitation--midnight .rsvp-submit,.invitation--midnight .rsvp-confirmation>.button { color:#101827!important; }
+.rsvp-confirmation--no>span { color:var(--theme-accent); background:var(--theme-surface); }
+.rsvp-confirmation--no h2 { max-width:300px; font-size:31px; }
+.rsvp-attendance button.active { box-shadow:0 8px 22px color-mix(in srgb,var(--theme-accent) 24%,transparent); }
+
+/* Radio indicators are calm filled dots, not checkmarks */
+.rsvp-mode-options button>span { position:relative; }
+.rsvp-mode-options button.active>span::after { content:""; width:6px; height:6px; border-radius:50%; background:#fff; }
+
+/* Horizontal category rail on the start page */
+.category-entry-grid { display:flex; gap:22px; width:100%; overflow-x:auto; padding:8px 2px 30px; scroll-snap-type:x mandatory; scrollbar-width:thin; scrollbar-color:#b9a99a transparent; }
+.category-entry { flex:0 0 clamp(285px,27vw,355px); scroll-snap-align:start; }
+.category-entry:last-child { flex-basis:clamp(285px,27vw,355px); }
+
+/* Desktop occasion menu */
+.collection-menu { position:relative; }
+.collection-menu>summary { cursor:pointer; list-style:none; }
+.collection-menu>summary::-webkit-details-marker { display:none; }
+.collection-menu>summary::after { content:"⌄"; margin-left:6px; opacity:.65; }
+.collection-menu>div { position:absolute; top:30px; left:50%; width:240px; display:grid; padding:12px; border:1px solid rgba(255,255,255,.18); border-radius:18px; color:#28231f; background:rgba(250,246,239,.96); box-shadow:0 22px 55px rgba(25,20,17,.2); backdrop-filter:blur(18px); transform:translateX(-50%); }
+.collection-menu>div a { padding:10px 12px; border-radius:11px; font-size:10px; }
+.collection-menu>div a:hover { background:#eee4d8; }
+
+/* Category cards use the exact invitation renderer at miniature scale */
+.category-products { max-width:1500px; }
+.category-product-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.product-art { aspect-ratio:.78; }
+.product-invitation-preview { position:absolute; inset:25px 25px 0; overflow:hidden; border-radius:26px; box-shadow:0 24px 45px rgba(41,31,25,.2); }
+.product-invitation-preview .invitation { width:170%; min-height:660px; transform:scale(.59); transform-origin:top left; border-radius:35px; box-shadow:none; }
+.product-invitation-preview .invitation--layout-storybook,.product-invitation-preview .invitation--layout-cinematic { min-height:760px; padding-top:270px; }
+.product-invitation-preview .invitation--layout-vintage { padding-top:245px; }
+.product-invitation-preview .invitation--layout-patisserie { padding-top:185px; }
+.product-invitation-preview .invitation--layout-celestial { padding-top:170px; }
+.product-invitation-preview .invitation--layout-postcard { min-height:660px; padding:42px 28px; }
+.product-art-hit { position:absolute; z-index:12; inset:0; }
+.product-art .card-index,.product-art .card-badge { z-index:14; pointer-events:none; }
+
+/* Theme-specific motion particles */
+.theme-motion { position:absolute; z-index:2; display:block; pointer-events:none; }
+.theme-motion.tm-1{left:9%;top:18%}.theme-motion.tm-2{right:11%;top:24%}.theme-motion.tm-3{left:17%;top:54%}.theme-motion.tm-4{right:16%;top:62%}.theme-motion.tm-5{left:47%;top:11%}.theme-motion.tm-6{left:8%;top:77%}.theme-motion.tm-7{right:8%;top:44%}.theme-motion.tm-8{left:42%;top:83%}.theme-motion.tm-9{right:32%;top:17%}.theme-motion.tm-10{left:28%;top:34%}.theme-motion.tm-11{right:29%;top:72%}.theme-motion.tm-12{left:55%;top:48%}
+.theme-motion--firefly { width:5px; height:5px; border-radius:50%; background:#ffd66e; box-shadow:0 0 12px 4px rgba(255,214,110,.55); }
+.theme-motion--confetti { width:7px; height:17px; border-radius:3px; background:#27317c; }.theme-motion--confetti:nth-child(3n){background:#ffed4a}.theme-motion--confetti:nth-child(3n+1){background:#fff3e2}.theme-motion--confetti:nth-child(3n+2){background:#30c8b0}
+.theme-motion--editorial { left:69px; top:30%; width:2px; height:150px; background:#1b1b1a; transform-origin:top; }
+.theme-motion--sunflare { left:12%; top:12%; width:170px; height:170px; border-radius:50%; background:radial-gradient(circle,rgba(255,221,143,.55),transparent 69%); filter:blur(5px); }
+.theme-motion--moonstar { color:#ffe5a3; filter:drop-shadow(0 0 8px rgba(255,232,174,.75)); }
+.theme-motion--dust { color:#aa8b5f; font:28px var(--serif); }
+.theme-motion--cherry { width:13px; height:13px; color:#a92e46; border-radius:50%; background:#a92e46; font-size:0; box-shadow:8px 3px 0 #c5485b; }.theme-motion--cherry::after{content:"";position:absolute;width:1px;height:18px;left:9px;bottom:9px;background:#65815c;transform:rotate(24deg)}
+.theme-motion--deco { color:#d5b66d; font-size:11px; filter:drop-shadow(0 0 7px currentColor); }
+.theme-motion--ticket { left:0; top:18%; width:60px; height:68%; background:linear-gradient(90deg,transparent,rgba(255,225,139,.18),transparent); transform:skewX(-15deg); }
+.theme-motion--lemon { width:17px; height:14px; color:#f1cb36; border-radius:50%; background:#f1cb36; font-size:0; box-shadow:inset -3px -2px rgba(181,139,18,.18); }
+
+@media (max-width:1150px) { .category-product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:700px) {
+  .category-entry { flex:0 0 min(82vw,340px); }
+  .category-entry:last-child { flex-basis:min(82vw,340px); }
+  .category-product-grid { grid-template-columns:1fr; }
+  .collection-menu { display:none; }
+}

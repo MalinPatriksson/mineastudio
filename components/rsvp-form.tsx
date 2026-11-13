@@ -82,7 +82,7 @@ export function RsvpForm({ open, onClose, invitationName, invitationToken, quest
       window.localStorage.setItem(`minea-rsvp-${invitationToken}`, result.editToken);
       setEditToken(result.editToken);
       setEditUrl(`${window.location.origin}${result.editUrl}`);
-      setFeedback(result.message ?? "Tack! Ditt svar är registrerat.");
+      setFeedback(attendance === "yes" ? "Härligt – ditt svar är registrerat. Vi ser fram emot att ses!" : "Tack för att du berättade. Vi kommer att sakna dig den här gången.");
       setSubmitState("success");
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : "Något gick fel. Försök igen.");
@@ -91,16 +91,22 @@ export function RsvpForm({ open, onClose, invitationName, invitationToken, quest
   };
 
   const showConfirmation = submitState === "success" || submitState === "preview";
+  const confirmationTitle = submitState === "preview"
+    ? attendance === "yes" ? "Så här ser ett ja ut." : "Så här ser ett nej ut."
+    : attendance === "yes" ? `Vad roligt, ${guestName}!` : `Tack för ditt svar, ${guestName}.`;
+  const confirmationCopy = submitState === "preview"
+    ? `Det här är en förhandsvisning av bekräftelsen för någon som ${attendance === "yes" ? "kommer" : "inte kan komma"}. Inget OSA-svar har sparats.`
+    : feedback;
 
   return (
     <div className="rsvp-overlay" role="dialog" aria-modal="true" aria-labelledby="rsvp-title">
       <button className="rsvp-close" type="button" onClick={onClose} aria-label="Stäng OSA-formuläret"><X /></button>
       {showConfirmation ? (
-        <div className="rsvp-confirmation" aria-live="polite">
-          <span><Check /></span>
+        <div className={`rsvp-confirmation rsvp-confirmation--${attendance}`} aria-live="polite">
+          <span>{attendance === "yes" ? <Check /> : <Heart />}</span>
           <p className="eyebrow">{submitState === "preview" ? "Förhandsvisning" : "Svar mottaget"}</p>
-          <h2>{submitState === "preview" ? "Så här ser bekräftelsen ut." : `Tack, ${guestName}!`}</h2>
-          <p>{feedback}</p>
+          <h2>{confirmationTitle}</h2>
+          <p>{confirmationCopy}</p>
           {editUrl && (
             <div className="rsvp-edit-link">
               <small>Spara din personliga ändringslänk</small>

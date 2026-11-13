@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { TemplateArt } from "@/components/template-art";
+import { InvitationRenderer } from "@/components/invitation-renderer";
 import { invitationCategories, templates } from "@/lib/invitations";
 
 const categoryDetails = Object.fromEntries(invitationCategories.map((category) => [category.slug, { name: category.name, intro: category.note, palette: category.palette }]));
@@ -45,11 +45,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <div className="product-grid category-product-grid">
           {items.map((template, index) => (
             <article className={`product-card product-card--${template.palette}`} key={template.id}>
-              <Link className={`product-art product-art--${template.palette}`} href={`/studio/${template.id}`} aria-label={`Anpassa ${template.name}`}>
+              <div className={`product-art product-art--${template.palette}`}>
                 <span className="card-index">{String(index + 1).padStart(2, "0")}</span>
-                <TemplateArt template={template} animated={false} />
+                <div className="product-invitation-preview"><InvitationRenderer template={template} data={template.defaultData} enabled={[]} animation="none" interactive={false} demoMark={false} rsvpMode="none" thumbnail /></div>
+                <Link className="product-art-hit" href={`/studio/${template.id}`} aria-label={`Anpassa ${template.name}`} />
                 <span className="card-badge"><Sparkles size={12} /> Interaktiv</span>
-              </Link>
+              </div>
               <div className="product-info">
                 <div><p>{template.category}</p><h3>{template.name}</h3></div>
                 <div className="product-price">{template.price} kr<small>engångspris</small></div>

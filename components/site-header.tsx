@@ -12,7 +12,10 @@ export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
       {!quiet && (
         <>
           <nav aria-label="Huvudmeny">
-            <Link href="/#kollektion">Kollektion</Link>
+            <details className="collection-menu">
+              <summary>Alla tillfällen</summary>
+              <div>{invitationCategories.map((category) => <Link key={category.slug} href={`/kategori/${category.slug}`}>{category.name}</Link>)}</div>
+            </details>
             <Link href="/#sa-fungerar-det">Så fungerar det</Link>
             <Link className="nav-cta" href="/studio/rosendrom">
               Skapa din inbjudan <ArrowUpRight size={15} />

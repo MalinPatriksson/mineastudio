@@ -167,7 +167,7 @@ export function InvitationStudio({ template }: Props) {
               <div className="rsvp-settings-head"><div><b>Hur ska gästen svara?</b><small>OSA direkt samlar svaren på ett ställe.</small></div><em>Rekommenderad</em></div>
               <div className="rsvp-mode-options" role="radiogroup" aria-label="Välj OSA-sätt">
                 {([{ id: "form", title: "Direkt i inbjudan", note: "Snyggt formulär" }, { id: "sms", title: "Via SMS", note: "Öppnar mobilen" }, { id: "none", title: "Ingen OSA", note: "Dölj svarsknappen" }] as const).map((option) => (
-                  <button type="button" role="radio" aria-checked={rsvpMode === option.id} className={rsvpMode === option.id ? "active" : ""} key={option.id} onClick={() => selectRsvpMode(option.id)}><span>{rsvpMode === option.id && <Check />}</span><b>{option.title}</b><small>{option.note}</small></button>
+                  <button type="button" role="radio" aria-checked={rsvpMode === option.id} className={rsvpMode === option.id ? "active" : ""} key={option.id} onClick={() => selectRsvpMode(option.id)}><span aria-hidden="true" /><b>{option.title}</b><small>{option.note}</small></button>
                 ))}
               </div>
               {rsvpMode === "form" && <div className="rsvp-question-options"><p>Frågor i formuläret</p>{([{ key: "partySize", label: "Antal personer" }, { key: "allergies", label: "Allergier & kost" }, { key: "message", label: "Meddelande" }] as const).map((question) => <label key={question.key}><input type="checkbox" checked={rsvpQuestions[question.key]} onChange={() => toggleRsvpQuestion(question.key)} /><span><Check /></span>{question.label}</label>)}</div>}
