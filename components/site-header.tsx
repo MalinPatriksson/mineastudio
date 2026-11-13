@@ -17,6 +17,7 @@ export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
               <div>{invitationCategories.map((category) => <Link key={category.slug} href={`/kategori/${category.slug}`}>{category.name}</Link>)}</div>
             </details>
             <Link href="/#sa-fungerar-det">Så fungerar det</Link>
+            <Link href="/mina-inbjudningar">Mina inbjudningar</Link>
             <Link className="nav-cta" href="/studio/rosendrom">
               Skapa din inbjudan <ArrowUpRight size={15} />
             </Link>
@@ -26,6 +27,7 @@ export function SiteHeader({ quiet = false }: { quiet?: boolean }) {
             <div>
               {invitationCategories.map((category) => <Link key={category.slug} href={`/kategori/${category.slug}`}>{category.name}</Link>)}
               <Link href="/#sa-fungerar-det">Så fungerar det</Link>
+              <Link href="/mina-inbjudningar">Mina inbjudningar</Link>
               <Link href="/studio/rosendrom">Börja skapa <ArrowUpRight size={15} /></Link>
             </div>
           </details>
