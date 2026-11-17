@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, ExternalLink, Mail, MessageSquareText, PartyPopper, Pencil, UsersRound } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Mail, MessageSquareText, Pencil, UsersRound } from "lucide-react";
+import { InvitationRenderer } from "@/components/invitation-renderer";
 import { SiteHeader } from "@/components/site-header";
 import { OrganizerLogin } from "@/components/organizer-login";
 import { OrganizerShareLink } from "@/components/organizer-share-link";
 import { getOrganizerSession, organizerAuthConfigured } from "@/lib/organizer-auth";
 import { getOrganizerInvitations, invitationStatusLabel } from "@/lib/organizer-data";
+import { templateById } from "@/lib/invitations";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Mina inbjudningar", robots: { index: false, follow: false } };
@@ -38,12 +40,6 @@ export default async function OrganizerDashboardPage() {
   }
 
   const invitations = await getOrganizerInvitations(session.userId);
-  const totals = invitations.reduce((summary, invitation) => ({
-    events: summary.events + 1,
-    attending: summary.attending + invitation.metrics.attendingPeople,
-    responses: summary.responses + invitation.metrics.respondingParties,
-  }), { events: 0, attending: 0, responses: 0 });
-
   return (
     <main className="organizer-page">
       <SiteHeader quiet />
@@ -60,14 +56,6 @@ export default async function OrganizerDashboardPage() {
       </section>
 
       <section className="organizer-dashboard">
-        {invitations.length > 0 && (
-          <div className="organizer-total-strip">
-            <div><PartyPopper /><span><strong>{totals.events}</strong> {totals.events === 1 ? "inbjudan" : "inbjudningar"}</span></div>
-            <div><UsersRound /><span><strong>{totals.attending}</strong> personer kommer</span></div>
-            <div><MessageSquareText /><span><strong>{totals.responses}</strong> svarande sällskap</span></div>
-          </div>
-        )}
-
         {invitations.length === 0 ? (
           <div className="organizer-empty">
             <span><CalendarDays /></span>
@@ -80,11 +68,27 @@ export default async function OrganizerDashboardPage() {
           <div className="organizer-invitation-list">
             {invitations.map((invitation, index) => {
               const shareUrl = `${publicOrigin}/i/${invitation.publicToken}`;
+              const template = templateById[invitation.templateId];
               return (
                 <article className={`organizer-invitation-card organizer-invitation-card--${invitation.categorySlug}`} key={invitation.id}>
-                  <div className="organizer-card-art" style={{ backgroundImage: `url(${invitation.templateArtwork})` }}>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <b>{invitation.templateName}</b>
+                  <div className="organizer-card-art" aria-label={`Förhandsvisning av ${invitation.title}`}>
+                    {template && (
+                      <div className="organizer-card-preview">
+                        <InvitationRenderer
+                          template={template}
+                          data={{ ...template.defaultData, ...invitation.data }}
+                          enabled={invitation.enabled}
+                          animation="none"
+                          colorway={invitation.colorway}
+                          interactive={false}
+                          demoMark={false}
+                          rsvpMode={invitation.rsvpMode}
+                          rsvpQuestions={invitation.rsvpQuestions}
+                          thumbnail
+                        />
+                      </div>
+                    )}
+                    <span className="organizer-card-index">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                   <div className="organizer-card-body">
                     <div className="organizer-card-title">

@@ -54,7 +54,7 @@ function Countdown({ date, label }: { date: string; label: string }) {
 export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false, rsvpMode = "sms", rsvpQuestions = defaultRsvpQuestions, invitationToken, thumbnail = false }: Props) {
   const photoIsBackground = template.layout === "cinematic" && Boolean(data.photoUrl);
   const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature) && (feature !== "rsvp" || rsvpMode !== "none"));
-  const motionEnabled = animation !== "none";
+  const motionEnabled = !thumbnail && animation !== "none";
   const playful = animation === "playful";
   const densityScore = enabled.length + (data.photoUrl ? 2 : 0) + (data.greeting.length > 95 ? 1 : 0) + (data.name.length > 18 ? 1 : 0);
   const dense = densityScore >= 6;
