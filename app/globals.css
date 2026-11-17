@@ -1336,6 +1336,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .organizer-detail-hero { min-height:480px; display:grid; grid-template-columns:minmax(330px,.82fr) minmax(0,1.18fr); background:color-mix(in srgb,var(--detail-tint) 65%,#f7f3ed); }
 .organizer-detail-art { position:relative; min-height:480px; overflow:hidden; background:color-mix(in srgb,var(--detail-tint) 74%,#f8f3ec); box-shadow:inset -1px 0 rgba(255,255,255,.4); }
 .organizer-detail-art .invitation--thumbnail{position:absolute;inset:0;width:100%;min-height:100%;transform:none!important;pointer-events:none;border-radius:0;box-shadow:none}.organizer-detail-art .invitation--thumbnail::after{display:none}
+.organizer-detail-art .invite-details,.organizer-detail-art .invite-greeting,.organizer-detail-art .invite-countdown,.organizer-detail-art .invite-actions,.organizer-detail-art .invitation>footer{display:none!important}
 .organizer-detail-heading { align-self:center; max-width:680px; padding:65px clamp(40px,7vw,100px); }
 .organizer-detail-heading>a:first-child { display:inline-flex; align-items:center; gap:7px; margin-bottom:45px; color:#72675f; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }.organizer-detail-heading>a svg{width:14px}
 .organizer-detail-kicker { display:flex; align-items:center; justify-content:space-between; gap:20px; }.organizer-detail-kicker>span:first-child{color:#7b6e64;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.15em}
