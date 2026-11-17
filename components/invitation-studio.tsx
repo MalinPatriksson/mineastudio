@@ -32,10 +32,6 @@ const featureKeys: FeatureKey[] = ["map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
 const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
 
-function LockedAfterPurchase() {
-  return <span className="locked-after-purchase"><LockKeyhole size={11} /> Låst efter köp</span>;
-}
-
 async function optimizePhoto(file: File) {
   const image = await createImageBitmap(file);
   const maxSide = 1600;
@@ -188,15 +184,15 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
       <div className="studio-layout">
         <aside className="editor-panel">
           <div className="editor-intro"><p className="eyebrow">{isEditing ? "Redigera inbjudan" : "Gör den till din"}</p><h1>Din stund,<br /><em>dina ord.</em></h1><p>{isEditing ? "Ändringarna visas direkt här och sparas på samma delningslänk." : "Vi tar hand om designen medan du fyller den med det som betyder något."}</p></div>
+          {isEditing && <div className="studio-lock-notice"><LockKeyhole /><div><b>Designen och identiteten är låsta efter köp</b><p>Du kan fortfarande ändra datum, tider, adress, kontaktuppgifter, hälsning, OSA och funktioner. Gråmarkerade val hör till den köpta inbjudningen och kan inte ändras.</p></div></div>}
           <section className="editor-section">
             <div className="editor-section-title"><span>01</span><div><h2>Berätta om stunden</h2><p>Texten uppdateras direkt i kortet.</p></div></div>
             <div className="field-grid">
-              <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Namn{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.name} maxLength={32} onChange={(event) => update("name", event.target.value)} /></label>
+              <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Namn<input disabled={isEditing} value={data.name} maxLength={32} onChange={(event) => update("name", event.target.value)} /></label>
               <div className={`photo-upload field--wide ${isEditing ? "studio-control--locked" : ""}`}>
                 <div>
                   <span className="photo-upload-icon"><ImagePlus size={19} /></span>
                   <span><b>{photoIsBackground ? "Egen bakgrundsbild" : "Egen bild"} <em>valfritt</em></b><small>{photoIsBackground ? "Bilden fyller hela inbjudan. Dra den för att välja exakt utsnitt." : "Välj form och finish, dra sedan fram precis rätt utsnitt."}</small></span>
-                  {isEditing && <LockedAfterPurchase />}
                 </div>
                 {data.photoUrl ? (
                   <>
@@ -235,7 +231,7 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
                   <label className="photo-upload-button">Välj bild<input disabled={isEditing} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
                 )}
               </div>
-              {template.category === "Barnkalas" && <label className={`field ${isEditing ? "studio-field--locked" : ""}`}>Ålder{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
+              {template.category === "Barnkalas" && <label className={`field ${isEditing ? "studio-field--locked" : ""}`}>Ålder<input disabled={isEditing} type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
               <label className="field">Datum<input type="date" value={data.date} onChange={(event) => update("date", event.target.value)} /></label>
               <label className="field">Starttid<input type="time" value={data.startTime} onChange={(event) => update("startTime", event.target.value)} /></label>
               <label className="field">Sluttid<input type="time" value={data.endTime} onChange={(event) => update("endTime", event.target.value)} /></label>
@@ -246,8 +242,8 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
             <div className="editable-copy">
               <p className="editable-copy-title"><Sparkles size={13} /> Din personliga text</p>
               <div className="field-grid">
-                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Överrubrik{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.kicker} maxLength={48} onChange={(event) => update("kicker", event.target.value)} /></label>
-                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Underrubrik{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.subtitle} maxLength={48} onChange={(event) => update("subtitle", event.target.value)} /></label>
+                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Överrubrik<input disabled={isEditing} value={data.kicker} maxLength={48} onChange={(event) => update("kicker", event.target.value)} /></label>
+                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Underrubrik<input disabled={isEditing} value={data.subtitle} maxLength={48} onChange={(event) => update("subtitle", event.target.value)} /></label>
                 <label className="field field--wide">Personlig hälsning<textarea rows={3} maxLength={150} value={data.greeting} onChange={(event) => update("greeting", event.target.value)} /><small>{data.greeting.length}/150</small></label>
               </div>
               <p className="editable-copy-note">Knappar, nedräkning och avslutning är färdigformulerade för att alltid vara tydliga för gästen.</p>
@@ -275,7 +271,6 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
 
           <section className={`editor-section ${isEditing ? "editor-section--locked" : ""}`}>
             <div className="editor-section-title"><span>03</span><div><h2>Välj rörelse</h2><p>Stilla visar en färdig komposition utan pausade objekt.</p></div></div>
-            {isEditing && <LockedAfterPurchase />}
             <div className="animation-options">
               {([{ key: "none", title: "Stilla", symbol: "—" }, { key: "soft", title: "Mjuk", symbol: "∿" }, { key: "playful", title: "Lekfull", symbol: "✦" }] as const).map((option) => <button disabled={isEditing} key={option.key} className={animation === option.key ? "active" : ""} onClick={() => { markDirty(); setAnimation(option.key); }}><i>{option.symbol}</i><span>{option.title}</span>{animation === option.key && <Check size={14} />}</button>)}
             </div>
@@ -283,7 +278,6 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
 
           <section className={`editor-section ${isEditing ? "editor-section--locked" : ""}`}>
             <div className="editor-section-title"><span>04</span><div><h2>Välj färgvärld</h2><p>Alla toner anpassas tillsammans av designen.</p></div></div>
-            {isEditing && <LockedAfterPurchase />}
             <div className="colorway-options">
               {colorwayOptions[template.palette].map((option) => (
                 <button disabled={isEditing} type="button" key={option.id} className={colorway === option.id ? "active" : ""} onClick={() => { markDirty(); setColorway(option.id); }} aria-pressed={colorway === option.id}>
