@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { InvitationData } from "@/lib/invitations";
+import type { AnimationStyle, Colorway, FeatureKey, InvitationData, RsvpMode, RsvpQuestionConfig } from "@/lib/invitations";
 import { templateById } from "@/lib/invitations";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
@@ -26,6 +26,11 @@ export type OrganizerInvitation = {
   status: string;
   purchasedAt: string | null;
   data: Partial<InvitationData>;
+  enabled: FeatureKey[];
+  animation: AnimationStyle;
+  colorway: Colorway;
+  rsvpMode: RsvpMode;
+  rsvpQuestions: RsvpQuestionConfig;
   responses: GuestResponse[];
   metrics: {
     respondingParties: number;
@@ -44,6 +49,13 @@ type InvitationRow = {
   status: string;
   purchased_at: string | null;
   invitation_data: Partial<InvitationData> | null;
+  enabled_features: FeatureKey[] | null;
+  animation: AnimationStyle;
+  colorway: Colorway;
+  rsvp_mode: RsvpMode;
+  rsvp_ask_party_size: boolean;
+  rsvp_ask_allergies: boolean;
+  rsvp_ask_message: boolean;
 };
 
 type ResponseRow = {
@@ -83,6 +95,15 @@ function normalizeInvitation(row: InvitationRow, responseRows: ResponseRow[]): O
     status: row.status,
     purchasedAt: row.purchased_at,
     data: row.invitation_data ?? {},
+    enabled: row.enabled_features ?? [],
+    animation: row.animation,
+    colorway: row.colorway,
+    rsvpMode: row.rsvp_mode,
+    rsvpQuestions: {
+      partySize: row.rsvp_ask_party_size,
+      allergies: row.rsvp_ask_allergies,
+      message: row.rsvp_ask_message,
+    },
     responses,
     metrics: {
       respondingParties: responses.length,
@@ -99,7 +120,7 @@ export async function getOrganizerInvitations(ownerId: string) {
   const supabase = getSupabaseAdmin();
   const { data: invitationRows, error } = await supabase
     .from("invitations")
-    .select("id, public_token, template_id, title, event_date, status, purchased_at, invitation_data")
+    .select("id, public_token, template_id, title, event_date, status, purchased_at, invitation_data, enabled_features, animation, colorway, rsvp_mode, rsvp_ask_party_size, rsvp_ask_allergies, rsvp_ask_message")
     .eq("owner_id", ownerId)
     .not("purchased_at", "is", null)
     .order("event_date", { ascending: false });

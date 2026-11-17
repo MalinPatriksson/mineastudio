@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, CalendarDays, Check, Download, ExternalLink, MessageSquareText, Utensils, UsersRound, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, Check, Download, ExternalLink, MessageSquareText, Pencil, Utensils, UsersRound, X } from "lucide-react";
 import { OrganizerShareLink } from "@/components/organizer-share-link";
 import { SiteHeader } from "@/components/site-header";
 import { getOrganizerSession } from "@/lib/organizer-auth";
@@ -34,7 +34,10 @@ export default async function GuestListPage({ params }: { params: Promise<{ id: 
           <h1>{invitation.title}</h1>
           <p><CalendarDays /> {formatEventDate(invitation.eventDate)}</p>
           <OrganizerShareLink url={shareUrl} />
-          <a className="organizer-view-invitation" href={shareUrl} target="_blank" rel="noreferrer">Visa inbjudan <ExternalLink /></a>
+          <div className="organizer-detail-actions">
+            <Link className="organizer-edit-invitation" href={`/mina-inbjudningar/${invitation.id}/redigera`}>Redigera inbjudan <Pencil /></Link>
+            <a className="organizer-view-invitation" href={shareUrl} target="_blank" rel="noreferrer">Visa inbjudan <ExternalLink /></a>
+          </div>
         </div>
       </section>
 

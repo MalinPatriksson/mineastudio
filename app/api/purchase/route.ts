@@ -3,49 +3,15 @@ import { z } from "zod";
 import { invitationRetentionDays } from "@/lib/config";
 import { templateById } from "@/lib/invitations";
 import type { InvitationData } from "@/lib/invitations";
+import { invitationConfigurationSchema, invitationValidationMessage } from "@/lib/invitation-validation";
 import { getSupabaseAdmin, isRsvpBackendConfigured } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 
-const invitationDataSchema = z.object({
-  name: z.string().trim().min(1).max(32),
-  // The platform request limit is the outer guard. Existing editor sessions may
-  // still contain an original data URL; newly selected photos are compressed client-side.
-  photoUrl: z.string().optional(),
-  photoPositionX: z.number().min(0).max(100).optional(),
-  photoPositionY: z.number().min(0).max(100).optional(),
-  photoShape: z.enum(["organic", "arch", "circle"]).optional(),
-  photoFrame: z.enum(["clean", "fade", "floral"]).optional(),
-  age: z.string().max(3).optional(),
-  date: z.iso.date(),
-  startTime: z.string().regex(/^\d{2}:\d{2}$/),
-  endTime: z.union([z.string().regex(/^\d{2}:\d{2}$/), z.literal("")]).optional(),
-  address: z.string().trim().min(2).max(180),
-  kicker: z.string().max(48),
-  subtitle: z.string().max(48),
-  greeting: z.string().max(150),
-  footerText: z.string().max(120),
-  countdownLabel: z.string().max(80),
-  rsvpHint: z.string().max(80),
-  rsvpLabel: z.string().max(80),
-  mapHint: z.string().max(80),
-  mapLabel: z.string().max(80),
-  calendarHint: z.string().max(80),
-  calendarLabel: z.string().max(80),
-  phone: z.string().trim().min(5).max(30),
-  rsvpDate: z.union([z.iso.date(), z.literal("")]),
-});
-
-const purchaseSchema = z.object({
+const purchaseSchema = invitationConfigurationSchema.extend({
   checkoutReference: z.uuid(),
   email: z.email().trim().max(254),
   templateId: z.string().min(2).max(64),
-  data: invitationDataSchema,
-  enabled: z.array(z.enum(["rsvp", "map", "calendar", "countdown", "greeting"])).max(5),
-  animation: z.enum(["none", "soft", "playful"]),
-  colorway: z.enum(["signature", "soft", "deep", "beige", "boy"]),
-  rsvpMode: z.enum(["form", "sms", "none"]),
-  rsvpQuestions: z.object({ partySize: z.boolean(), allergies: z.boolean(), message: z.boolean() }),
   website: z.string().max(0).optional(),
 });
 
@@ -76,9 +42,7 @@ export async function POST(request: Request) {
   const parsed = purchaseSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     const field = parsed.error.issues[0]?.path.join(".");
-    const error = field === "email"
-      ? "Kontrollera att mejladressen är korrekt."
-      : "Kontrollera datum, tider och obligatoriska uppgifter i inbjudan.";
+    const error = invitationValidationMessage(field);
     return Response.json({ error, field }, { status: 400 });
   }
   if (parsed.data.website) return Response.json({ error: "Köpet kunde inte genomföras." }, { status: 400 });

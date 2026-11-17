@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, ExternalLink, Mail, MessageSquareText, PartyPopper, UsersRound } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Mail, MessageSquareText, PartyPopper, Pencil, UsersRound } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { OrganizerLogin } from "@/components/organizer-login";
 import { OrganizerShareLink } from "@/components/organizer-share-link";
@@ -100,6 +100,7 @@ export default async function OrganizerDashboardPage() {
                     </div>
                     <div className="organizer-card-actions">
                       <Link href={`/mina-inbjudningar/${invitation.id}`}>Öppna gästlistan <ArrowRight /></Link>
+                      <Link href={`/mina-inbjudningar/${invitation.id}/redigera`}>Redigera <Pencil /></Link>
                       <a href={shareUrl} target="_blank" rel="noreferrer">Visa inbjudan <ExternalLink /></a>
                     </div>
                   </div>
