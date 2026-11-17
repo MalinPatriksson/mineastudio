@@ -4,7 +4,7 @@ import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Eye, ImagePlus, Monitor, Move, Save, Smartphone, Sparkles, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Eye, ImagePlus, LockKeyhole, Monitor, Move, Save, Smartphone, Sparkles, Trash2, X } from "lucide-react";
 import type { AnimationStyle, Colorway, FeatureKey, InvitationData, InvitationTemplate, PhotoFrameStyle, PhotoShape, RsvpMode, RsvpQuestionConfig } from "@/lib/invitations";
 import { colorwayOptions, defaultRsvpQuestions, featureLabels } from "@/lib/invitations";
 import { InvitationRenderer } from "./invitation-renderer";
@@ -31,6 +31,10 @@ type Props = {
 const featureKeys: FeatureKey[] = ["map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
 const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
+
+function LockedAfterPurchase() {
+  return <span className="locked-after-purchase"><LockKeyhole size={11} /> Låst efter köp</span>;
+}
 
 async function optimizePhoto(file: File) {
   const image = await createImageBitmap(file);
@@ -187,22 +191,23 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
           <section className="editor-section">
             <div className="editor-section-title"><span>01</span><div><h2>Berätta om stunden</h2><p>Texten uppdateras direkt i kortet.</p></div></div>
             <div className="field-grid">
-              <label className="field field--wide">Namn<input value={data.name} maxLength={32} onChange={(event) => update("name", event.target.value)} /></label>
-              <div className="photo-upload field--wide">
+              <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Namn{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.name} maxLength={32} onChange={(event) => update("name", event.target.value)} /></label>
+              <div className={`photo-upload field--wide ${isEditing ? "studio-control--locked" : ""}`}>
                 <div>
                   <span className="photo-upload-icon"><ImagePlus size={19} /></span>
                   <span><b>{photoIsBackground ? "Egen bakgrundsbild" : "Egen bild"} <em>valfritt</em></b><small>{photoIsBackground ? "Bilden fyller hela inbjudan. Dra den för att välja exakt utsnitt." : "Välj form och finish, dra sedan fram precis rätt utsnitt."}</small></span>
+                  {isEditing && <LockedAfterPurchase />}
                 </div>
                 {data.photoUrl ? (
                   <>
-                    <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>Justera bilden nedan</b><button type="button" aria-label="Ta bort bild" onClick={() => { markDirty(); setData((current) => ({ ...current, photoUrl: undefined })); }}><Trash2 size={15} /></button></div>
+                    <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>{isEditing ? "Bilden hör till den köpta inbjudan" : "Justera bilden nedan"}</b><button disabled={isEditing} type="button" aria-label="Ta bort bild" onClick={() => { markDirty(); setData((current) => ({ ...current, photoUrl: undefined })); }}><Trash2 size={15} /></button></div>
                     {photoIsBackground ? (
                       <div
                         className="cinematic-photo-editor"
-                        onPointerDown={startPhotoDrag}
-                        onPointerMove={movePhoto}
-                        onPointerUp={stopPhotoDrag}
-                        onPointerCancel={stopPhotoDrag}
+                        onPointerDown={isEditing ? undefined : startPhotoDrag}
+                        onPointerMove={isEditing ? undefined : movePhoto}
+                        onPointerUp={isEditing ? undefined : stopPhotoDrag}
+                        onPointerCancel={isEditing ? undefined : stopPhotoDrag}
                         style={{ backgroundImage: `linear-gradient(180deg,transparent 38%,rgba(27,17,11,.78)),url(${data.photoUrl})`, backgroundPosition: `center,${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }}
                       >
                         <span><small>{data.kicker}</small><b>{data.name}</b><em>{data.subtitle}</em></span>
@@ -211,26 +216,26 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
                       <div className={`photo-editor-theme invitation invitation--${template.palette} colorway--${colorway}`}>
                         <div
                           className="photo-editor-drag-target"
-                          onPointerDown={startPhotoDrag}
-                          onPointerMove={movePhoto}
-                          onPointerUp={stopPhotoDrag}
-                          onPointerCancel={stopPhotoDrag}
+                          onPointerDown={isEditing ? undefined : startPhotoDrag}
+                          onPointerMove={isEditing ? undefined : movePhoto}
+                          onPointerUp={isEditing ? undefined : stopPhotoDrag}
+                          onPointerCancel={isEditing ? undefined : stopPhotoDrag}
                         >
                           <InvitationPhoto data={data} templateId={template.id} className="invite-photo-wrap--editor" />
                         </div>
                       </div>
                     )}
-                    <p className="photo-drag-hint"><Move size={13} /> Dra bilden för att välja exakt utsnitt</p>
+                    <p className="photo-drag-hint">{isEditing ? <><LockKeyhole size={13} /> Bildens utsnitt är låst efter köp</> : <><Move size={13} /> Dra bilden för att välja exakt utsnitt</>}</p>
                     {!photoIsBackground && <div className="photo-controls">
-                      <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
-                      <div><small>Finish</small><div className="photo-choice-row">{photoFrames.map((frame) => <button type="button" key={frame.id} className={(data.photoFrame ?? "fade") === frame.id ? "active" : ""} aria-pressed={(data.photoFrame ?? "fade") === frame.id} onClick={() => update("photoFrame", frame.id)}>{frame.label}</button>)}</div></div>
+                      <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button disabled={isEditing} type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
+                      <div><small>Finish</small><div className="photo-choice-row">{photoFrames.map((frame) => <button disabled={isEditing} type="button" key={frame.id} className={(data.photoFrame ?? "fade") === frame.id ? "active" : ""} aria-pressed={(data.photoFrame ?? "fade") === frame.id} onClick={() => update("photoFrame", frame.id)}>{frame.label}</button>)}</div></div>
                     </div>}
                   </>
                 ) : (
-                  <label className="photo-upload-button">Välj bild<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
+                  <label className="photo-upload-button">Välj bild<input disabled={isEditing} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
                 )}
               </div>
-              {template.category === "Barnkalas" && <label className="field">Ålder<input type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
+              {template.category === "Barnkalas" && <label className={`field ${isEditing ? "studio-field--locked" : ""}`}>Ålder{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
               <label className="field">Datum<input type="date" value={data.date} onChange={(event) => update("date", event.target.value)} /></label>
               <label className="field">Starttid<input type="time" value={data.startTime} onChange={(event) => update("startTime", event.target.value)} /></label>
               <label className="field">Sluttid<input type="time" value={data.endTime} onChange={(event) => update("endTime", event.target.value)} /></label>
@@ -241,8 +246,8 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
             <div className="editable-copy">
               <p className="editable-copy-title"><Sparkles size={13} /> Din personliga text</p>
               <div className="field-grid">
-                <label className="field field--wide">Överrubrik<input value={data.kicker} maxLength={48} onChange={(event) => update("kicker", event.target.value)} /></label>
-                <label className="field field--wide">Underrubrik<input value={data.subtitle} maxLength={48} onChange={(event) => update("subtitle", event.target.value)} /></label>
+                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Överrubrik{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.kicker} maxLength={48} onChange={(event) => update("kicker", event.target.value)} /></label>
+                <label className={`field field--wide ${isEditing ? "studio-field--locked" : ""}`}>Underrubrik{isEditing && <LockedAfterPurchase />}<input disabled={isEditing} value={data.subtitle} maxLength={48} onChange={(event) => update("subtitle", event.target.value)} /></label>
                 <label className="field field--wide">Personlig hälsning<textarea rows={3} maxLength={150} value={data.greeting} onChange={(event) => update("greeting", event.target.value)} /><small>{data.greeting.length}/150</small></label>
               </div>
               <p className="editable-copy-note">Knappar, nedräkning och avslutning är färdigformulerade för att alltid vara tydliga för gästen.</p>
@@ -268,18 +273,20 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
             </div>
           </section>
 
-          <section className="editor-section">
+          <section className={`editor-section ${isEditing ? "editor-section--locked" : ""}`}>
             <div className="editor-section-title"><span>03</span><div><h2>Välj rörelse</h2><p>Stilla visar en färdig komposition utan pausade objekt.</p></div></div>
+            {isEditing && <LockedAfterPurchase />}
             <div className="animation-options">
-              {([{ key: "none", title: "Stilla", symbol: "—" }, { key: "soft", title: "Mjuk", symbol: "∿" }, { key: "playful", title: "Lekfull", symbol: "✦" }] as const).map((option) => <button key={option.key} className={animation === option.key ? "active" : ""} onClick={() => { markDirty(); setAnimation(option.key); }}><i>{option.symbol}</i><span>{option.title}</span>{animation === option.key && <Check size={14} />}</button>)}
+              {([{ key: "none", title: "Stilla", symbol: "—" }, { key: "soft", title: "Mjuk", symbol: "∿" }, { key: "playful", title: "Lekfull", symbol: "✦" }] as const).map((option) => <button disabled={isEditing} key={option.key} className={animation === option.key ? "active" : ""} onClick={() => { markDirty(); setAnimation(option.key); }}><i>{option.symbol}</i><span>{option.title}</span>{animation === option.key && <Check size={14} />}</button>)}
             </div>
           </section>
 
-          <section className="editor-section">
+          <section className={`editor-section ${isEditing ? "editor-section--locked" : ""}`}>
             <div className="editor-section-title"><span>04</span><div><h2>Välj färgvärld</h2><p>Alla toner anpassas tillsammans av designen.</p></div></div>
+            {isEditing && <LockedAfterPurchase />}
             <div className="colorway-options">
               {colorwayOptions[template.palette].map((option) => (
-                <button type="button" key={option.id} className={colorway === option.id ? "active" : ""} onClick={() => { markDirty(); setColorway(option.id); }} aria-pressed={colorway === option.id}>
+                <button disabled={isEditing} type="button" key={option.id} className={colorway === option.id ? "active" : ""} onClick={() => { markDirty(); setColorway(option.id); }} aria-pressed={colorway === option.id}>
                   <span className="colorway-swatches">{option.colors.map((color) => <i key={color} style={{ backgroundColor: color }} />)}</span>
                   <b>{option.name}</b>
                   {colorway === option.id && <Check size={14} />}

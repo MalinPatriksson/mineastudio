@@ -70,8 +70,8 @@ export default async function OrganizerDashboardPage() {
               const shareUrl = `${publicOrigin}/i/${invitation.publicToken}`;
               const template = templateById[invitation.templateId];
               return (
-                <article className={`organizer-invitation-card organizer-invitation-card--${invitation.categorySlug}`} key={invitation.id}>
-                  <div className="organizer-card-art" aria-label={`Förhandsvisning av ${invitation.title}`}>
+                <article className={`organizer-invitation-card organizer-invitation-card--${invitation.categorySlug} ${template ? `organizer-theme--${template.palette}-${invitation.colorway}` : ""}`} key={invitation.id}>
+                  <div className="organizer-card-art" role="img" aria-label={`Förhandsvisning av ${invitation.title}`}>
                     {template && (
                       <div className="organizer-card-preview">
                         <InvitationRenderer

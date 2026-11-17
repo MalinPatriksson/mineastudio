@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, CalendarDays, Check, Download, ExternalLink, MessageSquareText, Pencil, Utensils, UsersRound, X } from "lucide-react";
+import { InvitationRenderer } from "@/components/invitation-renderer";
 import { OrganizerShareLink } from "@/components/organizer-share-link";
 import { SiteHeader } from "@/components/site-header";
+import { templateById } from "@/lib/invitations";
 import { getOrganizerSession } from "@/lib/organizer-auth";
 import { getOrganizerInvitation, invitationStatusLabel } from "@/lib/organizer-data";
 
@@ -21,13 +23,28 @@ export default async function GuestListPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const invitation = await getOrganizerInvitation(session.userId, id);
   if (!invitation) notFound();
+  const template = templateById[invitation.templateId];
+  if (!template) notFound();
   const shareUrl = `${publicOrigin}/i/${invitation.publicToken}`;
 
   return (
-    <main className={`organizer-page organizer-detail organizer-detail--${invitation.categorySlug}`}>
+    <main className={`organizer-page organizer-detail organizer-detail--${invitation.categorySlug} organizer-theme--${template.palette}-${invitation.colorway}`}>
       <SiteHeader quiet />
       <section className="organizer-detail-hero">
-        <div className="organizer-detail-art" style={{ backgroundImage: `url(${invitation.templateArtwork})` }} />
+        <div className="organizer-detail-art" role="img" aria-label={`Förhandsvisning av ${invitation.title}`}>
+          <InvitationRenderer
+            template={template}
+            data={{ ...template.defaultData, ...invitation.data }}
+            enabled={invitation.enabled}
+            animation="none"
+            colorway={invitation.colorway}
+            interactive={false}
+            demoMark={false}
+            rsvpMode={invitation.rsvpMode}
+            rsvpQuestions={invitation.rsvpQuestions}
+            thumbnail
+          />
+        </div>
         <div className="organizer-detail-heading">
           <Link href="/mina-inbjudningar"><ArrowLeft /> Alla inbjudningar</Link>
           <div className="organizer-detail-kicker"><span>{invitation.templateName}</span><span className={`organizer-status organizer-status--${invitation.status}`}><i />{invitationStatusLabel[invitation.status] ?? invitation.status}</span></div>
