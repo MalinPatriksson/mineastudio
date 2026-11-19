@@ -925,7 +925,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .storybook-layers,.poster-graphics,.editorial-rail,.cinematic-sequence,.celestial-orbit,.vintage-frame,.patisserie-awning,.deco-frame,.ticket-stub { position:absolute; z-index:1; inset:0; pointer-events:none; }
 
 /* Sagoskogen: a tall, layered storybook that is discovered while scrolling */
-.invitation--layout-storybook { min-height:1120px; padding-top:360px; background:#10241f; }
+.invitation--layout-storybook { min-height:1120px; padding-top:125px; background:#10241f; }
 .invitation--layout-storybook .invite-world-bg { inset:0; opacity:1; background-position:center top; background-size:auto 100%; }
 .invitation--layout-storybook .invite-world-bg::after { background:linear-gradient(180deg,transparent 9%,rgba(9,25,21,.16) 28%,rgba(10,27,23,.88) 52%,#10241f 78%); }
 .invitation--layout-storybook .invite-content { align-items:flex-start; padding:28px; border:1px solid rgba(231,200,134,.26); border-radius:28px; background:rgba(9,25,21,.76); backdrop-filter:blur(12px); }
@@ -936,7 +936,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .storybook-layers span:first-child { left:-70px; top:80px; clip-path:polygon(0 0,70% 0,100% 100%,0 100%); }
 .storybook-layers span:nth-child(2) { right:-70px; top:180px; transform:scaleX(-1); clip-path:polygon(0 0,70% 0,100% 100%,0 100%); }
 .storybook-layers i,.storybook-layers b { position:absolute; z-index:2; color:#e9d29a; font:italic 10px var(--serif); letter-spacing:.12em; text-transform:uppercase; }
-.storybook-layers i { top:315px; left:34px; }.storybook-layers b { top:555px; right:24px; }
+.storybook-layers i { top:96px; left:34px; }.storybook-layers b { top:555px; right:24px; }
 
 /* Konfettikalas: graphic poster rather than a paper card */
 .invitation--layout-poster { padding-top:78px; background:#ff6b7d; color:#252d77; }
@@ -1141,7 +1141,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .product-art { aspect-ratio:.78; }
 .product-invitation-preview { position:absolute; inset:0; overflow:hidden; border-radius:0; box-shadow:none; }
 .product-invitation-preview .invitation { width:170%; min-height:660px; transform:scale(.59); transform-origin:top left; border-radius:0; box-shadow:none; }
-.product-invitation-preview .invitation--layout-storybook { min-height:760px; padding-top:270px; }
+.product-invitation-preview .invitation--layout-storybook { min-height:760px; padding-top:90px; }
 .product-invitation-preview .invitation--layout-cinematic { min-height:760px; padding-top:185px; }
 .product-invitation-preview .invitation--layout-cinematic .invite-content { gap:5px; }
 .product-invitation-preview .invitation--layout-cinematic .invite-header,.product-invitation-preview .invitation--layout-cinematic .invite-details,.product-invitation-preview .invitation--layout-cinematic .invite-greeting,.product-invitation-preview .invitation--layout-cinematic .invite-actions { padding:8px 11px; }
