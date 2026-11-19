@@ -706,6 +706,10 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .drag-scroll-area { cursor:grab; scrollbar-width:none; overscroll-behavior:contain; }
 .drag-scroll-area:active { cursor:grabbing; }
 .drag-scroll-area::-webkit-scrollbar { display:none; }
+@media (hover:hover) and (pointer:fine) {
+  .drag-scroll-area,.drag-scroll-area * { -webkit-user-select:none; user-select:none; }
+  .drag-scroll-area img { -webkit-user-drag:none; }
+}
 
 /* The phone never grows: high-content combinations tighten further inside it */
 .phone-frame { overflow:auto; overscroll-behavior:contain; }
