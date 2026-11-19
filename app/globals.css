@@ -990,7 +990,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .celestial-orbit i,.celestial-orbit b,.celestial-orbit em { position:absolute; color:#f9df9c; font-style:normal; }.celestial-orbit i{top:2px;left:50%}.celestial-orbit b{right:0;top:60%}.celestial-orbit em{left:8px;top:35%}
 
 /* Nallekram: framed heirloom card */
-.invitation--layout-vintage { padding-top:310px; background:#eee4d2; }
+.invitation--layout-vintage { padding-top:210px; background:#eee4d2; }
 .invitation--layout-vintage .invite-world-bg { inset:0; opacity:1; background-position:center top; }
 .invitation--layout-vintage .invite-world-bg::after { background:linear-gradient(180deg,transparent 20%,rgba(247,240,225,.42) 42%,rgba(242,233,215,.92) 66%); }
 .invitation--layout-vintage .invite-content { padding:25px 22px; border:1px solid #9d8b6b; border-radius:42% 42% 18px 18px / 55px 55px 18px 18px; background:rgba(250,244,231,.76); }
@@ -1146,7 +1146,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .product-invitation-preview .invitation--layout-cinematic .invite-content { gap:5px; }
 .product-invitation-preview .invitation--layout-cinematic .invite-header,.product-invitation-preview .invitation--layout-cinematic .invite-details,.product-invitation-preview .invitation--layout-cinematic .invite-greeting,.product-invitation-preview .invitation--layout-cinematic .invite-actions { padding:8px 11px; }
 .product-invitation-preview .invitation--layout-cinematic .invite-header h1 { font-size:34px; }
-.product-invitation-preview .invitation--layout-vintage { padding-top:245px; }
+.product-invitation-preview .invitation--layout-vintage { padding-top:165px; }
 .product-invitation-preview .invitation--layout-patisserie { padding-top:185px; }
 .product-invitation-preview .invitation--layout-celestial { padding-top:170px; }
 .product-invitation-preview .invitation--layout-postcard { min-height:660px; padding:42px 28px; }
