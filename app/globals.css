@@ -225,6 +225,18 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .photo-choice-row { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; padding:4px; border-radius:14px; background:rgba(87,69,56,.07); }
 .photo-choice-row button { min-height:32px; padding:5px 4px; border:1px solid transparent; border-radius:10px; color:#766b62; background:transparent; font:8px var(--sans); cursor:pointer; }
 .photo-choice-row button.active { color:#302925; border-color:rgba(104,79,63,.13); background:#fffdfa; box-shadow:0 4px 12px rgba(64,48,38,.08); }
+.postcard-cover-options { display:grid!important; grid-template-columns:repeat(5,minmax(0,1fr)); gap:7px!important; }
+.postcard-cover-options button { min-width:0; padding:4px 4px 8px; overflow:hidden; border:1px solid rgba(82,68,55,.12); border-radius:13px; color:#665d55; background:rgba(255,255,255,.54); cursor:pointer; }
+.postcard-cover-options button>span { display:block; width:100%; aspect-ratio:.72; margin-bottom:6px; border-radius:9px; background-size:cover; background-position:center; filter:saturate(.9); }
+.postcard-cover-options button>b { overflow:hidden; font:7px/1.2 var(--sans); text-overflow:ellipsis; white-space:nowrap; }
+.postcard-cover-options button.active { border-color:#997764; background:#fff; box-shadow:0 7px 20px rgba(60,44,35,.13); }
+.postcard-cover-options button.active>span { box-shadow:inset 0 0 0 2px rgba(255,255,255,.8); filter:none; }
+.postcard-cover-options button:disabled { cursor:not-allowed; opacity:.58; }
+.postcard-photo-editor { aspect-ratio:2/3; }
+@media (max-width:720px) {
+  .postcard-cover-options { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .published-shell .invitation--layout-postcard:not(.is-postcard-flipped) { height:calc(100svh - 75px); min-height:calc(100svh - 75px); }
+}
 
 .invitation { border-radius:28px; padding-left:31px; padding-right:31px; box-shadow:inset 0 0 90px rgba(255,255,255,.18); }
 .invitation::after { content:""; position:absolute; inset:7px; border:1px solid rgba(255,255,255,.42); border-radius:24px; pointer-events:none; }
@@ -1038,16 +1050,20 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation--layout-postcard { min-height:720px; padding:42px 28px; background:#f7f0d8; perspective:1200px; }
 .invitation--layout-postcard .invite-world-bg { opacity:.32; }
 .invitation--layout-postcard .invite-world-bg::after { background:rgba(255,252,235,.74); }
-.invitation--layout-postcard:not(.is-postcard-flipped) .invite-content { opacity:0; transform:rotateY(180deg); pointer-events:none; }
+.invitation--layout-postcard:not(.is-postcard-flipped) { height:720px; min-height:720px; padding:0; }
+.invitation--layout-postcard:not(.is-postcard-flipped) .invite-content { position:absolute; inset:0; opacity:0; transform:rotateY(180deg); pointer-events:none; }
 .invitation--layout-postcard.is-postcard-flipped .postcard-front { opacity:0; transform:rotateY(-180deg); pointer-events:none; }
 .invitation--layout-postcard.is-postcard-flipped { padding-top:80px; }
 .invitation--layout-postcard .invite-content { padding:35px 25px; border:1px solid #bcb18c; background:#fffdf0; transform-origin:center; }
 .invitation--layout-postcard .invite-header { width:100%; padding-left:34%; text-align:left; }
 .invitation--layout-postcard .invite-header h1 { font-size:36px; }
 .invitation--layout-postcard .invite-details { width:100%; border-radius:0; border-left:1px solid #bcb18c; background:transparent!important; }
-.postcard-front { position:absolute; z-index:9; inset:22px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:40px 28px; border:10px solid #fff8e5; background-image:linear-gradient(transparent 45%,rgba(14,71,44,.35)),url('/art/citronlunden-world.webp'); background-size:cover; background-position:center; box-shadow:0 20px 50px rgba(28,54,35,.22); transition:opacity .4s,transform .65s; backface-visibility:hidden; }
+.postcard-front { position:absolute; z-index:9; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-height:0; padding:40px 28px; border:10px solid #fff8e5; border-radius:inherit; background-image:linear-gradient(transparent 42%,rgba(14,51,35,.5)),url('/art/citronlunden-cover-terrass.webp'); background-size:cover; background-position:center; box-shadow:0 20px 50px rgba(28,54,35,.22); transition:opacity .4s,transform .65s; backface-visibility:hidden; }
 .postcard-front>div { color:#fffbea; text-align:center; text-shadow:0 3px 18px #21482e; }.postcard-front p{margin:0;font:italic 16px var(--serif)}.postcard-front h2{margin:4px 0;font:48px/.9 var(--serif)}.postcard-front span{font:8px var(--sans);text-transform:uppercase;letter-spacing:.15em}
 .postcard-front button,.postcard-turn-back { margin-top:24px; padding:11px 15px; border:1px solid currentColor; border-radius:999px; color:#264c31; background:#fff9df; font:700 8px var(--sans); cursor:pointer; }.postcard-front button{display:flex;align-items:center;gap:8px}.postcard-front svg{width:13px}.postcard-turn-back{margin-bottom:10px;background:transparent}
+.phone-frame .invitation--layout-postcard:not(.is-postcard-flipped) { height:654px; min-height:654px; }
+.fullscreen-device--mobile .invitation--layout-postcard:not(.is-postcard-flipped) { height:100%; min-height:100%; }
+.fullscreen-device--desktop .invitation--layout-postcard:not(.is-postcard-flipped) { height:calc(100vh - 55px); min-height:calc(100vh - 55px); }
 
 /* Each experience has its own motion signature; "Stilla" always removes it */
 @keyframes posterBounce { 0%,100%{transform:rotate(8deg) scale(1)} 50%{transform:rotate(4deg) scale(1.08)} }

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const invitationDataSchema = z.object({
   name: z.string().trim().min(1).max(32),
   photoUrl: z.string().optional(),
+  coverImageUrl: z.string().max(180).optional(),
   photoPositionX: z.number().min(0).max(100).optional(),
   photoPositionY: z.number().min(0).max(100).optional(),
   photoShape: z.enum(["organic", "arch", "circle"]).optional(),

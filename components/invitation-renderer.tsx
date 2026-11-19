@@ -53,10 +53,11 @@ function Countdown({ date, label }: { date: string; label: string }) {
 
 export function InvitationRenderer({ template, data, enabled, animation, colorway = "signature", interactive = true, demoMark = true, envelope = false, rsvpMode = "sms", rsvpQuestions = defaultRsvpQuestions, invitationToken, thumbnail = false }: Props) {
   const photoIsBackground = template.layout === "cinematic" && Boolean(data.photoUrl);
+  const postcardCover = data.photoUrl || data.coverImageUrl || template.artwork;
   const actions = enabled.filter((feature) => ["rsvp", "map", "calendar"].includes(feature) && (feature !== "rsvp" || rsvpMode !== "none"));
   const motionEnabled = !thumbnail && animation !== "none";
   const playful = animation === "playful";
-  const densityScore = enabled.length + (data.photoUrl ? 2 : 0) + (data.greeting.length > 95 ? 1 : 0) + (data.name.length > 18 ? 1 : 0);
+  const densityScore = enabled.length + (data.photoUrl && template.layout !== "postcard" ? 2 : 0) + (data.greeting.length > 95 ? 1 : 0) + (data.name.length > 18 ? 1 : 0);
   const dense = densityScore >= 6;
   const extraDense = densityScore >= 8;
   const [opened, setOpened] = useState(!envelope);
@@ -114,7 +115,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
       {template.layout === "patisserie" && <div className="patisserie-awning" aria-hidden="true">{Array.from({ length: 7 }, (_, index) => <i key={index} />)}</div>}
       {template.layout === "deco" && <div className="deco-frame" aria-hidden="true"><span /><i /><b /></div>}
       {template.layout === "ticket" && <div className="ticket-stub" aria-hidden="true"><span>ADMIT ONE</span><i>№ 2027</i><b>✦</b></div>}
-      {template.layout === "postcard" && !postcardFlipped && <div className="postcard-front"><div><p>Hälsningar från</p><h2>Citronlunden</h2><span>En kväll i solen</span></div><button type="button" onClick={() => setPostcardFlipped(true)}>Vänd vykortet <ChevronRight /></button></div>}
+      {template.layout === "postcard" && !postcardFlipped && <div className="postcard-front" style={{ backgroundImage: `linear-gradient(transparent 42%,rgba(14,51,35,.5)),url(${postcardCover})`, backgroundPosition: `center,${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }}><div><p>Hälsningar från</p><h2>Citronlunden</h2><span>En kväll i solen</span></div><button type="button" onClick={() => setPostcardFlipped(true)}>Vänd vykortet <ChevronRight /></button></div>}
 
       <div className="invite-decoration" aria-hidden="true">
         {template.layout === "classic" && template.palette === "rose" && <>{motionEnabled && Array.from({ length: playful ? 6 : 3 }, (_, bloom) => <motion.span key={bloom} className={`background-bloom bb-${bloom + 1}`} animate={{ y: playful ? [-8, 10, -8] : [0, 0, 0], scale: playful ? [.82, 1.24, .82] : [.94, 1.08, .94], rotate: playful ? [-10, 12, -10] : [-3, 4, -3], opacity: [.18, playful ? .68 : .48, .18] }} transition={{ duration: (playful ? 3.6 : 5.5) + bloom * .45, repeat: Infinity, delay: bloom * .35 }}>✿</motion.span>)}<div className="ribbon-mark"><span /><b /><span /></div></>}
@@ -142,7 +143,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
         </header>
 
         <AnimatePresence mode="popLayout" initial={false}>
-          {data.photoUrl && !photoIsBackground && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} templateId={template.id} /></motion.div>}
+          {data.photoUrl && !photoIsBackground && template.layout !== "postcard" && <motion.div key="photo" layout className="invite-photo-slot" initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .94 }}><InvitationPhoto data={data} templateId={template.id} /></motion.div>}
           <motion.div key="details" layout className="invite-details">
             <p className="invite-date">{formatDate(data.date)}</p>
             <p><Clock3 size={14} /> {data.startTime || "14:00"}{data.endTime ? `–${data.endTime}` : ""}</p>

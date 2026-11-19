@@ -20,6 +20,7 @@ export const defaultRsvpQuestions: RsvpQuestionConfig = {
 export type InvitationData = {
   name: string;
   photoUrl?: string;
+  coverImageUrl?: string;
   photoPositionX?: number;
   photoPositionY?: number;
   photoShape?: PhotoShape;
@@ -328,7 +329,7 @@ export const templates: InvitationTemplate[] = [
     tagline: "Ett solvarmt vykort från en kväll i södern.",
     description: "Ett interaktivt vykort som vänds från citronlundens framsida till kvällens alla detaljer.",
     artwork: "/art/citronlunden-world.webp", layout: "postcard", palette: "sky", recommended: ["rsvp", "map", "calendar"],
-    defaultData: { name: "Middag i lunden", date: "2027-07-24", startTime: "18:00", endTime: "23:00", address: "Orangeriet 7, Visby", kicker: "Saluti dalla sera", subtitle: "en lång middag under citronträden", greeting: "Ta plats vid bordet för antipasti, levande ljus och en sommarkväll som får dröja kvar.", footerText: "A presto, vi ses snart", countdownLabel: "dagar till middagen", rsvpHint: "Reservera en stol", rsvpLabel: "Svara på inbjudan", mapHint: "Till lunden", mapLabel: "Hitta till bordet", calendarHint: "Spara kvällen", calendarLabel: "Lägg till i kalender", phone: "0704344454", rsvpDate: "2027-07-10" },
+    defaultData: { name: "Middag i lunden", coverImageUrl: "/art/citronlunden-cover-terrass.webp", date: "2027-07-24", startTime: "18:00", endTime: "23:00", address: "Orangeriet 7, Visby", kicker: "Saluti dalla sera", subtitle: "en lång middag under citronträden", greeting: "Ta plats vid bordet för antipasti, levande ljus och en sommarkväll som får dröja kvar.", footerText: "A presto, vi ses snart", countdownLabel: "dagar till middagen", rsvpHint: "Reservera en stol", rsvpLabel: "Svara på inbjudan", mapHint: "Till lunden", mapLabel: "Hitta till bordet", calendarHint: "Spara kvällen", calendarLabel: "Lägg till i kalender", phone: "0704344454", rsvpDate: "2027-07-10" },
   },
 ];
 

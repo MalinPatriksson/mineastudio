@@ -31,6 +31,13 @@ type Props = {
 const featureKeys: FeatureKey[] = ["map", "calendar", "countdown", "greeting"];
 const photoShapes: Array<{ id: PhotoShape; label: string }> = [{ id: "organic", label: "Mjuk" }, { id: "arch", label: "Valv" }, { id: "circle", label: "Rund" }];
 const photoFrames: Array<{ id: PhotoFrameStyle; label: string }> = [{ id: "clean", label: "Ren" }, { id: "fade", label: "Mjuk fade" }, { id: "floral", label: "Dekorativ ram" }];
+const postcardCovers = [
+  { url: "/art/citronlunden-cover-terrass.webp", label: "Terrassen" },
+  { url: "/art/citronlunden-cover-portal.webp", label: "Citronportalen" },
+  { url: "/art/citronlunden-cover-picknick.webp", label: "Picknickviken" },
+  { url: "/art/citronlunden-cover-kvall.webp", label: "Kväll i lunden" },
+  { url: "/art/citronlunden-cover-orangeri.webp", label: "Orangeriet" },
+] as const;
 
 async function optimizePhoto(file: File) {
   const image = await createImageBitmap(file);
@@ -69,6 +76,8 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
   const required = [data.name, data.date, data.startTime, data.address, data.phone];
   const progress = Math.round((required.filter(Boolean).length / required.length) * 100);
   const photoIsBackground = template.layout === "cinematic";
+  const photoIsPostcardCover = template.layout === "postcard";
+  const photoIsFullBleed = photoIsBackground || photoIsPostcardCover;
 
   const markDirty = () => {
     if (isEditing) {
@@ -105,6 +114,10 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
       photoShape: current.photoShape ?? "organic",
       photoFrame: current.photoFrame ?? "fade",
     }));
+  };
+  const selectPostcardCover = (coverImageUrl: string) => {
+    markDirty();
+    setData((current) => ({ ...current, coverImageUrl, photoUrl: undefined, photoPositionX: 50, photoPositionY: 50 }));
   };
   const startPhotoDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -192,21 +205,22 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
               <div className={`photo-upload field--wide ${isEditing ? "studio-control--locked" : ""}`}>
                 <div>
                   <span className="photo-upload-icon"><ImagePlus size={19} /></span>
-                  <span><b>{photoIsBackground ? "Egen bakgrundsbild" : "Egen bild"} <em>valfritt</em></b><small>{photoIsBackground ? "Bilden fyller hela inbjudan. Dra den för att välja exakt utsnitt." : "Välj form och finish, dra sedan fram precis rätt utsnitt."}</small></span>
+                  <span><b>{photoIsPostcardCover ? "Framsidesbild" : photoIsBackground ? "Egen bakgrundsbild" : "Egen bild"} <em>valfritt</em></b><small>{photoIsPostcardCover ? "Välj ett av våra motiv eller ladda upp en egen bild. Bilden används bara på vykortets framsida." : photoIsBackground ? "Bilden fyller hela inbjudan. Dra den för att välja exakt utsnitt." : "Välj form och finish, dra sedan fram precis rätt utsnitt."}</small></span>
                 </div>
+                {photoIsPostcardCover && <div className="postcard-cover-options" role="group" aria-label="Välj framsidesbild">{postcardCovers.map((cover) => <button disabled={isEditing} type="button" key={cover.url} className={!data.photoUrl && (data.coverImageUrl ?? postcardCovers[0].url) === cover.url ? "active" : ""} aria-pressed={!data.photoUrl && (data.coverImageUrl ?? postcardCovers[0].url) === cover.url} onClick={() => selectPostcardCover(cover.url)}><span style={{ backgroundImage: `url(${cover.url})` }} /><b>{cover.label}</b></button>)}</div>}
                 {data.photoUrl ? (
                   <>
                     <div className="photo-uploaded"><span style={{ backgroundImage: `url(${data.photoUrl})`, backgroundPosition: `${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }} /><b>{isEditing ? "Bilden hör till den köpta inbjudan" : "Justera bilden nedan"}</b><button disabled={isEditing} type="button" aria-label="Ta bort bild" onClick={() => { markDirty(); setData((current) => ({ ...current, photoUrl: undefined })); }}><Trash2 size={15} /></button></div>
-                    {photoIsBackground ? (
+                    {photoIsFullBleed ? (
                       <div
-                        className="cinematic-photo-editor"
+                        className={`cinematic-photo-editor ${photoIsPostcardCover ? "postcard-photo-editor" : ""}`}
                         onPointerDown={isEditing ? undefined : startPhotoDrag}
                         onPointerMove={isEditing ? undefined : movePhoto}
                         onPointerUp={isEditing ? undefined : stopPhotoDrag}
                         onPointerCancel={isEditing ? undefined : stopPhotoDrag}
-                        style={{ backgroundImage: `linear-gradient(180deg,transparent 38%,rgba(27,17,11,.78)),url(${data.photoUrl})`, backgroundPosition: `center,${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }}
+                        style={{ backgroundImage: `linear-gradient(180deg,transparent 38%,rgba(27,17,11,.72)),url(${data.photoUrl})`, backgroundPosition: `center,${data.photoPositionX ?? 50}% ${data.photoPositionY ?? 50}%` }}
                       >
-                        <span><small>{data.kicker}</small><b>{data.name}</b><em>{data.subtitle}</em></span>
+                        <span><small>{photoIsPostcardCover ? "Hälsningar från" : data.kicker}</small><b>{photoIsPostcardCover ? "Citronlunden" : data.name}</b><em>{photoIsPostcardCover ? "En kväll i solen" : data.subtitle}</em></span>
                       </div>
                     ) : (
                       <div className={`photo-editor-theme invitation invitation--${template.palette} colorway--${colorway}`}>
@@ -222,13 +236,13 @@ export function InvitationStudio({ template, invitationId, initialConfiguration 
                       </div>
                     )}
                     <p className="photo-drag-hint">{isEditing ? <><LockKeyhole size={13} /> Bildens utsnitt är låst efter köp</> : <><Move size={13} /> Dra bilden för att välja exakt utsnitt</>}</p>
-                    {!photoIsBackground && <div className="photo-controls">
+                    {!photoIsFullBleed && <div className="photo-controls">
                       <div><small>Form</small><div className="photo-choice-row">{photoShapes.map((shape) => <button disabled={isEditing} type="button" key={shape.id} className={(data.photoShape ?? "organic") === shape.id ? "active" : ""} aria-pressed={(data.photoShape ?? "organic") === shape.id} onClick={() => update("photoShape", shape.id)}>{shape.label}</button>)}</div></div>
                       <div><small>Finish</small><div className="photo-choice-row">{photoFrames.map((frame) => <button disabled={isEditing} type="button" key={frame.id} className={(data.photoFrame ?? "fade") === frame.id ? "active" : ""} aria-pressed={(data.photoFrame ?? "fade") === frame.id} onClick={() => update("photoFrame", frame.id)}>{frame.label}</button>)}</div></div>
                     </div>}
                   </>
                 ) : (
-                  <label className="photo-upload-button">Välj bild<input disabled={isEditing} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
+                  <label className="photo-upload-button">{photoIsPostcardCover ? "Ladda upp egen bild" : "Välj bild"}<input disabled={isEditing} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => void addPhoto(event.target.files?.[0])} /></label>
                 )}
               </div>
               {template.category === "Barnkalas" && <label className={`field ${isEditing ? "studio-field--locked" : ""}`}>Ålder<input disabled={isEditing} type="number" min="1" max="99" value={data.age} onChange={(event) => update("age", event.target.value)} /></label>}
