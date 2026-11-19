@@ -1053,14 +1053,26 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 .invitation--layout-postcard:not(.is-postcard-flipped) { height:720px; min-height:720px; padding:0; }
 .invitation--layout-postcard:not(.is-postcard-flipped) .invite-content { position:absolute; inset:0; opacity:0; transform:rotateY(180deg); pointer-events:none; }
 .invitation--layout-postcard.is-postcard-flipped .postcard-front { opacity:0; transform:rotateY(-180deg); pointer-events:none; }
-.invitation--layout-postcard.is-postcard-flipped { padding-top:80px; }
-.invitation--layout-postcard .invite-content { padding:35px 25px; border:1px solid #bcb18c; background:#fffdf0; transform-origin:center; }
-.invitation--layout-postcard .invite-header { width:100%; padding-left:34%; text-align:left; }
-.invitation--layout-postcard .invite-header h1 { font-size:36px; }
+.invitation--layout-postcard.is-postcard-flipped { padding:30px 12px 24px; }
+.invitation--layout-postcard .invite-content { padding:32px 24px; overflow:hidden; border:1px solid #bcb18c; background:#fffdf0; transform-origin:center; }
+.invitation--layout-postcard .invite-header { width:100%; padding-left:0; text-align:left; }
+.invitation--layout-postcard .invite-header h1 { width:100%; max-width:none; font-size:42px; line-height:.9; text-align:left; }
+.invitation--layout-postcard .invite-header h2 { max-width:none; text-align:left; }
 .invitation--layout-postcard .invite-details { width:100%; border-radius:0; border-left:1px solid #bcb18c; background:transparent!important; }
 .postcard-front { position:absolute; z-index:9; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-height:0; padding:40px 28px; border:10px solid #fff8e5; border-radius:inherit; background-image:linear-gradient(transparent 42%,rgba(14,51,35,.5)),url('/art/citronlunden-cover-terrass.webp'); background-size:cover; background-position:center; box-shadow:0 20px 50px rgba(28,54,35,.22); transition:opacity .4s,transform .65s; backface-visibility:hidden; }
 .postcard-front>div { color:#fffbea; text-align:center; text-shadow:0 3px 18px #21482e; }.postcard-front p{margin:0;font:italic 16px var(--serif)}.postcard-front h2{margin:4px 0;font:48px/.9 var(--serif)}.postcard-front span{font:8px var(--sans);text-transform:uppercase;letter-spacing:.15em}
 .postcard-front button,.postcard-turn-back { margin-top:24px; padding:11px 15px; border:1px solid currentColor; border-radius:999px; color:#264c31; background:#fff9df; font:700 8px var(--sans); cursor:pointer; }.postcard-front button{display:flex;align-items:center;gap:8px}.postcard-front svg{width:13px}.postcard-turn-back{margin-bottom:10px;background:transparent}
+.postcard-paper-lemons { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.postcard-paper-lemons span { --lemon-rotate:-10deg; --lemon-scale:1; position:absolute; width:58px; height:48px; opacity:.15; transform:scale(var(--lemon-scale)) rotate(var(--lemon-rotate)); transform-origin:center; }
+.postcard-paper-lemons span::before { content:""; position:absolute; left:4px; top:13px; width:43px; height:27px; border-radius:58% 42% 55% 45% / 52% 48% 52% 48%; background:radial-gradient(circle at 36% 32%,#fff3a7 0 9%,#e2bd38 48%,#bd9526 100%); box-shadow:inset -5px -4px 8px rgba(122,90,14,.18); }
+.postcard-paper-lemons span::after { content:""; position:absolute; right:0; top:3px; width:21px; height:12px; border-radius:100% 0 100% 0; background:linear-gradient(135deg,#9eb77d,#5f8050); transform:rotate(17deg); }
+.postcard-paper-lemons span:first-child { left:-12px; top:18%; }
+.postcard-paper-lemons span:nth-child(2) { --lemon-rotate:14deg; right:-18px; top:51%; opacity:.12; }
+.postcard-paper-lemons span:nth-child(3) { --lemon-rotate:-22deg; --lemon-scale:.8; left:12px; bottom:13%; opacity:.1; }
+.animation--soft.invitation--layout-postcard.is-postcard-flipped .postcard-paper-lemons span { animation:postcardLemonDrift 7s ease-in-out infinite; }
+.animation--soft.invitation--layout-postcard.is-postcard-flipped .postcard-paper-lemons span:nth-child(2) { animation-delay:-2.4s; }
+.animation--soft.invitation--layout-postcard.is-postcard-flipped .postcard-paper-lemons span:nth-child(3) { animation-delay:-4.6s; }
+.animation--playful.invitation--layout-postcard.is-postcard-flipped .postcard-paper-lemons span { animation:postcardLemonDrift 4.2s ease-in-out infinite; opacity:.18; }
 .phone-frame .invitation--layout-postcard:not(.is-postcard-flipped) { height:654px; min-height:654px; }
 .fullscreen-device--mobile .invitation--layout-postcard:not(.is-postcard-flipped) { height:100%; min-height:100%; }
 .fullscreen-device--desktop .invitation--layout-postcard:not(.is-postcard-flipped) { height:calc(100vh - 55px); min-height:calc(100vh - 55px); }
@@ -1074,6 +1086,7 @@ footer { background:#161513;color:#f4eee5;padding:80px clamp(24px,6vw,92px) 28px
 @keyframes decoShimmer { 0%,100%{filter:drop-shadow(0 0 0 rgba(223,188,108,0))} 50%{filter:drop-shadow(0 0 12px rgba(223,188,108,.7))} }
 @keyframes ticketPulse { 0%,100%{letter-spacing:.14em;opacity:.72} 50%{letter-spacing:.22em;opacity:1} }
 @keyframes postcardSun { 0%,100%{background-position:center} 50%{background-position:53% 48%} }
+@keyframes postcardLemonDrift { 0%,100%{transform:translate3d(0,0,0) scale(var(--lemon-scale)) rotate(var(--lemon-rotate))} 50%{transform:translate3d(3px,-7px,0) scale(var(--lemon-scale)) rotate(calc(var(--lemon-rotate) + 5deg))} }
 .animation--soft.invitation--layout-poster .poster-graphics span { animation:posterBounce 3.8s ease-in-out infinite; }
 .animation--playful.invitation--layout-poster .poster-graphics span { animation:posterBounce 1.8s ease-in-out infinite; }
 .animation--soft.invitation--layout-editorial .editorial-rail::after,.animation--playful.invitation--layout-editorial .editorial-rail::after { content:"";position:absolute;left:26px;top:44%;width:1px;height:90px;background:#111;animation:editorialRule 4s ease-in-out infinite; }

@@ -136,6 +136,7 @@ export function InvitationRenderer({ template, data, enabled, animation, colorwa
       </div>
 
       <div className="invite-content">
+        {template.layout === "postcard" && <div className="postcard-paper-lemons" aria-hidden="true"><span /><span /><span /></div>}
         <header className="invite-header">
           <p>{data.kicker}</p>
           <h1 className={data.name.length > 18 ? "long-name" : ""}>{data.name || "Ditt namn"}</h1>
